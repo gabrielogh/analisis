@@ -1,8 +1,8 @@
 package trivia;
-
+import org.javalite.activejdbc.Base;
 import trivia.User;
 
-import org.javalite.activejdbc.Base;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 public class UserTest{
     @Before
     public void before(){
-        Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia_test", "franco", "franco");
+        Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia_test", "root", "root");
         System.out.println("UserTest setup");
         Base.openTransaction();
     }
@@ -24,23 +24,26 @@ public class UserTest{
         Base.close();
     }
 
-    // @Test
-    // public void validateUniquenessOfUsernames(){
-    //     User user = new User();
-    //     user.set("username", "anakin");
-    //     user.saveIt();
+     @Test
+     public void validateUniquenessOfUsernames(){
+         User user = new User();
+         user.set("username", "anakin");
+         user.set("password", "messi");
+         user.saveIt();
+         User user2 = new User();
+         user2.set("username", "anakin");
+         assertEquals(user2.isValid(), false);
+     }
+     
 
-    //     User user2 = new User();
-    //     user.set("username", "anakin");
 
-    //     assertEquals(user2.isValid(), false);
-    // }
 
-    @Test
+   /* @Test
     public void validateUniquenessOfUsernames(){
         User user = new User();
         user.set("username", "");
 
         assertEquals(user.isValid(), false);
-    }
+
+    }*/
 }
