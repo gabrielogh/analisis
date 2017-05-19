@@ -3,6 +3,7 @@ import org.javalite.activejdbc.Base;
 import trivia.User;
 import java.util.Scanner;
 
+
 /**
  * Hello world!
  *
