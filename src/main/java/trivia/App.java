@@ -17,9 +17,9 @@ public class App{
 			System.out.flush();
 			System.out.println("Bienvenido a Triviagame. Que desea hacer?:");
 			System.out.println("1- Registrarme");
-			System.out.println("2- Jugar contra la maquina");
-			System.out.println("3- Jugar contra personas");
-			System.out.println("4- Modificar dificultad.");
+			System.out.println("2- Jugar contra la maquina(NOT AVALIBLE)");
+			System.out.println("3- Jugar contra personas(NOT AVALIBLE)");
+			System.out.println("4- Modificar dificultad(NOT AVALIBLE)");
 			System.out.println("5- Salir.");
 			System.out.println("Seleccione el numero de opcion deseada");
 			
