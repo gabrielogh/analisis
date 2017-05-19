@@ -15,13 +15,13 @@ public class App{
 		while (option != 5) {
 			System.out.print("\033[H\033[2J");
 			System.out.flush();
-			System.out.println("Bienvenido a Triviagame. Que desea hacer?:");
-			System.out.println("1- Registrarme");
-			System.out.println("2- Jugar contra la maquina(NOT AVALIBLE)");
-			System.out.println("3- Jugar contra personas(NOT AVALIBLE)");
-			System.out.println("4- Modificar dificultad(NOT AVALIBLE)");
-			System.out.println("5- Salir.");
-			System.out.println("Seleccione el numero de opcion deseada");
+			System.out.println("Welcome to Triviagame. What do you want to do?");
+			System.out.println(" 1- Sign up");
+			System.out.println(" 2- Play solo(NOT AVAILABLE)");
+			System.out.println(" 3- Multiplayer(NEVER AVAILABLE)");
+			System.out.println(" 4- Select dificulty (NOT AVAILABLE)");
+			System.out.println(" 5- Exit");
+			System.out.println("Select an option please");
 			
 			option = sc.nextInt();
 			switch (option) {
