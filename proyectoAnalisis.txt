@@ -1,0 +1,155 @@
+﻿1.INTRODUCCIÓN
+1.1 Propósito
+
+      Juego virtual que tiene como propósito entretener y educar mediante preguntas y respuestas de forma didáctica. Se evalúan distintas categorías de la cultura mundial.
+
+	Preguntado$ sera una aplicación JAVA que sera utilizada mediante un navegador web.
+
+1.2 Alcance
+
+USER
+
+*Sign in
+*Log in
+*Play game
+*Resume game
+*Get a category
+*Get a question
+*Select an answer
+*Get a result
+*Rate a quiestion
+*Write a question
+*View statistics
+*View global ranking
+
+
+ADMIN
+
+*Generate a category
+*Generate a question
+*Generate an answer
+*Create an user
+*Modify a category
+*Modify a question
+*Modify an answer
+*Modify an user
+*Delete a category
+*Delete a question
+*Delete an answer
+*Delete an user
+*Assign correct answer
+*Modify answers time out
+*Select number's answers
+
+
+
+
+
+
+
+1.3 Definiciones, acrónimos y abreviaciones
+
+
+1.4 Referencias
+
+
+1.5 Visión Global
+
+
+2 REQUISITOS ESPECÍFICOS:
+
+2.1 Requerimientos de interfaces externas
+	-Se requiere que el navegador utilizado tenga compatibilidad con HTML5 – JAVA (NO SE RECOMIENDA EL USO DE INTERNET EXPLORER (ninguna versión) LOS DESARROLLADORES NO SE HACEN CARGO DE MAL FUNCIONAMIENTO DEL SISTEMA POR EL USO EN ESTE NAVEGADOR)
+
+2.2 REQUERIMIENTOS FUNCIONALES.
+
+--Funcionalidades como usuario--
+
+2.2.1 Ingreso a la Aplicación.
+	-Como usuario quiero entrar al servidor de Preguntado$ para poder jugar.
+
+2.2.2 Registrarme (Sign in).
+	-Como usuario quiero poder registrarme para utilizar todas las funcionalidades del sistema y conservar mis avances.
+
+2.2.3 Ingresar al Sistema (Log in).
+	- Como usuario registrado quiero poder iniciar sesión haciendo click en el botón LOGIN del menú. Para cargar mis avances previos y generar nuevos.
+
+2.2.4 Jugar una partida (Play a game)
+	- Como usuario invitado quiero quiero comenzar una partida para divertirme haciendo click en el botón PLAY la cual consta en una ronda de N preguntas definidas previamente por el administrador.
+	– Como usuario registrado quiero poder resumir una partida o comenzar una nueva con el fin de entretenerme haciendo click en el botón PLAY.
+
+2.2.5 Reanudar partida (Resume game)
+	- Como usuario registrado quiero poder reanudar mis partidas comenzadas con el objetivo de finalizarlas.
+
+2.2.6 Obtener una categoría (Get a category)
+      - Como  jugador quiero poder obtener una categoría de forma aleatoria una vez hecho clic en el botón PLAY o CONTINUAR.
+
+2.2.7 Obtener una pregunta (Get a question)
+      - Como jugador quiero poder obtener de forma aleatoria (luego de haber obtenido una categoría) una pregunta para poder seleccionar una respuesta, del fabuloso repertorio de posibles respuestas, brindado por los hermosos administradores.
+
+2.2.8 Seleccionar una respuesta (Select an answer)
+      - Como jugador quiero poder seleccionar una respuesta de las n posibilidades brindadas por el administrador, dentro del tiempo estipulado, con el fin de ganar
+
+2.2.9 Obtener un resultado (Get a result)
+      - Como jugador quiero poder obtener un resultado (CORRECTO o INCORRECTO) una vez seleccionada una respuesta del repertorio dentro del tiempo estipulado.
+
+2.2.10 Calificar preguntas (Rate a question)
+       - Como jugador quiero poder calificar las preguntas luego de responder, seleccionando un numero del 1 al 5 según mi apreciación.
+
+2.2.11 Sugerir una pregunta (Write a question)
+       - Como usuario quiero poder sugerir preguntas, esperando que estas sean aprobadas con el fin de aportar mis conocimientos al juego.
+
+2.2.12 Ver estadísticas (View statistics)
+       - Como usuario registrado quiero poder acceder a mis estadísticas con el fin de ver mis progresos y un resumen estadístico general.
+
+2.2.13 Ver ranking global (View global ranking)
+       - Como usuario quiero poder visitar el ranking global de posiciones.
+       - Como usuario registrado quiero poder ver mi posición en el ranking y la de los demás usuarios con el fin de alimentar mi ego.
+2.2.14
+
+--Funcionalidades como administrador--
+
+2.2.15 Generar una categoría	(Generate a category)
+	- Como administrador quiero poder generar nuevas categorías con el fin de enriquecer la temática del juego.
+
+2.2.16 Generar una pregunta (Generate a question)
+	- Como administrador quiero poder generar nuevas preguntas para enriquecer la temática del juego.
+
+2.2.17 Generar una respuesta (Generate an answer)
+	- Como administrador quiero poder generar una respuesta a una pregunta determinada.
+
+2.2.18 Crear un usuario (Create an user)
+	- Como administrador quiero poder crear nuevos usuario, para que este pueda jugar
+
+2.2.19 Modificar una categoría (Modify a category)
+	-  Como administrador quiero poder modificar el repertorio de categorías, con el fin de hacer mas dinámico el juego
+
+2.2.20 Modificar una pregunta (Modify a question)
+	- Como administrador quiero poder modificar el contenido de alguna pregunta, para hacer mas dinámico el juego
+
+2.2.21 Modificar una respuesta (Modify an answer)
+	- Como administrador quiero poder modificar alguna respuesta, para adaptarnos a la actualidad.
+
+2.2.22 Modificar un usuario (Modify an user)
+	- Como administrador quiero poder modificar un usuario y sus datos, con el fin de que pueda utilizar mas funcionalidades del juego.
+
+2.2.23 Eliminar una categoría (Delete a category)
+	- Como administrador quiero poder eliminar una categoría, con el fin de mantener actualizado el repertorio
+
+2.2.24 Eliminar una pregunta (Delete a question)
+	- Como administrador quiero poder eliminar una pregunta, para mantener actualizado el repertorio
+
+2.2.25 Eliminar una respuesta (Delete a answer)
+	- Como administrador quiero poder eliminar una respuesta, para corregir y mantener actualizado el repertorio
+
+2.2.26 Eliminar un usuario (Delete an user)
+	- Como administrador quiero poder eliminar usuarios con el fin de administrar la base de datos
+
+2.2.27 Asignar respuesta correcta (Select correct answer)
+	- Como administrador quiero poder asignar la respuesta correcta a una pregunta determinada
+
+2.2.28 Modificar el tiempo de respuesta (Modify answers time out) 
+	- Como administrador quiero poder modificar el tiempo de respuesta que cada usuario tiene
+
+2.2.29 Seleccionar numero de respuestas (Select number's answers)
+	- Como administrador quiero poder modificar la cantidad de respuestas que aparecerán en cada pregunta

@@ -11,7 +11,9 @@
   <properties>
     <activejdbc.version>1.4.13.j7</activejdbc.version>
     <environments>development.test,development</environments>
-    <project.basedir>/Users/franco/unrc/Materias/Disenio/2017/trivia-app</project.basedir>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <project.basedir>/Users/gabriel/Escritorio/analisis2017</project.basedir>
   </properties>
 
   <build>
@@ -105,6 +107,24 @@
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
       <version>5.1.6</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sparkjava</groupId>
+      <artifactId>spark-core</artifactId>
+      <version>2.6.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>1.7.21</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sparkjava</groupId>
+      <artifactId>spark-template-mustache</artifactId>
+      <version>2.5.5</version>
     </dependency>
   </dependencies>
 
