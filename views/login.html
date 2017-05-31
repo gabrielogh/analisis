@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+<body bgcolor='#CEECF5'>
+  <h1>Bienvenido al sistema de registro de usuarios</h1>
+  <form action="/login" method="post">                           
+    <label for="username">Usuario:</label>
+    <input type="text" name="username" />                        
+    <label for="password">Password:</label>
+    <input type="password" name="password" />                    
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}" /> 
+    <button type="submit" class="btn btn-primary">Enviar</button>
+  </form>
+</body>
+</html>

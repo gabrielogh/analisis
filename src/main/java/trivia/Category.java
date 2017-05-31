@@ -1,24 +1,31 @@
 package trivia;
+import java.util.Random;
+import java.util.List;
 import org.javalite.activejdbc.Model;
-import org.javalite.activejdbc.Base;
-import java.util.Scanner; 
 
 
-public class Category extends Model {
+public class Category extends Model{
   static{
-    validatePresenceOf("username").message("Por favor, ingrese un usuario");
-    validatePresenceOf("password").message("Por favor, ingrese una contraseña");
+    validatePresenceOf("name").message("Por favor, ingrese un nombre de Categoria.");
+  }
+ 	public Category(){
+
+ 	}
+	public Category(String name){
+  	set("name",name);
   }
 
-	public static void selectCategory(){
-		Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "root");
-		Scanner sc = new Scanner(System.in);	
-		User u = new User();
-		int pas,pas2;
-		System.out.print("\033[H\033[2J");
-		System.out.flush();
-		Base.close();
-	}
+  public Category randomCat(){
+  	List<Category> list = findAll(); 
+  	Random r = new Random();
+  	return list.get(r.nextInt(list.size()));
+  }
 
-
+  public Question getQuestion(){
+  	List<Question> questions = this.getAll(Question.class);
+    System.out.println(questions.size());
+    Random r = new Random();
+    Integer i = r.nextInt(questions.size());
+    return questions.get(i);
+  }
 }

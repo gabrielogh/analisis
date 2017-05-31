@@ -1,41 +1,48 @@
 package trivia;
 import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.Base;
-import java.util.Scanner; 
-
+import java.util.List;
+import java.util.Scanner;
 
 public class User extends Model {
   static{
     validatePresenceOf("username").message("Por favor, ingrese un usuario");
     validatePresenceOf("password").message("Por favor, ingrese una contraseña");
   }
+  //Constructor
+  public User(){
 
-  //Metodo de registro de usuarios.
-	public static void createUser(){
-		Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "root");
-		Scanner sc = new Scanner(System.in);	
-		User u = new User();
-		int pas,pas2;
-		System.out.print("\033[H\033[2J");
-		System.out.flush();
-		System.out.println("Ingrese un nombre de usuario: ");
-		String nombre = sc.nextLine(); 
-		u.set("username", nombre);
-			do{
-				System.out.println("Ingrese una contraseña: ");
-				pas = sc.nextInt();
-				System.out.println("Vuelva a ingresar su contraseña: ");
-				pas2 = sc.nextInt();
-				if(pas != pas2){
-					System.out.println("Error: Las contraseñas no coinciden, vuelva a intentarlo");
-				}
-			    
-			}
-			while (pas != pas2);
-			u.set("password", pas);
-			u.saveIt();
-			Base.close();
-	}
+  }
+  //Metodo que registra un usuario
+  public User(String user, String mail, String pass){
+    validatePresenceOf("username").message("Por favor, ingrese un usuario");
+    validatePresenceOf("password").message("Por favor, ingrese una contraseña");
+    set("username", user);
+    set("mail", mail);
+    set("password", pass);
+    set("score",0);
+    set("c_questions",0);
+    set("i_questions",0);
+  }
+  public Game createGameForUser(){
+    return new Game((Long)this.get("id"));
+  }
+  /*
+  public List<Game> getGame(){
+    return this.getAll(Game.class);
+  }*/
 
+  //Metodo que utiliza un usuario para responder una pregunta.
+  public boolean answerQuestion(Question q){
+    q.showQuestion();
+    
+    if (q.validateA(4)){
+      this.set("c_questions", (Integer) this.get("c_questions")+1).saveIt();
+      this.set("score",(Integer) this.get("score")+1).saveIt();
+      return true;
+    }
+    this.set("i_questions", (Integer) this.get("i_questions")+1).saveIt();
+    return false;
+  }
 
 }
