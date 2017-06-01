@@ -19,22 +19,26 @@ import spark.template.mustache.MustacheTemplateEngine;
 public class App{
     public static void main( String[] args ){
 		Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
-  
+    //Mensaje de Bienvenida
     Map map = new HashMap();
     map.put("title", "Bienvenido a Preguntado$");
     map.put("register", "Sistema de registro de usuarios.");
 
+    //Pagina principal.
+    get("/index", (req, res) -> {
+      return new ModelAndView(map,"./views/index.html");
+    }, new MustacheTemplateEngine()
+    );
+
+    //Pagina de registro de usuarios.
     get("/login", (req, res) -> {
       return new ModelAndView(map, "./views/login.html");
     }, new MustacheTemplateEngine()
     );
 
- 		get("/index", (req, res) -> {
-      return new ModelAndView(map,"./views/index.html");
-    }, new MustacheTemplateEngine()
-    );
 
- 		//Creamos una categoria, una pregunta y sus respuesta a modo de poder testear le game.
+
+ 	//Creamos una categoria, una pregunta y sus respuesta a modo de poder testear le game.
     Category c = new Category("Historia");
     c.saveIt();
     Question q = new Question("Quien es el actual presidente de Argentina?", "Macri", "Menem", "Cristina", "Marcelo Tinelli", 1);
@@ -60,32 +64,39 @@ public class App{
     );
 
 
-		// Método para tratar los posts de /users (Creación de usuarios)
-		post("/login2", (req, res) -> {
-			Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
-			// Se cargan los parámetros de la query (URL)
-			String name = req.queryParams("username");
-			String email = req.queryParams("email");
-			String pass = req.queryParams("password");
-			String body = req.body();
-			System.out.println(name);
-			System.out.println(pass);
-			System.out.println(email);
-			User u = new User(name,email, pass);
-   		u.saveIt();
-   		Base.close();
-   		return u;
-			});
-		/*
+	// Método para tratar los posts de /users (Creación de usuarios)
+	post("/login2", (req, res) -> {
+	Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
+    
+	// Se cargan los parámetros de la query (URL) en un arreglo
+    String[] result = {req.queryParams("username"),req.queryParams("username"),req.queryParams("email"),req.queryParams("password")};
+	String body = req.body();
+	User u = new User(result[0],result[1], result[2]);
+	u.saveIt();
+    Category cat = (new Category()).randomCat();
+    Question que = cat.getQuestion();
+    String[] resQ = {(String)que.get("description"),(String)que.get("a1"),(String)que.get("a2"),(String)que.get("a3"),(String)que.get("a4")};
+    Map questt = new HashMap();
+    questt.put("usernamee", result[0]);
+    questt.put("desc", resQ[0]);
+    questt.put("a1", resQ[1]);
+    questt.put("a2", resQ[2]);
+    questt.put("a3", resQ[3]);
+    questt.put("a4", resQ[4]);
+	Base.close();
+    return new ModelAndView(questt, "./views/test.mustache");
+	}, new MustacheTemplateEngine());
+		
+
+    /*
     User u = new User("Gabriel","gabriel.ogh@gmail.com", "12345");
     u.saveIt();
     Game g = new Game((Long)u.getId());
     g.saveIt();
-    g.playGame();*/
-		/*  
+    g.playGame(); 
     //game.play();
-		*/
- 		Base.close();
+	*/
+	Base.close();
 
-		}
+    }
 }
