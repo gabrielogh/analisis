@@ -6,7 +6,6 @@ import java.util.Scanner;
 import trivia.Question;
 import trivia.Game;
 import trivia.Category;
-import org.javalite.activejdbc.Base;
 //----------------------------------
 import java.util.List;
 import java.util.HashMap;
@@ -16,21 +15,26 @@ import static spark.Spark.*;
 import spark.ModelAndView;
 import spark.template.mustache.MustacheTemplateEngine;
 //---------------------------------
+
 public class App{
     public static void main( String[] args ){
 		Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
   
     Map map = new HashMap();
-    map.put("name", "Gabriel");
-    map.put("server", "Bienvenido a Preguntado$");
+    map.put("title", "Bienvenido a Preguntado$");
+    map.put("register", "Sistema de registro de usuarios.");
 
-
-
-    get("/index", (req, res) -> {
+    get("/login", (req, res) -> {
       return new ModelAndView(map, "./views/login.html");
     }, new MustacheTemplateEngine()
     );
 
+ 		get("/index", (req, res) -> {
+      return new ModelAndView(map,"./views/index.html");
+    }, new MustacheTemplateEngine()
+    );
+
+ 		//Creamos una categoria, una pregunta y sus respuesta a modo de poder testear le game.
     Category c = new Category("Historia");
     c.saveIt();
     Question q = new Question("Quien es el actual presidente de Argentina?", "Macri", "Menem", "Cristina", "Marcelo Tinelli", 1);
@@ -48,50 +52,39 @@ public class App{
     quest.put("a3", an3);
     quest.put("a4", an4);
 
+
+    //Modulo que entrega una pregunta y obtiene una respuesta.
     get("/question", (req, res) -> {
       return new ModelAndView(quest, "./views/test.mustache");
     }, new MustacheTemplateEngine()
     );
 
 
+		// Método para tratar los posts de /users (Creación de usuarios)
+		post("/login2", (req, res) -> {
+			Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
+			// Se cargan los parámetros de la query (URL)
+			String name = req.queryParams("username");
+			String email = req.queryParams("email");
+			String pass = req.queryParams("password");
+			String body = req.body();
+			System.out.println(name);
+			System.out.println(pass);
+			System.out.println(email);
+			User u = new User(name,email, pass);
+   		u.saveIt();
+   		Base.close();
+   		return u;
+			});
+		/*
     User u = new User("Gabriel","gabriel.ogh@gmail.com", "12345");
     u.saveIt();
     Game g = new Game((Long)u.getId());
     g.saveIt();
-    g.playGame();
+    g.playGame();*/
 		/*  
-		Category c = new Category();
- 		Question q = new Question();
- 		Answer a = new Answer();
- 		Answer b = new Answer();
- 		Game g = new Game();
- 		User u = new User();
-
-
- 		c.set("name", "Historia");
- 		c.saveIt();
- 		
- 		q.set("id_category", c.getId());
- 		q.set("name", "Hola");
- 		q.saveIt();
-
- 		a.set("description", "Respuesta correcta");
- 		a.set("state", true);
- 		a.set("question_id", q.getId());
-
- 		b.set("description", "Respuesta incorrecta");
- 		b.set("state", false);
- 		b.set("question_id", q.getId());
-
- 		u.set("username", "yo");
- 		u.set("password", 123);
- 		u.saveIt();
-
- 		g.u.getId());
- 		g.saveIt();
-    */
     //game.play();
-
+		*/
  		Base.close();
 
 		}

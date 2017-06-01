@@ -1,14 +1,27 @@
 <!doctype html>
 <html lang="en">
+<head>
+  <title>
+    {{title}}
+  </title>
+</head>
 <body bgcolor='#CEECF5'>
-  <h1>Bienvenido al sistema de registro de usuarios</h1>
-  <form action="/login" method="post">                           
-    <label for="username">Usuario:</label>
-    <input type="text" name="username" />                        
-    <label for="password">Password:</label>
-    <input type="password" name="password" />                    
+  <h1>{{register}}</h1>
+  <form action="/login2" method="post">
+		<p>                          
+    <label for="username">Usuario:<span class=”required”>*</span></label><p>
+    <input type="text" name="username" />
+		</p>
+		<p>                       
+    <label for="password">Password:<span class=”required”>*</span></label><p>
+    <input type="password" name="password" />
+		</p>
+		<p> 
+			<label for="email">Dirección de correo: <span class="required">*</span></label><br>
+			<input type="email" id="email" name="email" placeholder="sucorreo@ejemplo.com" required />
+		</p>
     <input type="hidden" name="_csrf" value="{{_csrf.token}}" /> 
-    <button type="submit" class="btn btn-primary">Enviar</button>
+    <button type="submit" class="btn btn-primary">Registrar</button>
   </form>
 </body>
 </html>
