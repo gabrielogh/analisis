@@ -3,7 +3,7 @@ import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.Base;
 import java.util.List;
 import java.util.Scanner;
-
+import java.security.MessageDigest;
 public class User extends Model {
   static{
     validatePresenceOf("username").message("Por favor, ingrese un usuario");
@@ -27,6 +27,7 @@ public class User extends Model {
   public Game createGameForUser(){
     return new Game((Long)this.get("id"));
   }
+
   /*
   public List<Game> getGame(){
     return this.getAll(Game.class);
@@ -38,7 +39,7 @@ public class User extends Model {
     
     if (q.validateA(4)){
       this.set("c_questions", (Integer) this.get("c_questions")+1).saveIt();
-      this.set("score",(Integer) this.get("score")+1).saveIt();
+      //this.set("score",(Integer) this.get("score")+1).saveIt();
       return true;
     }
     this.set("i_questions", (Integer) this.get("i_questions")+1).saveIt();

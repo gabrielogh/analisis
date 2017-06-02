@@ -13,11 +13,10 @@ public class Question extends Model {
   /**
   *Constructo de la clase Question
   **/
-  public Question(){}
-  /**
-  *Constructor de la clase Question
-  *@Param description descripcion pregunta, ans1,ans2,ans2,ans4 respuestas a la pregunta
-  **/
+  public Question(){
+
+  }
+  
   public Question(String description,String ans1, String ans2, String ans3, String ans4, int correct){
 		validatePresenceOf("description").message("Error: Debe cargar la pregunta");	
 		validatePresenceOf("a1").message("Por favor, debe cargar 4 respuestas");
