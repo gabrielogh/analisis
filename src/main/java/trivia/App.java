@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 //--------------------------------
 import static spark.Spark.*;
+import static spark.Spark.staticFileLocation;
 import spark.ModelAndView;
 import spark.template.mustache.MustacheTemplateEngine;
 //---------------------------------
@@ -18,7 +19,7 @@ import spark.template.mustache.MustacheTemplateEngine;
 public class App{
   public static void main( String[] args ){
 		Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
-
+    staticFiles.location("/public");
  	  //Creamos una categoria, una pregunta y sus respuesta a modo de poder testear le game.
     Category c = new Category("Historia");
     c.saveIt();
@@ -41,7 +42,7 @@ public class App{
 
     //Pagina principal.
     get("/index", (req, res) -> {
-      //staticFileLocation("./views/css.css");
+
       return new ModelAndView(map,"./views/index.html");
     }, new MustacheTemplateEngine()
     );

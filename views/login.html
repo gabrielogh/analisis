@@ -10,16 +10,16 @@
   <h1>{{register}}</h1>
   <form action="/login2" method="post">
 		<p>                          
-    <label for="username">Usuario:<span class=”required”>*</span></label><p>
+    <label for="username"><span class=”required”>*</span>Usuario:</label><p>
     <input type="text" name="username" />
 		</p>
 		<p>                       
-    <label for="password">Password:<span class=”required”>*</span></label><p>
+    <label for="password"><span class=”required”>*</span>Password:</label><p>
     <input type="password" name="password" />
 		</p>
 		<p> 
-			<label for="email">Dirección de correo: <span class="required">*</span></label><br>
-			<input type="email" id="email" name="email" placeholder="sucorreo@ejemplo.com" required />
+			<label for="email"><span class="required">*</span>Dirección de correo:</label><br>
+			<input type="email" id="email" name="email" placeholder="su_correo@ejemplo.com" required />
 		</p>
     <input type="hidden" name="_csrf" value="{{_csrf.token}}" /> 
     <button type="submit" class="btn btn-primary">Registrar</button>

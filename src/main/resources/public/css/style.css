@@ -1,0 +1,51 @@
+body {
+    background-color: #BDBDBD;
+}
+.menu, .menu ul {
+list-style: none;
+padding: 0;
+margin: 0;
+}
+.menu {
+background: -moz-linear-gradient(#292929, #252525);
+background: -ms-linear-gradient(#292929, #252525);
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #292929), color-stop(100%, #252525));
+background: -webkit-linear-gradient(#292929, #252525);
+background: -o-linear-gradient(#292929, #252525);
+height: 58px;
+width: 100%;
+}
+.menu li {
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#292929', endColorstr='#252525');
+-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#292929', endColorstr='#252525')";
+background: linear-gradient(#292929, #252525);
+min-width: 160px;
+}
+.menu > li {
+padding: 0;
+margin: 0;
+display: block;
+float: left;
+position: relative;
+}
+.menu > li:first-child {
+border-radius: 5px 0 0;
+}
+a:hover { 
+	background: -moz-linear-gradient(#292929, #514D4D);
+	background: -ms-linear-gradient(#292929, #514D4D);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #292929), color-stop(100%, #514D4D));
+	background: -webkit-linear-gradient(#292929, #514D4D);
+	background: -o-linear-gradient(#292929, #514D4D);
+}
+.menu a {
+border-left: 3px solid rgba(0, 0, 0, 0);
+color: #808080;
+display: block;
+font-family: 'Lucida Console';
+font-size: 18px;
+line-height: 58px;
+padding: 0 25px;
+text-decoration: none;
+text-transform: uppercase;
+}
