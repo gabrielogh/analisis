@@ -1,28 +1,24 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <title>
-    {{title}}
-  </title>
-</head>
-<body bgcolor='#CEECF5'>
-
-  <h1>{{register}}</h1>
-  <form action="/login2" method="post">
-		<p>                          
-    <label for="username"><span class=”required”>*</span>Usuario:</label><p>
-    <input type="text" name="username" />
-		</p>
-		<p>                       
-    <label for="password"><span class=”required”>*</span>Password:</label><p>
-    <input type="password" name="password" />
-		</p>
-		<p> 
-			<label for="email"><span class="required">*</span>Dirección de correo:</label><br>
-			<input type="email" id="email" name="email" placeholder="su_correo@ejemplo.com" required />
-		</p>
-    <input type="hidden" name="_csrf" value="{{_csrf.token}}" /> 
-    <button type="submit" class="btn btn-primary">Registrar</button>
-  </form>
-</body>
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel='stylesheet' href='/css/style.css'>
+		<link rel='stylesheet' href='/css/login.css'>
+	</head>
+	<body>
+		<ul class="menu">
+			<li><a href="/index">Inicio</a></li>
+			<li><a href="/login">Sig In</a></li>
+			<li><a href="">Log In</a></li>
+			</li>
+		</ul>
+		<p class="texto">Registro</p>
+		<div class="Registro">
+			<form method="post" action="">
+				<input type="text" required placeholder="Nombre de usuario" autocomplete="off"> 
+				<input type="text" id="email" required placeholder="Correo" autocomplete="off">
+				<input type="password" name="password" id="password" required placeholder="Contraseña" autocomplete="off"> 
+				<input type="submit" value="Registrar" title="Registra tu cuenta">
+			</form>
+		</div>
+	</body>
 </html>
