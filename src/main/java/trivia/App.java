@@ -1,6 +1,7 @@
 package trivia;
 //--------------------------------
 import org.javalite.activejdbc.Base;
+import org.javalite.activejdbc.validation.UniquenessValidator;
 import trivia.User;
 import trivia.Question;
 import trivia.Game;
@@ -17,13 +18,17 @@ import spark.template.mustache.MustacheTemplateEngine;
 //---------------------------------
 
 public class App{
+	private static final String SESSION_NAME = "username";
   public static void main( String[] args ){
 		Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
+
+		
     staticFiles.location("/public");
+
  	  //Creamos una categoria, una pregunta y sus respuesta a modo de poder testear le game.
     Category c = new Category("Historia");
     c.saveIt();
-    Question q = new Question("Quien es el actual presidente de Argentina?", "Macri", "Menem", "Cristina", "Marcelo Tinelli", 1);
+    Question q = new Question("Quien fue el anterior presidente de Argentina?", "Macri", "Menem", "Cristina", "Marcelo Tinelli", 3);
     q.set("category_id", c.get("id"));
     q.saveIt();
     String[] catResult = {(String)q.get("description"), (String)q.get("a1"), (String)q.get("a2"), (String)q.get("a3"), (String)q.get("a4")};
@@ -37,6 +42,7 @@ public class App{
 
     //Mensaje de Bienvenida
     Map map = new HashMap();
+    map.put("logo", "Preguntado$");
     map.put("title", "Bienvenido a Preguntado$");
     map.put("register", "Sistema de registro de usuarios.");
 
@@ -47,9 +53,15 @@ public class App{
     }, new MustacheTemplateEngine()
     );
 
-    //Pagina de registro de usuarios.
+    //Pagina de log de usuarios.
     get("/login", (req, res) -> {
       return new ModelAndView(map, "./views/login.html");
+    }, new MustacheTemplateEngine()
+    );
+
+    //Pagina de registro de usuarios.
+    get("/registrar", (req, res) -> {
+      return new ModelAndView(map, "./views/registrar.html");
     }, new MustacheTemplateEngine()
     );
 
@@ -59,11 +71,26 @@ public class App{
     }, new MustacheTemplateEngine()
     );
 
+    post("/logger", (req,res) -> {
+    	Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
+    	req.session(true); 
+    	String namee = req.session().attribute(SESSION_NAME);
+    	String password = req.queryParams("password");
+      System.out.println(namee);
+    	//if((name!=null) && (password != null)){
+    		Map resLogin = new HashMap();
+    		resLogin.put("username",namee);
+    		
+    	//}
+    	Base.close();
+    	return new ModelAndView(resLogin,"./views/index.html");   	
+    }, new MustacheTemplateEngine()
+    );
 
   	// Método para tratar los posts de /users (Creación de usuarios).
-  	post("/login2", (req, res) -> {
+  	post("/registering", (req, res) -> {
   	Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
-      
+       
   	// Se cargan los parámetros de la query (URL) en un arreglo
     String[] result = {req.queryParams("username"),req.queryParams("email"),req.queryParams("password")};
   	String body = req.body();

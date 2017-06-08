@@ -4,7 +4,7 @@
 @import url(https://meyerweb.com/eric/tools/css/reset/reset.css);
 
 body {
-  background-color: #BDBDBD;
+  background-color: #FFFFFF;
   text-align: center;
 	font-family: Arial, sans-serif;
 	font-size: 14px;
@@ -46,9 +46,9 @@ input {
 
 .Registro input[type="text"] {
 	background-color: #fff;
-	border-top: 2px solid #2c90c6;
-	border-right: 1px solid #000;
-	border-left: 1px solid #000;
+	border-top: 2px solid #292929;
+	border-right: 2px solid #292929;
+	border-left: 2px solid #292929;
 	border-radius: 5px 5px 0 0;
 	-moz-border-radius: 5px 5px 0 0;
 	-webkit-border-radius: 5px 5px 0 0;
@@ -61,10 +61,10 @@ input {
 
 .Registro input[type="password"] {
 	background-color: #fff;
-	border-top: 2px solid #2c90c6;
-	border-right: 1px solid #000;
-	border-bottom: 2px solid #2c90c6;
-	border-left: 1px solid #000;
+	border-top: 2px solid #292929;
+	border-right: 2px solid #292929;
+	border-bottom: 2px solid #292929;
+	border-left: 2px solid #292929;
 	border-radius: 0 0 5px 5px;
 	-moz-border-radius: 0 0 5px 5px;
 	-webkit-border-radius: 0 0 5px 5px;

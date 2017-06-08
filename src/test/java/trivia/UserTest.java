@@ -23,7 +23,7 @@ public class UserTest{
         Base.rollbackTransaction();
         Base.close();
     }
-/*
+
      @Test
      public void validateUniquenessOfUsernames(){
          User user = new User();
@@ -32,21 +32,19 @@ public class UserTest{
          user.saveIt();
 
          User user2 = new User();
-         user2.set("username", "anakin");
+         user2.set("username", "anakin2");
 
          assertEquals(user2.isValid(), false);
      }
-     */
-
-
+     
 
    @Test
-    public void validateUniquenessOfUsernames(){
+    public void validateExistenceOfUsername(){
         User user = new User();
         user.set("username", "");
         user.set("password", "1234");
 
         assertEquals(user.isValid(), false);
-
     }
+
 }
