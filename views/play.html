@@ -1,11 +1,30 @@
-<p>Bienvenido <b>{{usernamee}}</b> a Preguntado$, ya puedes jugar> </p>
-<p>La pregunta es:  <b>{{desc}}</b>
-<p>Opcion 1:  {{a1}}</p>
-<p>Opcion 2:  {{a2}}</p>
-<p>Opcion 3:  {{a3}}</p>
-<p>Opcion 4:  {{a4}}</p>
-<form action="/answer" method="post">                           
-  <label for="answer">Numero de respuesta:</label>
-  <input type="text" name="answer" />                                          
-  <button type="submit" class="btn btn-primary">Enviar</button>
-</form>
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel='stylesheet' href='/css/style.css'>
+		<link rel='stylesheet' href='/css/login.css'>
+	</head>
+	<body>
+		<ul class="menu">
+			<li><a href="/index">Inicio</a></li>
+			<li><a href="/registrar">Registrarme</a></li>
+			<li><a href="/login">Ingresar</a></li>
+			</li>
+		</ul>
+		<h2>Bienvenido <b>{{usernamee}}</b> a Preguntado$, ya puedes jugar> </h2>
+		<h1>Categoria: <b>{{categ}}</b></h1>
+		<h1>La pregunta es:  <b>{{desc}}</b></h1>
+		<ul class="pregunta">
+			<li>Opcion 1:  {{a1}}</li>
+			<li>Opcion 2:  {{a2}}</li>
+			<li>Opcion 3:  {{a3}}</li>
+			<li>Opcion 4:  {{a4}}</li>
+			</li>
+		</ul>
+		<form action="/answer" method="post">
+		  <label for="answer">Numero de respuesta:</label>
+		  <input type="text" name="answer" />
+		  <button type="submit" class="btn btn-primary">Enviar</button>
+		</form>
+	</body>
+</html>
