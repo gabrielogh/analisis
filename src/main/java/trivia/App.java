@@ -18,8 +18,10 @@ import spark.template.mustache.MustacheTemplateEngine;
 //---------------------------------
 
 public class App{
-	private static final String SESSION_NAME = "username";
-  public static void main( String[] args ){
+  private static final String SESSION_NAME = "username";
+  public static void main( String[] args ){ 
+
+
 		Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
 
 		
@@ -44,7 +46,6 @@ public class App{
     Map map = new HashMap();
     map.put("logo", "Preguntado$");
     map.put("title", "Bienvenido a Preguntado$");
-    map.put("register", "Sistema de registro de usuarios.");
 
     //Pagina principal.
     get("/index", (req, res) -> {
@@ -66,22 +67,26 @@ public class App{
     );
 
     //Modulo que entrega una pregunta y obtiene una respuesta.
-    get("/question", (req, res) -> {
-      return new ModelAndView(quest, "./views/test.mustache");
+    get("/play", (req, res) -> {
+      Map res_play = new HashMap();
+      res_play.put("username",req.queryParams("username"));
+      return new ModelAndView(res_play, "./views/play.html");
     }, new MustacheTemplateEngine()
     );
 
     post("/logger", (req,res) -> {
     	Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
-    	req.session(true); 
-    	String namee = req.session().attribute(SESSION_NAME);
+    	req.session(true);
     	String password = req.queryParams("password");
+      String namee = req.queryParams("username");
       System.out.println(namee);
-    	//if((name!=null) && (password != null)){
-    		Map resLogin = new HashMap();
+      req.session().attribute("username", namee);
+      req.session().attribute("password", password);
+      Map resLogin = new HashMap();
+    	if((namee!=null) && (password != null)){
     		resLogin.put("username",namee);
-    		
-    	//}
+    		resLogin.put("play", "Jugar");
+    	}
     	Base.close();
     	return new ModelAndView(resLogin,"./views/index.html");   	
     }, new MustacheTemplateEngine()
@@ -106,8 +111,12 @@ public class App{
     questt.put("a2", resQ[2]);
     questt.put("a3", resQ[3]);
     questt.put("a4", resQ[4]);
+    questt.put("play", "play");
+    questt.put("Usuario", "Usuario");
+    questt.put("id", u.getId());
+
   	Base.close();
-    return new ModelAndView(questt, "./views/test.mustache");
+    return new ModelAndView(questt, "./views/index.html");
   	}, new MustacheTemplateEngine());
 		
 
