@@ -18,7 +18,6 @@ import spark.template.mustache.MustacheTemplateEngine;
 //---------------------------------
 
 public class App{
-  private static final String SESSION_NAME = "username";
   public static void main( String[] args ){ 
 
 
@@ -70,41 +69,87 @@ public class App{
     map.put("logo", "Preguntado$");
     map.put("title", "Bienvenido a Preguntado$");
 
+    //Iicio de metodos GET
+    //----------------------------------------------------------------------------------------------------------
     //Pagina principal.
     get("/index", (req, res) -> {
-    	map.put("username", req.queryParams("username"));
+    		map.put("username", req.queryParams("username"));
+    	if(req.session().attribute("username")!=null){
+    		map.put("userId", (Integer)req.session().attribute("userId"));
+    		map.put("play", "jugar");
+    		map.put("logout","Salir");
+    	}
       return new ModelAndView(map,"./views/index.html");
     }, new MustacheTemplateEngine()
     );
-
+    //----------------------------------------------------------------------------------------------------------
     //Pagina de log de usuarios.
     get("/login", (req, res) -> {
+    	if(req.session().attribute("username")!=null){
+    		map.put("id", req.session().attribute("userId"));
+    		map.put("play", "jugar");
+    		map.put("logout","Salir");
+    	}
       return new ModelAndView(map, "./views/login.html");
     }, new MustacheTemplateEngine()
     );
-
+    //----------------------------------------------------------------------------------------------------------
     //Pagina de registro de usuarios.
     get("/registrar", (req, res) -> {
+    	if(req.session().attribute("username")!=null){
+    		map.put("play", "jugar");
+    		map.put("logout","Salir");
+    	}
       return new ModelAndView(map, "./views/registrar.html");
     }, new MustacheTemplateEngine()
     );
+    //----------------------------------------------------------------------------------------------------------
+    //Rankign de usuarios.
+    get("/ranking", (req, res) -> {
+    	if(req.session().attribute("username")!=null){
+    		map.put("id", req.session().attribute("userId"));
+    		map.put("play", "jugar");
+    		map.put("logout","Salir");
+    	}
+      return new ModelAndView(map, "./views/ranking.html");
+    }, new MustacheTemplateEngine()
+    );
+    //----------------------------------------------------------------------------------------------------------
+    //Desconectarse.
+    get("/logout", (req, res) -> {
+    	if(req.session().attribute("username")!=null){
+	 			req.session(false);
+    	}
+      return new ModelAndView(map, "./views/ranking.html");
+    }, new MustacheTemplateEngine()
+    );
 
-
-
+    //----------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------
+    //Inicio de sesiones.
     post("/logger", (req,res) -> {
+    	Map resLogin = new HashMap();
+    	//Si ya estmos conectados, no podemos conectarnos nuevamente.
+    	if(req.session().attribute("username")!=null){
+    		resLogin.put("id", (Integer)req.session().attribute("userId"));
+    		resLogin.put("play", "jugar");
+    		resLogin.put("error","Ya estas conectado como: "+ req.session().attribute("username"));
+	    	return new ModelAndView(resLogin,"./views/login.html");
+    	}
+
     	Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
-    	req.session(true);
     	String password = req.queryParams("password");
       String namee = req.queryParams("username");
-      //Verificamos si existe algun usuario con ese username y esa pass.
+    	req.session(true);
+
+	    //Verificamos si existe algun usuario con ese username y esa pass.
 	    List<User> unico = User.where("username = ? and password = ?", namee,password);
 	    Boolean result2 = unico.size()==0;
-			Map resLogin = new HashMap();
+			
 			if(!result2){
 	      req.session().attribute("username", namee);
 	      req.session().attribute("password", password);
-    		resLogin.put("username",namee);
-        resLogin.put("id",(unico.get(0)).get("id"));
+	      req.session().attribute("userId",(Integer)unico.get(0).get("id"));
     		resLogin.put("play", "Jugar");
     		Base.close();
 	    }
@@ -117,15 +162,16 @@ public class App{
     	return new ModelAndView(resLogin,"./views/index.html");   	
     }, new MustacheTemplateEngine()
     );
+    //----------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------
     //Modulo que entrega una pregunta y obtiene una respuesta.
     get("/play", (req, res) -> {
     	Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
       Map res_play = new HashMap();
 
       //Obtenemos el Usuario actual
-      List<User> user_now = User.where("id = ?", req.queryParams("id"));
+      List<User> user_now = User.where("id = ?", (Integer)req.session().attribute("userId"));
       User u = user_now.get(0);
-      res_play.put("username",u.get("username"));
       System.out.println("ID DEL USER: " + (Integer)u.get("id"));
       //Obtenemos el primer juego comenzado (si no tiene juegos iniciados creamos uno nuevo)
       Game game_now = u.getGameInProgress();
@@ -135,7 +181,6 @@ public class App{
     	String[] resQ = {(String)que.get("description"),(String)que.get("a1"),(String)que.get("a2"),(String)que.get("a3"),(String)que.get("a4")};
     	Integer correct = (Integer)que.get("correct_a");
     	//System.out.println("ID DEL JUEGO: " + (Integer)game_now.get("id"));
-	    res_play.put("id", u.get("id"));
 	    res_play.put("categ", (String)cat.get("name"));
 	    res_play.put("game_id", game_now.get("id"));
 	    res_play.put("desc", resQ[0]);
@@ -151,25 +196,24 @@ public class App{
       return new ModelAndView(res_play, "./views/play.html");
     }, new MustacheTemplateEngine()
     );
-
+    //----------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------
     //Metodo para responder una pregunta
     post("/answer", (req,res) -> {
     	Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
-      String userid = req.queryParams("id");
+
       //System.out.println("ID DEL JUEGO POST: " + (Integer)req.queryParams("gameId"));
       List<Game> games = Game.where("id = ?", req.queryParams("gameId"));
       Game game_now = games.get(0);
-	    List<User> users = User.where("id = ?", userid);
+	    List<User> users = User.where("id = ?", (Integer)req.session().attribute("userId"));
 	    User user_now = users.get(0);
 	    List<Question> question = Question.where("id = ?", req.queryParams("qId"));
 	    Question question_now = question.get(0);
 
 			Map resAnswer = new HashMap();
-    	resAnswer.put("username",user_now.get("username"));
-      resAnswer.put("id", user_now.get("id"));
 
 			game_now.set("question_number", (Integer)game_now.get("question_number")+1).saveIt();
-			Integer answer = Integer.valueOf((String)req.queryParams("answer"));
+			Integer answer = Integer.valueOf(req.queryParams("answer"));
 
 			if((Integer)game_now.get("question_number")==5){
 				game_now.set("in_progress", false).saveIt();
@@ -178,11 +222,9 @@ public class App{
 
       System.out.println("RESPUESTA CORRECTA: " + (Integer)question_now.get("correct_a"));
       System.out.println("RESPUESTA ACTUAL: " + answer);
-      Integer correctt = (Integer)question_now.get("correct_a");
-      Boolean res2= (correctt == answer);
-      System.out.println("RESULTADO: "+ res2);
+      System.out.println("RESULTADO: "+ question_now.validateA(answer));
 
-			if(correctt == answer){
+			if(question_now.validateA(answer)){
 				user_now.set("c_questions", (Integer)user_now.get("c_questions")+1).saveIt();
         game_now.set("corrects", (Integer)game_now.get("corrects")+1).saveIt();
 	    }
@@ -191,19 +233,27 @@ public class App{
         game_now.set("incorrects", (Integer)game_now.get("incorrects")+1).saveIt();
 	    }
  			Base.close();
- 			String link = "play?id=" + user_now.get("id");
+ 			String link = "play?id=" + req.session().attribute("userId");
   		res.redirect(link);
   		return null;	
     });
-
+    //----------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------
   	// Método para tratar los posts de /users (Creación de usuarios).
   	post("/registering", (req, res) -> {
   	Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
        
   	// Se cargan los parámetros de la query (URL) en un arreglo
-    String[] result = {req.queryParams("username"),req.queryParams("email"),req.queryParams("password")};
+    String[] result = {req.queryParams("username"),req.queryParams("email"),(String)req.queryParams("password"),(String)req.queryParams("password2")};
   	String body = req.body();
   	Map questt = new HashMap();
+    System.out.println("Password 1: " + result[2]);
+    System.out.println("Password 2: " + result[3]);
+
+    if(result[2] != result[3]){
+      questt.put("error","Las contraseñas no coincide, vuelva a intentarlo");
+      return new ModelAndView(questt,"./views/registrar.html");
+    }
     List<User> unico = User.where("username = ? or mail = ? ", result[0], result[1]);
     Boolean result2 = unico.size()==0;
   	if(result2){
@@ -217,6 +267,7 @@ public class App{
     	questt.put("error","Ese usuario o e-mail ya existe, intente con otro");
     	return new ModelAndView(questt,"./views/registrar.html");
     }
+
   	
     return new ModelAndView(questt, "./views/play.html");
   	}, new MustacheTemplateEngine());

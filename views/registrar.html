@@ -2,24 +2,29 @@
 <html>
 	<head>
 		<link rel='stylesheet' href='/css/style.css'>
-		<link rel='stylesheet' href='/css/login.css'>
+		<link rel='stylesheet' href='/css/reg.css'>
 	</head>
 	<body>
 		<ul class="menu">
 			<li><a href="/index">Inicio</a></li>
 			<li><a href="/registrar">Registrarme</a></li>
 			<li><a href="/login">Ingresar</a></li>
+			<li><a href="/play?id={{id}}">{{play}}</a></li>
+			<li><a href="/ranking">Ranking</a></li>
+			<li><a href="/logout">{{logout}}</a></li>
 			</li>
 		</ul>
 		<p class="texto">Registro</p>
 		<div class="Registro">
 			<form method="post" action="/registering">
 				<input type="text1" name="username" required placeholder="Nombre de usuario" autocomplete="off"> 
+				<input type="password" name="password" id="password" required placeholder="Contraseña" autocomplete="off">
+				<input type="password" name="password2" id="password2" required placeholder="Repita la contraseña" autocomplete="off">
 				<input type="text" name="email" id="email" required placeholder="Correo" autocomplete="off">
-				<input type="password" name="password" id="password" required placeholder="Contraseña" autocomplete="off"> 
 				<input type="submit" value="Registrar" title="Registra tu cuenta">
 				<b><font color="red">{{error}}</font></b>
 			</form>
 		</div>
+  <footer>Desarrollado por Melegatti Pablo, Somare Francico y Gabriel Gonzalez - UNRC 2017</footer>
 	</body>
 </html>

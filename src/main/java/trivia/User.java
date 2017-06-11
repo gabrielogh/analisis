@@ -47,16 +47,4 @@ public class User extends Model {
     return g; 
   }
 
-  //Metodo que utiliza un usuario para responder una pregunta.
-  public boolean answerQuestion(Question q){
-    
-    if (q.validateA(4)){
-      this.set("c_questions", (Integer) this.get("c_questions")+1).saveIt();
-      //this.set("score",(Integer) this.get("score")+1).saveIt();
-      return true;
-    }
-    this.set("i_questions", (Integer) this.get("i_questions")+1).saveIt();
-    return false;
-  }
-
 }

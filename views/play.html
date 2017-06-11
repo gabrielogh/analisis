@@ -1,33 +1,46 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel='stylesheet' href='/css/style.css'>
+		<link rel='stylesheet' href='/css/play.css'>
 	</head>
 	<body>
 		<ul class="menu">
 			<li><a href="/index">Inicio</a></li>
 			<li><a href="/registrar">Registrarme</a></li>
 			<li><a href="/login">Ingresar</a></li>
+			<li><a href="/ranking">Ranking</a></li>
+			<li><a href="/logout">{{logout}}</a></li>
 			</li>
 		</ul>
-		<h2>Bienvenido <b>{{username}}</b> a Preguntado$, ya puedes jugar> </h2>
-		<h1>Respuestas correctas: {{corrects}}</h1>
-		<h1>Respuestas incorrectas: {{incorrects}}</h1>
+	  <section>
+			<h2>Bienvenido <b>{{username}}</b> a Preguntado$, ya puedes jugar> </h2>
+			<h1>Respuestas correctas: {{corrects}}</h1>
+			<h1>Respuestas incorrectas: {{incorrects}}</h1>
 
-		<h1>Categoria: <b>{{categ}}</b></h1>
-		<h1>La pregunta es:  <b>{{desc}}</b></h1><br>
-		<ul class="pregunta">
-			<li>Opcion 1:  {{a1}}</li>
-			<li>Opcion 2:  {{a2}}</li>
-			<li>Opcion 3:  {{a3}}</li>
-			<li>Opcion 4:  {{a4}}</li>
-			</li>
-		</ul>
-		<br>
-		<form action="/answer?gameId={{game_id}}&ca={{correct}}&qId={{qid}}&id={{id}}" method="post">
-		  <label for="answer">Numero de respuesta:</label>
-		  <input type="number" name="answer" />
-		  <button type="submit" class="btn btn-primary">Enviar</button>
-		</form>
+			<h1>Categoria: <b>{{categ}}</b></h1>
+			<h1>La pregunta es:  <b>{{desc}}</b></h1><br>
+			<div>
+				<ul class="pregunta">
+					<li>Opcion 1:  {{a1}}</li>
+					<li>Opcion 2:  {{a2}}</li>
+					<li>Opcion 3:  {{a3}}</li>
+					<li>Opcion 4:  {{a4}}</li>
+				</ul>
+			</div>
+			<div class="form">
+				<form action="/answer?gameId={{game_id}}&ca={{correct}}&qId={{qid}}&id={{id}}" method="post">
+				  <label for="answer">Numero de respuesta:</label>
+				  <select name="answer">
+					   <option value="1">1</option> 
+					   <option value="2">2</option> 
+					   <option value="3">3</option>
+					   <option value="4">4</option> 
+					</select>
+				  <button type="submit" class="btn btn-primary">Enviar</button>
+				</form>
+			</div>
+		</section>
+  <footer>Desarrollado por Melegatti Pablo, Somare Francico y Gabriel Gonzalez - UNRC 2017</footer>
+
 	</body>
 </html>

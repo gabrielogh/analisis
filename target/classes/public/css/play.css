@@ -83,6 +83,7 @@ p:hover {
 .pregunta > li {
   padding: 2px;
   height:30px;
+  width:500px;
   margin: 1px auto;
   display: block;
   position: relative;
@@ -93,7 +94,9 @@ p:hover {
   background: -o-linear-gradient(#04B404, #04B404);
   border-radius: 5px 5px 5px 5px;
 }
-
+.fom{
+  position:absolute;
+}
 footer { 
    position:absolute;
    bottom:0;

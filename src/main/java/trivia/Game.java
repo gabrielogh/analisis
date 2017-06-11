@@ -23,28 +23,4 @@ public class Game extends Model{
   public Category getRandomCat(){
   	return (new Category()).randomCat();
   }
-
-  //Metodo que nos permite jugar una partida
-  public void playGame(){
-    User user = this.parent(User.class);
-    if(!(this.get("in_progress").equals(false))){
-      boolean respuesta_correcta = true;
-      while((Integer)this.get("question_number")<5){ 
-        Category c = getRandomCat();
-        Question q = c.getQuestion();
-        respuesta_correcta = user.answerQuestion(q);
-        if(respuesta_correcta){
-          user.set("c_question", (Integer)user.get("c_question")+1);
-        }
-        else{
-          user.set("i_question", (Integer)user.get("i_question")+1);
-        }
-        this.set("question_number",(Integer)this.get("question_number")+1).saveIt();
-      }
-      if((Integer)this.get("question_number")==5){
-        this.set("in_progress",false).saveIt();
-      }
-    }
-
-  }
 }
