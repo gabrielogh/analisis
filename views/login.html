@@ -14,9 +14,10 @@
 		<p class="texto">Ingresar</p>
 		<div class="Registro">
 			<form method="post" action="/logger">
-				<input type="text1" name="username" required placeholder="Nombre de usuario" autocomplete="off"> 
+				<input type="text1" name="username" required placeholder="Nombre de usuario" autocomplete="off">
 				<input type="password" name="password" id="password" required placeholder="Contraseña" autocomplete="off"> 
 				<input type="submit" value="Ingresar" title="ingresar">
+				<b><font color="red">{{error}}</font></b>
 			</form>
 		</div>
 	</body>

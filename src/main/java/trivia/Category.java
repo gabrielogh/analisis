@@ -23,7 +23,6 @@ public class Category extends Model{
 
   public Question getQuestion(){
   	List<Question> questions = this.getAll(Question.class);
-    System.out.println(questions.size());
     Random r = new Random();
     Integer i = r.nextInt(questions.size());
     return questions.get(i);

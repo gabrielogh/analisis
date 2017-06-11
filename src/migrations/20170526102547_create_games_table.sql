@@ -3,6 +3,8 @@ create table games (
   user_id int(11),
   question_number int,
   in_progress boolean,
+  corrects int,
+  incorrects int,
   created_at datetime,
   updated_at datetime,
   primary key (id)

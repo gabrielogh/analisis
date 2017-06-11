@@ -72,7 +72,7 @@ public class App{
 
     //Pagina principal.
     get("/index", (req, res) -> {
-
+    	map.put("username", req.queryParams("username"));
       return new ModelAndView(map,"./views/index.html");
     }, new MustacheTemplateEngine()
     );
@@ -89,13 +89,7 @@ public class App{
     }, new MustacheTemplateEngine()
     );
 
-    //Modulo que entrega una pregunta y obtiene una respuesta.
-    get("/play", (req, res) -> {
-      Map res_play = new HashMap();
-      res_play.put("username",req.queryParams("username"));
-      return new ModelAndView(res_play, "./views/play.html");
-    }, new MustacheTemplateEngine()
-    );
+
 
     post("/logger", (req,res) -> {
     	Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
@@ -110,13 +104,88 @@ public class App{
 	      req.session().attribute("username", namee);
 	      req.session().attribute("password", password);
     		resLogin.put("username",namee);
+        resLogin.put("id",(unico.get(0)).get("id"));
     		resLogin.put("play", "Jugar");
+    		Base.close();
 	    }
 	    else{
-	    	System.out.println("Usuario incorrecto");
+	    	Base.close();
+	    	resLogin.put("error","Usuario o password incorrectos");
+	    	return new ModelAndView(resLogin,"./views/login.html");
+	    }
+    	
+    	return new ModelAndView(resLogin,"./views/index.html");   	
+    }, new MustacheTemplateEngine()
+    );
+    //Modulo que entrega una pregunta y obtiene una respuesta.
+    get("/play", (req, res) -> {
+    	Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
+      Map res_play = new HashMap();
+
+      //Obtenemos el Usuario actual
+      res_play.put("username",req.queryParams("username"));
+      List<User> user_now = User.where("id = ?", req.queryParams("id"));
+      User u = user_now.get(0);
+      System.out.println("ID DEL USER: " + (Integer)u.get("id"));
+      //Obtenemos el primer juego comenzado (si no tiene juegos iniciados creamos uno nuevo)
+      Game game_now = u.getGameInProgress();
+      game_now.saveIt();
+			Category cat = (new Category()).randomCat();
+   		Question que = cat.getQuestion();
+    	String[] resQ = {(String)que.get("description"),(String)que.get("a1"),(String)que.get("a2"),(String)que.get("a3"),(String)que.get("a4")};
+    	Integer correct = (Integer)que.get("correct_a");
+    	//System.out.println("ID DEL JUEGO: " + (Integer)game_now.get("id"));
+	    res_play.put("us_id", u.get("id"));
+	    res_play.put("game_id", (Integer)game_now.get("id"));
+	    res_play.put("desc", resQ[0]);
+	    res_play.put("a1", resQ[1]);
+	    res_play.put("a2", resQ[2]);
+	    res_play.put("a3", resQ[3]);
+	    res_play.put("a4", resQ[4]);
+	    res_play.put("correct", correct);
+	    res_play.put("qid", que.get("id"));
+	    res_play.put("corrects",(Integer)game_now.get("corrects"));
+	    res_play.put("incorrects",(Integer)game_now.get("incorrects"));
+      Base.close();
+      return new ModelAndView(res_play, "./views/play.html");
+    }, new MustacheTemplateEngine()
+    );
+
+    //Metodo para responder una pregunta
+    post("/answer", (req,res) -> {
+    	Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
+      String userid = req.queryParams("id");
+      //System.out.println("ID DEL JUEGO POST: " + (Integer)req.queryParams("gameId"));
+      List<Game> games = Game.where("id = ?", req.queryParams("gameId"));
+      Game game_now = games.get(0);
+	    List<User> users = User.where("id = ?", userid);
+	    User user_now = users.get(0);
+	    List<Question> question = Question.where("id = ?", req.queryParams("qId"));
+	    Question question_now = question.get(0);
+
+			Map resAnswer = new HashMap();
+    	resAnswer.put("username",user_now.get("username"));
+      resAnswer.put("id", user_now.get("id"));
+
+			game_now.set("question_number", (Integer)game_now.get("question_number")+1).saveIt();
+			Integer answer = Integer.parseInt(req.queryParams("answer"));
+
+			if((Integer)game_now.get("question_number")==5){
+				game_now.set("in_progress", false).saveIt();
+
+			}
+      System.out.println("RESPUESTA CORRECTA: " + (Integer)question_now.get("correct_a"));
+      System.out.println("RESPUESTA ACTUAL: " + answer);
+			if((Integer)question_now.get("correct_a") == answer){
+				user_now.set("c_questions", (Integer)user_now.get("c_questions")+1).saveIt();
+        game_now.set("corrects", (Integer)game_now.get("corrects")+1).saveIt();
+	    }
+	    else{
+				user_now.set("i_questions", (Integer)user_now.get("i_questions")+1).saveIt();
+        game_now.set("incorrects", (Integer)game_now.get("incorrects")+1).saveIt();
 	    }
     	Base.close();
-    	return new ModelAndView(resLogin,"./views/index.html");   	
+    	return new ModelAndView(resAnswer,"./views/play.html");   	
     }, new MustacheTemplateEngine()
     );
 
@@ -137,7 +206,7 @@ public class App{
 	    Question que = cat.getQuestion();
 	    String[] resQ = {(String)que.get("description"),(String)que.get("a1"),(String)que.get("a2"),(String)que.get("a3"),(String)que.get("a4")};
 	    questt.put("categ", cat.get("name"));
-	    questt.put("usernamee", result[0]);
+	    questt.put("username", result[0]);
 	    questt.put("desc", resQ[0]);
 	    questt.put("a1", resQ[1]);
 	    questt.put("a2", resQ[2]);
@@ -146,23 +215,17 @@ public class App{
 	    questt.put("play", "play");
 	    questt.put("Usuario", "Usuario");
 	    questt.put("id", u.getId());
+	    Base.close();
 	  }
-	  else{
-	  	System.out.println("El usuario ya existe");
-	  }
-  	Base.close();
+    else{
+    	Base.close();
+    	questt.put("error","Ese usuario o e-mail ya existe, intente con otro");
+    	return new ModelAndView(questt,"./views/registrar.html");
+    }
+  	
     return new ModelAndView(questt, "./views/play.html");
   	}, new MustacheTemplateEngine());
 		
-
-    /*
-    User u = new User("Gabriel","gabriel.ogh@gmail.com", "12345");
-    u.saveIt();
-    Game g = new Game((Long)u.getId());
-    g.saveIt();
-    g.playGame(); 
-    //game.play();
-  	*/
   	Base.close();
   }
 }

@@ -11,9 +11,12 @@
 			<li><a href="/login">Ingresar</a></li>
 			</li>
 		</ul>
-		<h2>Bienvenido <b>{{usernamee}}</b> a Preguntado$, ya puedes jugar> </h2>
+		<h2>Bienvenido <b>{{username}}</b> a Preguntado$, ya puedes jugar> </h2>
+		<h1>Respuestas correctas: {{corrects}}</h1>
+		<h1>Respuestas incorrectas: {{incorrects}}</h1>
+
 		<h1>Categoria: <b>{{categ}}</b></h1>
-		<h1>La pregunta es:  <b>{{desc}}</b></h1>
+		<h1>La pregunta es:  <b>{{desc}}</b></h1><br>
 		<ul class="pregunta">
 			<li>Opcion 1:  {{a1}}</li>
 			<li>Opcion 2:  {{a2}}</li>
@@ -21,7 +24,7 @@
 			<li>Opcion 4:  {{a4}}</li>
 			</li>
 		</ul>
-		<form action="/answer" method="post">
+		<form action="/answer?gameId={{game_id}}&ca={{correct}}&qId={{qid}}&id={{us_id}}" method="post">
 		  <label for="answer">Numero de respuesta:</label>
 		  <input type="text" name="answer" />
 		  <button type="submit" class="btn btn-primary">Enviar</button>

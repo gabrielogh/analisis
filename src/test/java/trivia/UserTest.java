@@ -24,17 +24,31 @@ public class UserTest{
         Base.close();
     }
 
+
      @Test
      public void validateUniquenessOfUsernames(){
          User user = new User();
          user.set("username", "anakin");
-         user.set("password", "messi");
+         user.set("password", "123");
          user.saveIt();
-
          User user2 = new User();
-         user2.set("username", "anakin2");
+         user2.set("username", "gabriel");
+         user.set("password", "123");
+         assertEquals(user2.get("username")!=user.get("username"), true);
+     }
 
-         assertEquals(user2.isValid(), false);
+     @Test
+     public void validateUniquenessOfMmail(){
+         User user = new User();
+         user.set("username", "gabriel");
+         user.set("password", "123");
+         user.set("email", "g@gmail.com");
+         user.saveIt();
+         User user2 = new User();
+         user2.set("username", "Androide");
+         user.set("password", "123");
+         user2.set("email", "ggmail.com");
+         assertEquals(user2.get("email")!=user.get("email"), false);
      }
      
 

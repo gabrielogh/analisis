@@ -27,18 +27,28 @@ public class User extends Model {
     set("c_questions",0);
     set("i_questions",0);
   }
+
   public Game createGameForUser(){
-    return new Game((Long)this.get("id"));
+    return new Game((Integer)this.get("id"));
   }
 
-  /*
-  public List<Game> getGame(){
-    return this.getAll(Game.class);
-  }*/
+  
+  public Game getGameInProgress(){
+    List<Game> user_games = this.getAll(Game.class);
+    int i = 0;
+    while ((i< user_games.size())){
+      Game g = user_games.get(i);
+      if((Boolean)g.get("in_progress")== true){
+        return g;
+      }
+      i++;
+    }
+    Game g = this.createGameForUser();
+    return g; 
+  }
 
   //Metodo que utiliza un usuario para responder una pregunta.
   public boolean answerQuestion(Question q){
-    q.showQuestion();
     
     if (q.validateA(4)){
       this.set("c_questions", (Integer) this.get("c_questions")+1).saveIt();

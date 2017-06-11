@@ -33,21 +33,6 @@ public class Question extends Model {
     set("correct_a", correct);
 	}
 
-  //Metodo que muestra las respuestas de la categoria actual.
-  public void showAnswersOptions(){
-    System.out.println(this.get("a1"));
-    System.out.println(this.get("a2"));
-    System.out.println(this.get("a3"));
-    System.out.println(this.get("a4"));
-  }
-
-  //Metodo que muestra la pregunta y su categoria.
-  public void showQuestion(){
-    Category cat = this.parent(Category.class);
-    System.out.println((String)cat.get("name"));
-    System.out.println((String)this.get("description"));
-  }
-
   public boolean validateA(Integer n){
     return n== (this.get("correct_a"));
   }

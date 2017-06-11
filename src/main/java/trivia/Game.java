@@ -1,5 +1,6 @@
 package trivia;
 import org.javalite.activejdbc.Model;
+import java.util.List;
 
 public class Game extends Model{
   static{
@@ -11,10 +12,12 @@ public class Game extends Model{
  	}
 
  	//Constructor de la clase con parametros
-  public Game(Long id){
+  public Game(Integer id){
   	set("question_number",0);
   	set("user_id",id);
     set("in_progress",true);
+    set("incorrects",0);
+    set("corrects",0);
   }
   //Metodo que retorna una categoria Random
   public Category getRandomCat(){
