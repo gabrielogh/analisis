@@ -2,7 +2,6 @@
 <html>
 	<head>
 		<link rel='stylesheet' href='/css/style.css'>
-		<link rel='stylesheet' href='/css/login.css'>
 	</head>
 	<body>
 		<ul class="menu">
@@ -24,6 +23,7 @@
 			<li>Opcion 4:  {{a4}}</li>
 			</li>
 		</ul>
+		<br>
 		<form action="/answer?gameId={{game_id}}&ca={{correct}}&qId={{qid}}&id={{id}}" method="post">
 		  <label for="answer">Numero de respuesta:</label>
 		  <input type="number" name="answer" />
