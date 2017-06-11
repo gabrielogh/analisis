@@ -24,9 +24,9 @@
 			<li>Opcion 4:  {{a4}}</li>
 			</li>
 		</ul>
-		<form action="/answer?gameId={{game_id}}&ca={{correct}}&qId={{qid}}&id={{us_id}}" method="post">
+		<form action="/answer?gameId={{game_id}}&ca={{correct}}&qId={{qid}}&id={{id}}" method="post">
 		  <label for="answer">Numero de respuesta:</label>
-		  <input type="text" name="answer" />
+		  <input type="number" name="answer" />
 		  <button type="submit" class="btn btn-primary">Enviar</button>
 		</form>
 	</body>

@@ -123,9 +123,9 @@ public class App{
       Map res_play = new HashMap();
 
       //Obtenemos el Usuario actual
-      res_play.put("username",req.queryParams("username"));
       List<User> user_now = User.where("id = ?", req.queryParams("id"));
       User u = user_now.get(0);
+      res_play.put("username",u.get("username"));
       System.out.println("ID DEL USER: " + (Integer)u.get("id"));
       //Obtenemos el primer juego comenzado (si no tiene juegos iniciados creamos uno nuevo)
       Game game_now = u.getGameInProgress();
@@ -135,8 +135,9 @@ public class App{
     	String[] resQ = {(String)que.get("description"),(String)que.get("a1"),(String)que.get("a2"),(String)que.get("a3"),(String)que.get("a4")};
     	Integer correct = (Integer)que.get("correct_a");
     	//System.out.println("ID DEL JUEGO: " + (Integer)game_now.get("id"));
-	    res_play.put("us_id", u.get("id"));
-	    res_play.put("game_id", (Integer)game_now.get("id"));
+	    res_play.put("id", u.get("id"));
+	    res_play.put("categ", (String)cat.get("name"));
+	    res_play.put("game_id", game_now.get("id"));
 	    res_play.put("desc", resQ[0]);
 	    res_play.put("a1", resQ[1]);
 	    res_play.put("a2", resQ[2]);
@@ -168,15 +169,20 @@ public class App{
       resAnswer.put("id", user_now.get("id"));
 
 			game_now.set("question_number", (Integer)game_now.get("question_number")+1).saveIt();
-			Integer answer = Integer.parseInt(req.queryParams("answer"));
+			Integer answer = Integer.valueOf((String)req.queryParams("answer"));
 
 			if((Integer)game_now.get("question_number")==5){
 				game_now.set("in_progress", false).saveIt();
 
 			}
+
       System.out.println("RESPUESTA CORRECTA: " + (Integer)question_now.get("correct_a"));
       System.out.println("RESPUESTA ACTUAL: " + answer);
-			if((Integer)question_now.get("correct_a") == answer){
+      Integer correctt = (Integer)question_now.get("correct_a");
+      Boolean res2= (correctt == answer);
+      System.out.println("RESULTADO: "+ res2);
+
+			if(correctt == answer){
 				user_now.set("c_questions", (Integer)user_now.get("c_questions")+1).saveIt();
         game_now.set("corrects", (Integer)game_now.get("corrects")+1).saveIt();
 	    }
@@ -184,10 +190,11 @@ public class App{
 				user_now.set("i_questions", (Integer)user_now.get("i_questions")+1).saveIt();
         game_now.set("incorrects", (Integer)game_now.get("incorrects")+1).saveIt();
 	    }
-    	Base.close();
-    	return new ModelAndView(resAnswer,"./views/play.html");   	
-    }, new MustacheTemplateEngine()
-    );
+ 			Base.close();
+ 			String link = "play?id=" + user_now.get("id");
+  		res.redirect(link);
+  		return null;	
+    });
 
   	// Método para tratar los posts de /users (Creación de usuarios).
   	post("/registering", (req, res) -> {
@@ -202,18 +209,6 @@ public class App{
   	if(result2){
 	  	User u = new User(result[0],result[1], result[2]);
 	  	u.saveIt();
-	    Category cat = (new Category()).randomCat();
-	    Question que = cat.getQuestion();
-	    String[] resQ = {(String)que.get("description"),(String)que.get("a1"),(String)que.get("a2"),(String)que.get("a3"),(String)que.get("a4")};
-	    questt.put("categ", cat.get("name"));
-	    questt.put("username", result[0]);
-	    questt.put("desc", resQ[0]);
-	    questt.put("a1", resQ[1]);
-	    questt.put("a2", resQ[2]);
-	    questt.put("a3", resQ[3]);
-	    questt.put("a4", resQ[4]);
-	    questt.put("play", "play");
-	    questt.put("Usuario", "Usuario");
 	    questt.put("id", u.getId());
 	    Base.close();
 	  }

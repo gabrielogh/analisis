@@ -9,7 +9,7 @@ public class User extends Model {
   static{
     validatePresenceOf("username").message("Por favor, ingrese un usuario");
     validatePresenceOf("password").message("Por favor, ingrese una contraseña");
-    validateWith(new UniquenessValidator("username")).message("Este usuario ya existe, vuelve a intentarlo");
+    validatePresenceOf("mail").message("Por favor, ingrese un email");
   }
   //Constructor
   public User(){
@@ -19,7 +19,7 @@ public class User extends Model {
   public User(String user, String mail, String pass){
     validatePresenceOf("username").message("Por favor, ingrese un usuario");
     validatePresenceOf("password").message("Por favor, ingrese una contraseña");
-    validateWith(new UniquenessValidator("username")).message("Este usuario ya existe, vuelve a intentarlo");
+    validatePresenceOf("mail").message("Por favor, ingrese un email");
     set("username", user);
     set("mail", mail);
     set("password", pass);

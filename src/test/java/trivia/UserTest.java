@@ -30,10 +30,12 @@ public class UserTest{
          User user = new User();
          user.set("username", "anakin");
          user.set("password", "123");
+         user.set("mail", "g@gmail.com");
          user.saveIt();
          User user2 = new User();
          user2.set("username", "gabriel");
          user.set("password", "123");
+         user.set("mail", "asd@gmail.com");
          assertEquals(user2.get("username")!=user.get("username"), true);
      }
 
@@ -42,13 +44,13 @@ public class UserTest{
          User user = new User();
          user.set("username", "gabriel");
          user.set("password", "123");
-         user.set("email", "g@gmail.com");
+         user.set("mail", "g@gmail.com");
          user.saveIt();
          User user2 = new User();
          user2.set("username", "Androide");
          user.set("password", "123");
-         user2.set("email", "ggmail.com");
-         assertEquals(user2.get("email")!=user.get("email"), false);
+         user2.set("mail", "ggmail.com");
+         assertEquals(user2.get("mail")!=user.get("mail"), false);
      }
      
 
@@ -57,6 +59,7 @@ public class UserTest{
         User user = new User();
         user.set("username", "");
         user.set("password", "1234");
+        user.set("mail", "g@gmail.com");
 
         assertEquals(user.isValid(), false);
     }
