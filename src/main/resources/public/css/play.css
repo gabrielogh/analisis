@@ -81,6 +81,7 @@ p:hover {
   
 }
 .pregunta > li {
+  border: 1px solid #2c90c6;
   padding: 2px;
   height:30px;
   width:500px;

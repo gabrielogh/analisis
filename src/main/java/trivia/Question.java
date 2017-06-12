@@ -33,7 +33,7 @@ public class Question extends Model {
     set("correct_a", correct);
 	}
 
-  public boolean validateA(Integer n){
-    return n== (this.get("correct_a"));
+  public  boolean validateA(int n){
+    return n == (int)this.get("correct_a");
   }
 }

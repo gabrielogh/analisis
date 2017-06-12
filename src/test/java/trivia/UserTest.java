@@ -49,7 +49,7 @@ public class UserTest{
          User user2 = new User();
          user2.set("username", "Androide");
          user.set("password", "123");
-         user2.set("mail", "ggmail.com");
+         user2.set("mail", "g@gmail.com");
          assertEquals(user2.get("mail")!=user.get("mail"), false);
      }
      

@@ -1,5 +1,9 @@
 package trivia;
 //--------------------------------
+//MD5
+import java.security.MessageDigest;
+import java.math.BigInteger;
+//--------------------------------
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.validation.UniquenessValidator;
 import trivia.User;
@@ -18,6 +22,7 @@ import spark.template.mustache.MustacheTemplateEngine;
 //---------------------------------
 
 public class App{
+
   public static void main( String[] args ){ 
 
 
@@ -213,17 +218,14 @@ public class App{
 			Map resAnswer = new HashMap();
 
 			game_now.set("question_number", (Integer)game_now.get("question_number")+1).saveIt();
-			Integer answer = Integer.valueOf(req.queryParams("answer"));
+			int answer = Integer.valueOf(req.queryParams("answer"));
 
+      //Chequeamos si es la ultima pregunta.
 			if((Integer)game_now.get("question_number")==5){
 				game_now.set("in_progress", false).saveIt();
 
 			}
-
-      System.out.println("RESPUESTA CORRECTA: " + (Integer)question_now.get("correct_a"));
-      System.out.println("RESPUESTA ACTUAL: " + answer);
-      System.out.println("RESULTADO: "+ question_now.validateA(answer));
-
+      //Validamos la respuesta
 			if(question_now.validateA(answer)){
 				user_now.set("c_questions", (Integer)user_now.get("c_questions")+1).saveIt();
         game_now.set("corrects", (Integer)game_now.get("corrects")+1).saveIt();
@@ -247,25 +249,46 @@ public class App{
     String[] result = {req.queryParams("username"),req.queryParams("email"),(String)req.queryParams("password"),(String)req.queryParams("password2")};
   	String body = req.body();
   	Map questt = new HashMap();
-    System.out.println("Password 1: " + result[2]);
-    System.out.println("Password 2: " + result[3]);
 
-    if(result[2] != result[3]){
+    String p1 = new String(req.queryParams("password"));
+    String p2 = new String(req.queryParams("password2"));
+
+    if(!(p1.equals(p2))){
+    	Base.close();
       questt.put("error","Las contraseñas no coincide, vuelva a intentarlo");
       return new ModelAndView(questt,"./views/registrar.html");
     }
     List<User> unico = User.where("username = ? or mail = ? ", result[0], result[1]);
     Boolean result2 = unico.size()==0;
   	if(result2){
+      /*
+      //Codificacion password MD5.
+      MessageDigest md = MessageDigest.getInstance(MessageDigestAlgorithms.MD5);
+      md.update(((String)result[2]).getBytes());
+      byte[] digest = md.digest();
+      String pas;
+      for (byte b : digest) {
+         pas=(pas+(Integer.toHexString(0xFF & b)));
+      }
+      */
 	  	User u = new User(result[0],result[1], result[2]);
 	  	u.saveIt();
 	    questt.put("id", u.getId());
 	    Base.close();
 	  }
     else{
-    	Base.close();
-    	questt.put("error","Ese usuario o e-mail ya existe, intente con otro");
-    	return new ModelAndView(questt,"./views/registrar.html");
+      User u = unico.get(0);
+      String e = (String)u.get("mail");
+      if(e.equals(result[1])){
+      	Base.close();
+      	questt.put("error","Ese e-mail ya se encuentra registrado, intente con otro");
+      	return new ModelAndView(questt,"./views/registrar.html");
+      }
+      else{
+        Base.close();
+        questt.put("error","Ese usuario ya existe, intente con otro");
+        return new ModelAndView(questt,"./views/registrar.html");
+      }
     }
 
   	
