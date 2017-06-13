@@ -1,38 +1,208 @@
-    /*
- 	  //Creamos una categoria, una pregunta y sus respuesta a modo de poder testear le game.
     Category c = new Category("Historia");
-    c.saveIt();
-    Question q = new Question("Quien fue el anterior presidente de Argentina?", "Macri", "Menem", "Cristina", "Marcelo Tinelli", 3);
-    q.set("category_id", c.get("id"));
-    q.saveIt();
-    String[] catResult = {(String)q.get("description"), (String)q.get("a1"), (String)q.get("a2"), (String)q.get("a3"), (String)q.get("a4")};
-    
-     	  //Creamos una categoria, una pregunta y sus respuesta a modo de poder testear le game.
     Category ciencia = new Category("Ciencia");
-    ciencia.saveIt();
-    Question qciencia = new Question("Cual de los siguientes numeros binarios representa el 10 decimal?", "0000010", "0001010", "11111111", "0001000", 2);
-    qciencia.set("category_id", ciencia.get("id"));
-    qciencia.saveIt();
-    
-     	  //Creamos una categoria, una pregunta y sus respuesta a modo de poder testear le game.
     Category ent = new Category("Entrenenimiento");
-    ent.saveIt();
-    Question qent = new Question("Como le dicen a Macri?", "Pato", "Raro", "Malo", "Gatooooooo", 4);
-    qent.set("category_id", ent.get("id"));
-    qent.saveIt();
-    
-     	  //Creamos una categoria, una pregunta y sus respuesta a modo de poder testear le game.
     Category cdep = new Category("Deporte");
+    c.saveIt();
+    ciencia.saveIt();
+    ent.saveIt();
     cdep.saveIt();
-    Question qdep = new Question("Por cuantos goles le ganaria River a Boca si jugaran hoy?", "1-0", "2-0", "4-0", "Boca no asistiria", 4);
-    qdep.set("category_id", cdep.get("id"));
-    qdep.saveIt();
+
+    Question q1 = new Question("Quien fue el anterior presidente de Argentina?", "Macri", "Menem", "Cristina", "Marcelo Tinelli", 3);
+    q1.set("category_id", c.get("id"));
+    q1.saveIt();
+
+    Question q2 = new Question("¿Cuál es la rama mayoritaria del Islam?", "Chiismo", "Sunismo", "Jariyismo", "Sufismo", 2);
+    q2.set("category_id", c.get("id"));
+    q2.saveIt();
+
+    Question q3 = new Question("¿De que fue ministro Manuel Fraga durante el franquismo?", "De interior", "De economia", "De informacion y turismo", "Del ejercito", 3);
+    q3.set("category_id", c.get("id"));
+    q3.saveIt();
+
+    Question q4 = new Question("¿En que año tuvo lugar el ataque a Pearl Harbor?", "1939", "1940", "1941", "1942", 3);
+    q4.set("category_id", c.get("id"));
+    q4.saveIt();
+
+    Question q5 = new Question("¿Cual es la ciudad mas antigua de America Latina?", "Caral", "Valparaiso", "Arequipa", "La Paz", 1);
+    q5.set("category_id", c.get("id"));
+    q5.saveIt();
+
+    Question q6 = new Question("¿Con qué emperador estuvo casada Cleopatra?", "Ptolomeo XIV", "Julio Cesar", "Marco Antonio", "Todas son correctas", 4);
+    q6.set("category_id", c.get("id"));
+    q6.saveIt();
+
+    Question q7 = new Question("El Renacimiento marcó el inicio de la Edad...", "Moderna", "Antigüedad clasica", "Contemporanea", "Media", 1);
+    q7.set("category_id", c.get("id"));
+    q7.saveIt();
+
+    Question q8 = new Question("¿Que pais fue dirigido por Stalin?", "Cuba", "Alemania", "Argentina", "Union Sovietica", 4);
+    q8.set("category_id", c.get("id"));
+    q8.saveIt();
+
+    Question q9 = new Question("¿Que se celebra el 8 de Marzo?", "Dia del trabajador", "Dia del medio ambiente", "Dia del niño", "Dia de la mujer", 4);
+    q9.set("category_id", c.get("id"));
+    q9.saveIt();
+
+    Question q10 = new Question("¿Quién liberó a Argentina, Chile y Perú?", "Manuel Belgrano", "Simon Bolivar", "Ernesto Che Guevara", "Jose de San Martin", 4);
+    q10.set("category_id", c.get("id"));
+    q10.saveIt();
+
+    Question q11 = new Question("¿Donde surgio la filosofia?", "Argentina", "Egipto", "Chile", "Grecia", 4);
+    q11.set("category_id", c.get("id"));
+    q11.saveIt();
+
+    Question q12 = new Question("¿Quién gobernó Francia desde 1799 a 1815?", "Adam Smith", "Louis Bonaldgug", "Peron", "Napoleon Bonaparte", 4);
+    q12.set("category_id", c.get("id"));
+    q12.saveIt();
     
-    Question q= new
-    Map quest = new HashMap();
-    quest.put("desc", catResult[0]);
-    quest.put("a1", catResult[1]);
-    quest.put("a2", catResult[2]);
-    quest.put("a3", catResult[3]);
-    quest.put("a4", catResult[4]);
-    */
+    //PREGUNTAS PARA CIENCIA
+    Question qciencia1 = new Question("Cual de los siguientes numeros binarios representa el 10 decimal?", "0000010", "0001010", "11111111", "0001000", 2);
+    qciencia1.set("category_id", ciencia.get("id"));
+    qciencia1.saveIt();
+
+    Question qciencia2 = new Question("¿Cuál de las sisguientes enfermedades ataca al higado?", "Hepatitis", "Diabetes", "Artrosis", "Cifoescoliosis",1);
+    qciencia2.set("category_id", ciencia.get("id"));
+    qciencia2.saveIt();
+
+    Question qciencia3 = new Question("¿Cómo tomarías la sustancia alucinógena natural llamada ayahuasca? ", "Inhalada", "Inyectada", "Esnifada", "Ingerida",4);
+    qciencia3.set("category_id", ciencia.get("id"));
+    qciencia3.saveIt();
+
+    Question qciencia4 = new Question("¿Qué cambio de estado ocurre en la sublimación?", "De solido a liquido", "De solido a gaseoso", "De gaseoso a liquido", "De liquido a solido",2);
+    qciencia4.set("category_id", ciencia.get("id"));
+    qciencia4.saveIt();
+
+    Question qciencia5 = new Question("¿De qué color es la sange de los peces?", "Verde oscuro", "Marron oscuro", "Roja", "Azul",3);
+    qciencia5.set("category_id", ciencia.get("id"));
+    qciencia5.saveIt();
+
+    Question qciencia6 = new Question("¿Cuántas caras tiene un icosaedro?", "20", "16", "8", "24",1);
+    qciencia6.set("category_id", ciencia.get("id"));
+    qciencia6.saveIt();
+
+    Question qciencia7 = new Question("¿Qué estudia la icitología?", "Los insectos", "DLas erupciones cutaneas", "Las rocas", "Los peces",4);
+    qciencia7.set("category_id", ciencia.get("id"));
+    qciencia7.saveIt();
+
+    Question qciencia8 = new Question("¿Con qué otro nombre se conoce el ciclo del agua?", "Ciclo natural", "Ciclo hidroponico", "Ciclo hidrologico", "Ciclo acuoso",3);
+    qciencia8.set("category_id", ciencia.get("id"));
+    qciencia8.saveIt();
+
+    Question qciencia9 = new Question("¿Cuántos rayos gamma hay en una neurona?", "Uno", "Dos", "De dos a tres", "Ninguno",4);
+    qciencia9.set("category_id", ciencia.get("id"));
+    qciencia9.saveIt();
+
+    Question qciencia10 = new Question("¿Cómo se llama a los electrones que se encuentran en la última capa del átomo?", "Isotopos", "Iones", "Electrones", "Electrones de valencia",4);
+    qciencia10.set("category_id", ciencia.get("id"));
+    qciencia10.saveIt();
+
+    Question qciencia11 = new Question("¿Cómo se llama el nivel más alto de la marea?", "Pleamar", "Bajamar", "Repunte", "Estacionario",1);
+    qciencia11.set("category_id", ciencia.get("id"));
+    qciencia11.saveIt();
+
+    Question qciencia12 = new Question("¿Cómo se llama el incremento en el volumen,fluidez o frecuencia de las deposiciones?", "Estreñimiento", "Diverticulosis", "Hemorroides", "Diarrea",4);
+    qciencia12.set("category_id", ciencia.get("id"));
+    qciencia12.saveIt();
+
+    Question qciencia13 = new Question("¿Cómo se mide la fuerza del viento en el mar?", "Pies", "Zancadas", "Nudos", "Kilometros por hora",3);
+    qciencia13.set("category_id", ciencia.get("id"));
+    qciencia13.saveIt();
+
+    //PREGUNTAS PARA ENTRENENIMIENTO
+    Question qent1 = new Question("Como le dicen a Macri?", "Pato", "Raro", "Malo", "Gatooooooo", 4);
+    qent1.set("category_id", ent.get("id"));
+    qent1.saveIt();
+
+    Question qent2 = new Question("¿Cómo se llamaba el personaje que interpretaba John Travolta en Grease?", "Danny Puño", "Danny Zuko", "Danny Grease", "Danny Chulo", 2);
+    qent2.set("category_id", ent.get("id"));
+    qent2.saveIt();
+
+    Question qent3 = new Question("¿En qué año se estrenó la película de Disney Pinocho?", "1940", "1950", "1952", "1946", 1);
+    qent3.set("category_id", ent.get("id"));
+    qent3.saveIt();
+
+    Question qent4 = new Question("¿Cuál es el verdadero nombre de Alejandro Sanz?", "Alejandro Sánchez Pizarro", "Alejandro Sánchez Gutiérrez", "Alexander Santiago Seguiz", "Alejandro Alberto Sanzón", 1);
+    qent4.set("category_id", ent.get("id"));
+    qent4.saveIt();
+
+    Question qent5 = new Question("¿Cómo se llama el protagonista de la saga Indiana Jones?", "Jack Nicholson", "Michael Fox", "Harrison Ford", "Robin Williams", 3);
+    qent5.set("category_id", ent.get("id"));
+    qent5.saveIt();
+
+    Question qent6 = new Question("¿Cuál de ellas es una cantante española?", "Chenoa", "Ariana Grande", "Jennifer Lopez", "Alaska", 1);
+    qent6.set("category_id", ent.get("id"));
+    qent6.saveIt();
+
+    Question qent7 = new Question("¿A quién se considera el Rey del Pop?", "Justin Bieber", "Michael Jackson", "Zayn Malik", "Zac Efron", 2);
+    qent7.set("category_id", ent.get("id"));
+    qent7.saveIt();
+
+    Question qent8 = new Question("¿Qué personaje del videojuego Mortal Kombat tiene poderes de hielo?", "Scorpion", "Reptile", "Motaro", "Sub-Zero", 4);
+    qent8.set("category_id", ent.get("id"));
+    qent8.saveIt();
+
+    Question qent9 = new Question("¿Cómo se llama el pájaro símbolo de los Juegos del Hambre?", "Lechuza", "Llamas", "Paloma", "Sinsajo", 4);
+    qent9.set("category_id", ent.get("id"));
+    qent9.saveIt();
+
+    Question qent10 = new Question("¿Cuántos colores tiene un cubo de Rubik clásico?", "4", "6", "8", "9", 2);
+    qent10.set("category_id", ent.get("id"));
+    qent10.saveIt();
+
+    Question qent11 = new Question("¿Cómo se llama el robot alcohólico de la serie 'Futurama'?", "Zoidberg", "Vader", "Bender", "Hubert", 3);
+    qent11.set("category_id", ent.get("id"));
+    qent11.saveIt();
+
+    Question qent12 = new Question("¿Cómo se llama el payaso de 'Los Simpson'?", "Kurty", "Krusty", "Kroger", "Blaquito", 2);
+    qent12.set("category_id", ent.get("id"));
+    qent12.saveIt();
+
+    
+    //PREGUNTAS DE DEPORTES
+    Question qdep1 = new Question("Por cuantos goles le ganaria River a Boca si jugaran hoy?", "1-0", "2-0", "4-0", "Boca no asistiria", 4);
+    qdep1.set("category_id", cdep.get("id"));
+    qdep1.saveIt();
+
+    Question qdep2 = new Question("¿De que deporte es el kemari uno de los principales antecesores?", "Futbol", "Tenis", "Rugby", "Karate", 1);
+    qdep2.set("category_id", cdep.get("id"));
+    qdep2.saveIt();
+
+    Question qdep3 = new Question("¿Cuántas finales del mundo jugó la Selección Argentina de fútbol?", "Cinco", "Seis", "Cuatro", "Tres", 3);
+    qdep3.set("category_id", cdep.get("id"));
+    qdep3.saveIt();
+
+    Question qdep4 = new Question("¿Cuál es el estilo de natación más rápido?", "Crol", "Espalda", "Mariposa", "Pecho", 1);
+    qdep4.set("category_id", cdep.get("id"));
+    qdep4.saveIt();
+
+    Question qdep5 = new Question("¿Cuántos jugadores componen un equipo de rugby?", "11", "12", "15", "21", 3);
+    qdep5.set("category_id", cdep.get("id"));
+    qdep5.saveIt();
+
+    Question qdep6 = new Question("¿Quién inventó el arte marcial llamado Jeet Kune Do?", "David Carradine", "Bruce Lee", "Kato Mimoko", "Ninguna es correcta", 2);
+    qdep6.set("category_id", cdep.get("id"));
+    qdep6.saveIt();
+
+    Question qdep7 = new Question("¿De qué color es el cero en el cilindro de la ruleta?", "Blanco", "Negro", "Rojo", "Verde", 4);
+    qdep7.set("category_id", cdep.get("id"));
+    qdep7.saveIt();
+
+    Question qdep8 = new Question("¿Cuánto dura un partido de fútbol?", "80 minutos", "50 minutos", "90 minutos", "75 minutos", 3);
+    qdep8.set("category_id", cdep.get("id"));
+    qdep8.saveIt();
+
+    Question qdep9 = new Question("¿Cuál de estos pilotos no es de F1?", "Richard Petty", "Fernando Alonso", "Sebastian Vettel", "Mark Webber", 1);
+    qdep9.set("category_id", cdep.get("id"));
+    qdep9.saveIt();
+
+    Question qdep10 = new Question("¿En cuál de estos deportes no hay árbitro?", "Football", "Ultimate", "Basketball", "Volleyball", 2);
+    qdep10.set("category_id", cdep.get("id"));
+    qdep10.saveIt();
+
+    Question qdep11 = new Question("¿En cuántos mundiales de fútbol participó la selección de Canadá?", "0", "3", "1", "5", 3);
+    qdep11.set("category_id", cdep.get("id"));
+    qdep11.saveIt();
+
+    Question qdep12 = new Question("¿Cuántos cuadros tiene un tablero de ajedres?", "36", "54", "64", "81", 3);
+    qdep12.set("category_id", cdep.get("id"));
+    qdep12.saveIt();

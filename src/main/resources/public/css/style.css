@@ -25,7 +25,7 @@ width: 100%;
 filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#292929', endColorstr='#252525');
 -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#292929', endColorstr='#252525')";
 background: linear-gradient(#292929, #252525);
-min-width: 160px;
+width: 16.6666666%;
 }
 .menu > li {
 padding: 0;

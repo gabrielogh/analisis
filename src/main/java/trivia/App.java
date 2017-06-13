@@ -26,6 +26,7 @@ public class App{
   public static void main( String[] args ){ 
 
 		Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
+    // CSS,INAGES,JS.
     staticFiles.location("/public");
 
     //Mensaje de Bienvenida
@@ -86,9 +87,13 @@ public class App{
     	}
       return new ModelAndView(map,"./views/index.html"); 
     }, new MustacheTemplateEngine());
-    //----------------------------------------------------------------------------------------------------------
-    //----------------------------------------------------------------------------------------------------------
-    //Inicio de sesiones.
+
+    /**
+     * Inicio de sesiones.
+     * @param. Session, username, password.
+     * @pre. true.
+     * @post. Error(User logged) / User logged.
+     */
     post("/logger", (req,res) -> {
     	Map resLogin = new HashMap();
     	//Si ya estmos conectados, no podemos conectarnos nuevamente.
@@ -108,6 +113,7 @@ public class App{
 	    List<User> unico = User.where("username = ? and password = ?", namee,password);
 	    Boolean result2 = unico.size()==0;
 			
+      //Si encontramos un usuario cargamos la sesion.
 			if(!result2){
 	      req.session().attribute("username", namee);
 	      req.session().attribute("password", password);
@@ -124,9 +130,14 @@ public class App{
     	
     	return new ModelAndView(resLogin,"./views/index.html");   	
     }, new MustacheTemplateEngine());
-    //----------------------------------------------------------------------------------------------------------
-    //----------------------------------------------------------------------------------------------------------
-    //Modulo que entrega una pregunta y obtiene una respuesta.
+
+    /**
+     * 
+     * Modulo que entrega una pregunta y obtiene una respuesta.
+     * @param. user id.
+     * @pre. user logged.
+     * @post. question_number inrease. User profile updated.
+     */
     get("/play", (req, res) -> {
     	Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
       Map res_play = new HashMap();
@@ -158,9 +169,13 @@ public class App{
       Base.close();
       return new ModelAndView(res_play, "./views/play.html");
     }, new MustacheTemplateEngine());
-    //----------------------------------------------------------------------------------------------------------
-    //----------------------------------------------------------------------------------------------------------
-    //Metodo para responder una pregunta
+    
+    /**
+     * Metodo para responder una pregunta
+     * @param. game id., user id, question id
+     * @pre. user logged, game.get("in_progress") = true, .
+     * @post. question_number inrease. User profile updated.
+     */
     post("/answer", (req,res) -> {
     	Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
 
@@ -196,9 +211,13 @@ public class App{
   		res.redirect(link);
   		return null;	
     });
-    //----------------------------------------------------------------------------------------------------------
-    //----------------------------------------------------------------------------------------------------------
-  	// Método para tratar los posts de /users (Creación de usuarios).
+
+    /**
+  	 * Método para tratar los posts de /users (Creación de usuarios).
+     * @param. username., user id, question id, password, password2
+     * @pre. username != "", password == password2, email != "".
+     * @post. User registered / Error.
+     */
   	post("/registering", (req, res) -> {
   	Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
        
@@ -212,7 +231,7 @@ public class App{
 
     if(!(p1.equals(p2))){
     	Base.close();
-      questt.put("error","Las contraseñas no coincide, vuelva a intentarlo");
+      questt.put("error","Las contraseñas no coinciden, vuelva a intentarlo");
       return new ModelAndView(questt,"./views/registrar.html");
     }
     List<User> unico = User.where("username = ? or mail = ? ", result[0], result[1]);
