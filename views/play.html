@@ -13,14 +13,18 @@
 			</li>
 		</ul>
 	  <section>
-			<h2>Bienvenido <b>{{username}}</b> a Preguntado$, ya puedes jugar> </h2>
-			<h1>Respuestas correctas: {{corrects}}</h1>
-			<h1>Respuestas incorrectas: {{incorrects}}</h1>
-
+			<h2>Bienvenido <font color="blue"><b>{{username}}</b></font>, ya puedes jugar</h2>
+			<h1>Respuestas <font color="green">correctas:</font> {{corrects}}</h1>
+			<h1>Respuestas <font color="red">incorrectas:</font> {{incorrects}}</h1>
 			<h1>Categoria: <b>{{categ}}</b></h1>
-			<h1>La pregunta es:  <b>{{desc}}</b></h1><br>
+			<br>
 			<div>
 				<ul class="pregunta">
+					<li>La pregunta es:  <b>{{desc}}</li>
+				</ul>
+			</div>
+			<div>
+				<ul class="respuesta">
 					<li>Opcion 1:  {{a1}}</li>
 					<li>Opcion 2:  {{a2}}</li>
 					<li>Opcion 3:  {{a3}}</li>
