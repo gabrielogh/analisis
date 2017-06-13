@@ -92,6 +92,7 @@ p:hover {
   position: relative;
   background-color: #2E9AFE;
   border-radius: 5px 5px 5px 5px;
+  color: #fff;
 }
 .respuesta{
   float:left;

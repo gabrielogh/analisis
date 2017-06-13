@@ -29,27 +29,25 @@ public class App{
     // CSS,INAGES,JS.
     staticFiles.location("/public");
 
-    //Mensaje de Bienvenida
-    Map map = new HashMap();
-    map.put("logo", "Preguntado$");
-    map.put("title", "Bienvenido a Preguntado$");
-
     //Iicio de metodos GET
     //----------------------------------------------------------------------------------------------------------
     //Pagina principal.
     get("/index", (req, res) -> {
-    		map.put("username", req.queryParams("username"));
+      Map map = new HashMap();
+      map.put("title", "Bienvenido a Preguntado$");
+    	map.put("username", req.queryParams("username"));
     	if(req.session().attribute("username")!=null){
     		map.put("userId", (Integer)req.session().attribute("userId"));
     		map.put("play", "jugar");
     		map.put("logout","Salir");
     	}
       return new ModelAndView(map,"./views/index.html");
-    }, new MustacheTemplateEngine()
-    );
+    }, new MustacheTemplateEngine());
     //----------------------------------------------------------------------------------------------------------
     //Pagina de log de usuarios.
     get("/login", (req, res) -> {
+      Map map = new HashMap();
+      map.put("title", "Bienvenido a Preguntado$");
     	if(req.session().attribute("username")!=null){
     		map.put("id", req.session().attribute("userId"));
     		map.put("play", "jugar");
@@ -60,6 +58,8 @@ public class App{
     //----------------------------------------------------------------------------------------------------------
     //Pagina de registro de usuarios.
     get("/registrar", (req, res) -> {
+      Map map = new HashMap();
+      map.put("title", "Bienvenido a Preguntado$");
     	if(req.session().attribute("username")!=null){
     		map.put("play", "jugar");
     		map.put("logout","Salir");
@@ -69,23 +69,29 @@ public class App{
     //----------------------------------------------------------------------------------------------------------
     //Rankign de usuarios.
     get("/ranking", (req, res) -> {
+      Map map = new HashMap();
+      map.put("title", "Bienvenido a Preguntado$");
     	if(req.session().attribute("username")!=null){
     		map.put("id", req.session().attribute("userId"));
     		map.put("play", "jugar");
     		map.put("logout","Salir");
     	}
+      Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
+      List<User> users = User.findAll();
+      Base.close();
       return new ModelAndView(map, "./views/ranking.html");
     }, new MustacheTemplateEngine());
     //----------------------------------------------------------------------------------------------------------
     //Desconectarse.
     get("/logout", (req, res) -> {
+      Map logout = new HashMap();
+      logout.put("username", null);
     	if(req.session().attribute("username")!=null){
 	 			req.session().removeAttribute("username");
         req.session().removeAttribute("userId");
-        Map logout = new HashMap();
         return new ModelAndView(logout,"./views/index.html"); 
     	}
-      return new ModelAndView(map,"./views/index.html"); 
+      return new ModelAndView(logout,"./views/index.html"); 
     }, new MustacheTemplateEngine());
 
     /**
@@ -145,7 +151,6 @@ public class App{
       //Obtenemos el Usuario actual
       List<User> user_now = User.where("id = ?", (Integer)req.session().attribute("userId"));
       User u = user_now.get(0);
-      System.out.println("ID DEL USER: " + (Integer)u.get("id"));
       //Obtenemos el primer juego comenzado (si no tiene juegos iniciados creamos uno nuevo)
       Game game_now = u.getGameInProgress();
       game_now.saveIt();
@@ -154,7 +159,7 @@ public class App{
     	String[] resQ = {(String)que.get("description"),(String)que.get("a1"),(String)que.get("a2"),(String)que.get("a3"),(String)que.get("a4")};
     	Integer correct = (Integer)que.get("correct_a");
     	//System.out.println("ID DEL JUEGO: " + (Integer)game_now.get("id"));
-	    res_play.put("categ", (String)cat.get("name"));
+	    res_play.put("categ", cat.get("name"));
       res_play.put("username", ((String)u.get("username")).toUpperCase());
 	    res_play.put("game_id", game_now.get("id"));
 	    res_play.put("desc", resQ[0]);
@@ -164,8 +169,9 @@ public class App{
 	    res_play.put("a4", resQ[4]);
 	    res_play.put("correct", correct);
 	    res_play.put("qid", que.get("id"));
-	    res_play.put("corrects",(Integer)game_now.get("corrects"));
-	    res_play.put("incorrects",(Integer)game_now.get("incorrects"));
+	    res_play.put("corrects", game_now.get("corrects"));
+	    res_play.put("incorrects", game_now.get("incorrects"));
+      res_play.put("logout", "Salir");
       Base.close();
       return new ModelAndView(res_play, "./views/play.html");
     }, new MustacheTemplateEngine());
@@ -179,15 +185,12 @@ public class App{
     post("/answer", (req,res) -> {
     	Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
 
-      //System.out.println("ID DEL JUEGO POST: " + (Integer)req.queryParams("gameId"));
       List<Game> games = Game.where("id = ?", req.queryParams("gameId"));
       Game game_now = games.get(0);
 	    List<User> users = User.where("id = ?", (Integer)req.session().attribute("userId"));
 	    User user_now = users.get(0);
 	    List<Question> question = Question.where("id = ?", req.queryParams("qId"));
 	    Question question_now = question.get(0);
-
-			Map resAnswer = new HashMap();
 
 			game_now.set("question_number", (Integer)game_now.get("question_number")+1).saveIt();
 			int answer = Integer.valueOf(req.queryParams("answer"));
@@ -198,14 +201,8 @@ public class App{
 
 			}
       //Validamos la respuesta
-			if(question_now.validateA(answer)){
-				user_now.set("c_questions", (Integer)user_now.get("c_questions")+1).saveIt();
-        game_now.set("corrects", (Integer)game_now.get("corrects")+1).saveIt();
-	    }
-	    else{
-				user_now.set("i_questions", (Integer)user_now.get("i_questions")+1).saveIt();
-        game_now.set("incorrects", (Integer)game_now.get("incorrects")+1).saveIt();
-	    }
+      user_now.answerAQuestion(question_now, answer, game_now);
+      //user_now.set("score",)
  			Base.close();
  			String link = "play";
   		res.redirect(link);

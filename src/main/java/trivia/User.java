@@ -17,9 +17,6 @@ public class User extends Model {
   }
   //Metodo que registra un usuario
   public User(String user, String mail, String pass){
-    validatePresenceOf("username").message("Por favor, ingrese un usuario");
-    validatePresenceOf("password").message("Por favor, ingrese una contraseña");
-    validatePresenceOf("mail").message("Por favor, ingrese un email");
     set("username", user);
     set("mail", mail);
     set("password", pass);
@@ -45,6 +42,17 @@ public class User extends Model {
     }
     Game g = this.createGameForUser();
     return g; 
+  }
+
+  public void answerAQuestion(Question q, int a, Game g){
+      if(q.validateA(a)){
+        this.set("c_questions", (Integer)this.get("c_questions")+1).saveIt();
+        g.set("corrects", (Integer)g.get("corrects")+1).saveIt();
+      }
+      else{
+        this.set("i_questions", (Integer)this.get("i_questions")+1).saveIt();
+        g.set("incorrects", (Integer)g.get("incorrects")+1).saveIt();
+      }
   }
 
 }
