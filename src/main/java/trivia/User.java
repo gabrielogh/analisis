@@ -25,11 +25,22 @@ public class User extends Model {
     set("i_questions",0);
   }
 
+  //Metodo que crea un juego para un usuario
   public Game createGameForUser(){
     return new Game((Integer)this.get("id"));
   }
 
+  //Metodo utilizado para el Ranking
+  public String username(){
+    return this.getString("username");
+  }
   
+  //Metodo utilizado para el Ranking
+  public int c_questions(){
+    return this.getInteger("c_questions");
+  }
+
+  //Devuelve el primer juego en progreso que tenga el usuario, si no tiene ninguno, crea uno.
   public Game getGameInProgress(){
     List<Game> user_games = this.getAll(Game.class);
     int i = 0;
@@ -44,6 +55,7 @@ public class User extends Model {
     return g; 
   }
 
+  //Metodo que le permita a un usuario responder una pregunta.
   public void answerAQuestion(Question q, int a, Game g){
       if(q.validateA(a)){
         this.set("c_questions", (Integer)this.get("c_questions")+1).saveIt();

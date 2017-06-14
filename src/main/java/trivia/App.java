@@ -99,20 +99,13 @@ public class App{
     }, new MustacheTemplateEngine());
     //----------------------------------------------------------------------------------------------------------
     //Rankign de usuarios.
-    get("/ranking", (req, res) -> {
-      Map attributes = new HashMap();
-      attributes.put("title", "Bienvenido a Preguntado$");
-    	if(req.session().attribute("username")!=null){
-    		attributes.put("id", req.session().attribute("userId"));
-    		attributes.put("play", "jugar");
-    		attributes.put("logout","Salir");
-    	}
-      
-      List<User> users = User.findAll();
-      User u = users.get(0);
-      attributes.put("users", users);
-      return new ModelAndView(attributes, "./views/users.moustache");
-    }, new MustacheTemplateEngine());
+    get("/ranking",(req,res)->{
+      Map rank = new HashMap();
+      List<User> top_10 = User.findBySQL("select * from users order by c_questions desc limit 10");
+      rank.put("ranking",top_10);
+      return new ModelAndView(rank,"./views/ranking.html");
+    },new MustacheTemplateEngine());
+  
     //----------------------------------------------------------------------------------------------------------
     //Desconectarse.
     get("/logout", (req, res) -> {

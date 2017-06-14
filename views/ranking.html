@@ -3,6 +3,7 @@
 	<head>
 		<title> Bienvenido a Preguntado$ </title>
 		<link rel='stylesheet' href='/css/style.css'>
+		<link rel='stylesheet' href='/css/ranking.css'>
 		<link rel='stylesheet' href='/css/w3.css'>
 	</head>
 	<body>
@@ -15,11 +16,21 @@
 			<li><a href="/logout">{{logout}}</a></li>
 		</li>
 		</ul>
-		<ul>
-			{{#users}}
-			  <li> {{username}} {{score}} </li>
-			{{/users}}
-		</ul>  
+		<h2>Top 10 Users</h2>
+		<div class="center">
+			<table style="width:100%">
+			  <tr>
+			    <th>Nombre</th>
+			    <th>Puntaje</th> 
+			  </tr>
+			  {{#ranking}}
+				  <tr>
+			    	<td>{{username}}</td>
+			    	<td>{{c_questions}}</td>
+				  </tr>
+			  {{/ranking}}
+			</table>
+		</div>
 	<footer>Desarrollado por Melegatti Pablo, Somare Francico y Gabriel Gonzalez - UNRC 2017</footer>
 	</body>
 </html>
