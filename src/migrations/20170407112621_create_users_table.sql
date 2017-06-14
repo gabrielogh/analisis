@@ -1,7 +1,7 @@
 CREATE TABLE users (
   id  int(11) auto_increment,
   username  varchar(20),
-  password	varchar(8),
+  password	varchar(100),
   mail	varchar(30),
   i_questions int,
   c_questions int,

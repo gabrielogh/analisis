@@ -3,6 +3,10 @@ package trivia;
 //MD5
 import java.security.MessageDigest;
 import java.math.BigInteger;
+import java.security.NoSuchAlgorithmException;
+import javax.crypto.Mac;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 //--------------------------------
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.validation.UniquenessValidator;
@@ -22,7 +26,28 @@ import spark.template.mustache.MustacheTemplateEngine;
 //---------------------------------
 
 public class App{
+  public static String md5Encode(String texto) {
+    String output = "";
+    try {
+      byte[] defaultBytes = texto.getBytes();
+      MessageDigest algorithm = MessageDigest.getInstance("MD5");
+      algorithm.reset();
+      algorithm.update(defaultBytes);
+      byte messageDigest[] = algorithm.digest();
 
+      StringBuffer hexString = new StringBuffer();
+      for (int i = 0; i < messageDigest.length; i++) {
+        hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
+      }
+      //String foo = messageDigest.toString();
+      
+      output = hexString + "";
+      
+    } catch (NoSuchAlgorithmException noSuchAlgorithmException) {
+      System.out.println("Error");
+    }
+    return output;
+  }
   public static void main( String[] args ){ 
 
 		Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
@@ -112,11 +137,12 @@ public class App{
 
     	Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
     	String password = req.queryParams("password");
+      String passMD5 = md5Encode(password);
       String namee = req.queryParams("username");
     	req.session(true);
 
 	    //Verificamos si existe algun usuario con ese username y esa pass.
-	    List<User> unico = User.where("username = ? and password = ?", namee,password);
+	    List<User> unico = User.where("username = ? and password = ?", namee, passMD5);
 	    Boolean result2 = unico.size()==0;
 			
       //Si encontramos un usuario cargamos la sesion.
@@ -234,19 +260,12 @@ public class App{
     List<User> unico = User.where("username = ? or mail = ? ", result[0], result[1]);
     Boolean result2 = unico.size()==0;
   	if(result2){
-      /*
-      //Codificacion password MD5.
-      MessageDigest md = MessageDigest.getInstance(MessageDigestAlgorithms.MD5);
-      md.update(((String)result[2]).getBytes());
-      byte[] digest = md.digest();
-      String pas;
-      for (byte b : digest) {
-         pas=(pas+(Integer.toHexString(0xFF & b)));
-      }
-      */
-	  	User u = new User(result[0],result[1], result[2]);
+      String passMD5= md5Encode(p1);
+	  	User u = new User(result[0],result[1], passMD5);
 	  	u.saveIt();
 	    questt.put("id", u.getId());
+      req.session(true);
+      req.session().attribute("userId",(Integer)unico.get(0).get("id"));
 	    Base.close();
 	  }
     else{
