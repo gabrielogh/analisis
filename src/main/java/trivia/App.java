@@ -49,10 +49,16 @@ public class App{
     return output;
   }
   public static void main( String[] args ){ 
-
-		Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
     // CSS,INAGES,JS.
     staticFiles.location("/public");
+
+    before((req, res)->{
+        Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
+    });
+
+    after((req, res) -> {
+      Base.close();
+    });
 
     //Iicio de metodos GET
     //----------------------------------------------------------------------------------------------------------
@@ -62,7 +68,7 @@ public class App{
       map.put("title", "Bienvenido a Preguntado$");
     	map.put("username", req.queryParams("username"));
     	if(req.session().attribute("username")!=null){
-    		map.put("userId", (Integer)req.session().attribute("userId"));
+    		map.put("userId", (int)req.session().attribute("userId"));
     		map.put("play", "jugar");
     		map.put("logout","Salir");
     	}
@@ -94,18 +100,17 @@ public class App{
     //----------------------------------------------------------------------------------------------------------
     //Rankign de usuarios.
     get("/ranking", (req, res) -> {
-      Map<String, Object> attributes = new HashMap();
+      Map attributes = new HashMap();
       attributes.put("title", "Bienvenido a Preguntado$");
     	if(req.session().attribute("username")!=null){
     		attributes.put("id", req.session().attribute("userId"));
     		attributes.put("play", "jugar");
     		attributes.put("logout","Salir");
     	}
-      Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
       
       List<User> users = User.findAll();
+      User u = users.get(0);
       attributes.put("users", users);
-      Base.close();
       return new ModelAndView(attributes, "./views/users.moustache");
     }, new MustacheTemplateEngine());
     //----------------------------------------------------------------------------------------------------------
@@ -137,7 +142,6 @@ public class App{
 	    	return new ModelAndView(resLogin,"./views/login.html");
     	}
 
-    	Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
     	String password = req.queryParams("password");
       String passMD5 = md5Encode(password);
       String namee = req.queryParams("username");
@@ -154,14 +158,11 @@ public class App{
 	      req.session().attribute("userId",(Integer)unico.get(0).get("id"));
     		resLogin.put("play", "Jugar");
         resLogin.put("logout","Salir");
-    		Base.close();
 	    }
 	    else{
-	    	Base.close();
 	    	resLogin.put("error","Usuario o password incorrectos");
 	    	return new ModelAndView(resLogin,"./views/login.html");
 	    }
-    	Base.close();
     	return new ModelAndView(resLogin,"./views/index.html");   	
     }, new MustacheTemplateEngine());
 
@@ -173,7 +174,6 @@ public class App{
      * @post. question_number inrease. User profile updated.
      */
     get("/play", (req, res) -> {
-    	Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
       Map res_play = new HashMap();
 
       //Obtenemos el Usuario actual
@@ -199,7 +199,6 @@ public class App{
 	    res_play.put("corrects", game_now.get("corrects"));
 	    res_play.put("incorrects", game_now.get("incorrects"));
       res_play.put("logout", "Salir");
-      Base.close();
       return new ModelAndView(res_play, "./views/play.html");
     }, new MustacheTemplateEngine());
     
@@ -210,8 +209,6 @@ public class App{
      * @post. question_number inrease. User profile updated.
      */
     post("/answer", (req,res) -> {
-    	Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
-
       List<Game> games = Game.where("id = ?", req.queryParams("gameId"));
       Game game_now = games.get(0);
 	    List<User> users = User.where("id = ?", (Integer)req.session().attribute("userId"));
@@ -230,7 +227,6 @@ public class App{
       //Validamos la respuesta
       user_now.answerAQuestion(question_now, answer, game_now);
       //user_now.set("score",)
- 			Base.close();
  			String link = "play";
   		res.redirect(link);
   		return null;	
@@ -242,9 +238,7 @@ public class App{
      * @pre. username != "", password == password2, email != "".
      * @post. User registered / Error.
      */
-  	post("/registering", (req, res) -> {
-  	Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
-       
+  	post("/registering", (req, res) -> {       
   	// Se cargan los parámetros de la query (URL) en un arreglo
     String[] result = {req.queryParams("username"),req.queryParams("email"),(String)req.queryParams("password"),(String)req.queryParams("password2")};
   	String body = req.body();
@@ -254,7 +248,6 @@ public class App{
     String p2 = new String(req.queryParams("password2"));
 
     if(!(p1.equals(p2))){
-    	Base.close();
       questt.put("error","Las contraseñas no coinciden, vuelva a intentarlo");
       return new ModelAndView(questt,"./views/registrar.html");
     }
@@ -263,31 +256,26 @@ public class App{
   	if(result2){
       String passMD5= md5Encode(p1);
 	  	User u = new User(result[0],result[1], passMD5);
+
 	  	u.saveIt();
 	    questt.put("id", u.getId());
-      req.session(true);
-      req.session().attribute("userId",(Integer)unico.get(0).get("id"));
-	    Base.close();
 	  }
     else{
       User u = unico.get(0);
       String e = (String)u.get("mail");
       if(e.equals(result[1])){
-      	Base.close();
       	questt.put("error","Ese e-mail ya se encuentra registrado, intente con otro");
       	return new ModelAndView(questt,"./views/registrar.html");
       }
       else{
-        Base.close();
         questt.put("error","Ese usuario ya existe, intente con otro");
         return new ModelAndView(questt,"./views/registrar.html");
       }
     }
 
-    return new ModelAndView(questt, "./views/play.html");
+    return new ModelAndView(questt, "./views/index.html");
   	}, new MustacheTemplateEngine());
 		
     //Fin.
-  	Base.close();
   }
 }
