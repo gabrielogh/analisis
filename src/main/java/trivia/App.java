@@ -94,17 +94,19 @@ public class App{
     //----------------------------------------------------------------------------------------------------------
     //Rankign de usuarios.
     get("/ranking", (req, res) -> {
-      Map map = new HashMap();
-      map.put("title", "Bienvenido a Preguntado$");
+      Map<String, Object> attributes = new HashMap();
+      attributes.put("title", "Bienvenido a Preguntado$");
     	if(req.session().attribute("username")!=null){
-    		map.put("id", req.session().attribute("userId"));
-    		map.put("play", "jugar");
-    		map.put("logout","Salir");
+    		attributes.put("id", req.session().attribute("userId"));
+    		attributes.put("play", "jugar");
+    		attributes.put("logout","Salir");
     	}
       Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
+      
       List<User> users = User.findAll();
+      attributes.put("users", users);
       Base.close();
-      return new ModelAndView(map, "./views/ranking.html");
+      return new ModelAndView(attributes, "./views/users.moustache");
     }, new MustacheTemplateEngine());
     //----------------------------------------------------------------------------------------------------------
     //Desconectarse.
@@ -159,7 +161,7 @@ public class App{
 	    	resLogin.put("error","Usuario o password incorrectos");
 	    	return new ModelAndView(resLogin,"./views/login.html");
 	    }
-    	
+    	Base.close();
     	return new ModelAndView(resLogin,"./views/index.html");   	
     }, new MustacheTemplateEngine());
 
@@ -184,7 +186,6 @@ public class App{
    		Question que = cat.getQuestion();
     	String[] resQ = {(String)que.get("description"),(String)que.get("a1"),(String)que.get("a2"),(String)que.get("a3"),(String)que.get("a4")};
     	Integer correct = (Integer)que.get("correct_a");
-    	//System.out.println("ID DEL JUEGO: " + (Integer)game_now.get("id"));
 	    res_play.put("categ", cat.get("name"));
       res_play.put("username", ((String)u.get("username")).toUpperCase());
 	    res_play.put("game_id", game_now.get("id"));
