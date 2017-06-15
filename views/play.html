@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
 		<title> Bienvenido a Preguntado$ </title>
 		<link rel='stylesheet' href='/css/play.css'>
 	</head>
@@ -15,6 +16,11 @@
 		</ul>
 	  <section>
 			<h2>Bienvenido <font color="blue"><b>{{username}}</b></font>, ya puedes jugar</h2>
+			<div>
+				<ul class="juego">
+					<li><b>{{newgame}}</b></li>
+				</ul>
+			</div>
 			<h1>Respuestas <font color="green">correctas:</font> {{corrects}}</h1>
 			<h1>Respuestas <font color="red">incorrectas:</font> {{incorrects}}</h1>
 			<h1>Categoria: <b>{{categ}}</b></h1>

@@ -206,3 +206,54 @@
     Question qdep12 = new Question("¿Cuántos cuadros tiene un tablero de ajedres?", "36", "54", "64", "81", 3);
     qdep12.set("category_id", cdep.get("id"));
     qdep12.saveIt();
+
+       Category c = new Category("Geografia");
+    c.saveIt();
+
+    Question q1 = new Question("¿Cual es el pais menos turistico de Europa?", "Armenia", "Moldavia", "Lichtenstein", "Hungria", 3);
+    q1.set("category_id", c.get("id"));
+    q1.saveIt();
+
+       Question q2 = new Question("¿A que pais pertenece la isla de Tasmania?", "Estados Unidos", "Australia", "Portugal", "Ninguna es correcta", 2);
+    q2.set("category_id", c.get("id"));
+    q2.saveIt();
+
+       Question q3 = new Question("¿En cuál de los siguientes países NO hay ningún desierto?", "España", "Chile", "Mongolia", "Alemania", 4);
+    q3.set("category_id", c.get("id"));
+    q3.saveIt();
+
+       Question q4 = new Question("¿Cuál es el código internacional para Chile?", "CH", "CI", "CL", "CE", 3);
+    q4.set("category_id", c.get("id"));
+    q4.saveIt();
+
+       Question q5 = new Question("¿En qué país situarías la ciudad de Cali?", "Colombia", "Venezuela", "Costa Rica", "Chile", 1);
+    q5.set("category_id", c.get("id"));
+    q5.saveIt();
+
+       Question q6 = new Question("¿Cuál de estas características no pertenece al clima Mediterráneo?", "Veranos secos y calurosos", "Es un tipo de clima templado", "Lluvias muy abundantes", "Variables temperaturas en primavera", 3);
+    q6.set("category_id", c.get("id"));
+    q6.saveIt();
+
+       Question q7 = new Question("¿Qué es el Cabo de Creus?", "El punto más oriental de España", "El punto más oriental de la Península", "El punto más oriental de Cataluña", "Ninguna es correcta", 2);
+    q7.set("category_id", c.get("id"));
+    q7.saveIt();
+
+       Question q8 = new Question("¿Cuál es principal celebración holandesa?", "Navidad", "La llegada del verano", "El dia de la Reina", "Halloween", 3);
+    q8.set("category_id", c.get("id"));
+    q8.saveIt();
+
+       Question q9 = new Question("¿Cuál de las siguientes especialidades NO es típica de la cocina estadounidense?", "La hamburguesa", "El pastel de cangrejo", "La tarta de manzana", "Todas son tipicas", 4);
+    q9.set("category_id", c.get("id"));
+    q9.saveIt();
+
+       Question q10 = new Question("¿Con cuántos países limita Argentina?", "Tres", "Cuatro", "Cinco", "Seis", 3);
+    q10.set("category_id", c.get("id"));
+    q10.saveIt();
+
+       Question q11 = new Question("¿Cuál es la capital de Suiza?", "Berna", "Zurich", "Ginebra", "Basilea", 1);
+    q11.set("category_id", c.get("id"));
+    q11.saveIt();
+
+       Question q12 = new Question("¿Cuál de las siguientes islas está más al sur?", "Sicilia", "Malta", "Córcega", "Cerdeña", 2);
+    q12.set("category_id", c.get("id"));
+    q12.saveIt();

@@ -60,6 +60,7 @@ public class App{
       Base.close();
     });
 
+   
     //Iicio de metodos GET
     //----------------------------------------------------------------------------------------------------------
     //Pagina principal.
@@ -175,6 +176,12 @@ public class App{
       //Obtenemos el primer juego comenzado (si no tiene juegos iniciados creamos uno nuevo)
       Game game_now = u.getGameInProgress();
       game_now.saveIt();
+      if((int)game_now.get("question_number")==0){
+        res_play.put("newgame","Nuevo juego iniciado");
+      }
+      else{
+        res_play.put("newgame", "Juego en curso");
+      }
 			Category cat = (new Category()).randomCat();
    		Question que = cat.getQuestion();
     	String[] resQ = {(String)que.get("description"),(String)que.get("a1"),(String)que.get("a2"),(String)que.get("a3"),(String)que.get("a4")};

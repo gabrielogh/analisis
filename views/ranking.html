@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
 		<title> Bienvenido a Preguntado$ </title>
 		<link rel='stylesheet' href='/css/style.css'>
 		<link rel='stylesheet' href='/css/ranking.css'>
@@ -22,11 +23,13 @@
 			  <tr>
 			    <th>Nombre</th>
 			    <th>Puntaje</th> 
+			    <th>Win Rate</th> 
 			  </tr>
 			  {{#ranking}}
 				  <tr>
-			    	<td>{{username}}</td>
+			    	<td><b>{{username}}</b></td>
 			    	<td>{{c_questions}}</td>
+			    	<td>%{{win_rate}}</td>
 				  </tr>
 			  {{/ranking}}
 			</table>

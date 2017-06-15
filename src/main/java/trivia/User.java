@@ -1,10 +1,8 @@
 package trivia;
 import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.Base;
-import org.javalite.activejdbc.validation.UniquenessValidator;
 import java.util.List;
-import java.util.Scanner;
-import java.security.MessageDigest;
+
 public class User extends Model {
   static{
     validatePresenceOf("username").message("Por favor, ingrese un usuario");
@@ -20,7 +18,7 @@ public class User extends Model {
     set("username", user);
     set("mail", mail);
     set("password", pass);
-    set("score",0);
+    set("win_rate",0);
     set("c_questions",0);
     set("i_questions",0);
   }
@@ -38,6 +36,10 @@ public class User extends Model {
   //Metodo utilizado para el Ranking
   public int c_questions(){
     return this.getInteger("c_questions");
+  }
+
+  public Double win_rate(){
+    return (Double)this.get("win_rate");
   }
 
   //Devuelve el primer juego en progreso que tenga el usuario, si no tiene ninguno, crea uno.
@@ -65,6 +67,8 @@ public class User extends Model {
         this.set("i_questions", (Integer)this.get("i_questions")+1).saveIt();
         g.set("incorrects", (Integer)g.get("incorrects")+1).saveIt();
       }
+      Double winR = ((((Integer)this.get("c_questions"))* 100) / ((Integer)this.get("c_questions") + (Integer)this.get("i_questions"))) * 1.0;
+      this.set("win_rate", winR).saveIt();
   }
 
 }

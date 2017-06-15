@@ -5,7 +5,7 @@ CREATE TABLE users (
   mail	varchar(30),
   i_questions int,
   c_questions int,
-  score int,
+  win_rate double,
   created_at datetime,
   updated_at datetime,
   primary key(id)
