@@ -73,6 +73,30 @@ input {
 	padding-left: 36px;
 	width: 204px;
 }
+.Registro input[type="pregunta2"] {
+	background-color: #fff;
+	border-top: 2px solid #292929;
+	border-right: 2px solid #292929;
+	border-left: 2px solid #292929;
+	color: #363636;
+	padding-left: 36px;
+	width: 204px;
+}
+.Registro input[type="pregunta4"] {
+	background-color: #fff;
+	border-bottom: 2px solid #292929;
+	-moz-border-radius: 0px 0px 5px 5px;
+	-webkit-border-radius: 0px 0px 5px 5px;
+  -o-border-radius: 0px 0px 5px 5px;
+  -ms-border-radius: 0px 0px 5px 5px;
+	border-top: 2px solid #292929;
+	border-right: 2px solid #292929;
+	border-left: 2px solid #292929;
+	color: #363636;
+	margin-bottom: 20px;
+	padding-left: 36px;
+	width: 204px;
+}
 .Registro input[type="password"] {
 	background-color: #fff;
 	border-top: 2px solid #292929;
