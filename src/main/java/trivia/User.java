@@ -21,6 +21,7 @@ public class User extends Model {
     set("win_rate",0);
     set("c_questions",0);
     set("i_questions",0);
+    set("acces_level", 0);
   }
 
   //Metodo que crea un juego para un usuario

@@ -6,6 +6,7 @@ CREATE TABLE users (
   i_questions int,
   c_questions int,
   win_rate double,
+  acces_level int,
   created_at datetime,
   updated_at datetime,
   primary key(id)

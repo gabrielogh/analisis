@@ -72,9 +72,11 @@ public class App{
     		map.put("userId", (int)req.session().attribute("userId"));
     		map.put("play", "jugar");
     		map.put("logout","Salir");
+        map.put("admin", req.session().attribute("admin"));
     	}
       return new ModelAndView(map,"./views/index.html");
     }, new MustacheTemplateEngine());
+
     //----------------------------------------------------------------------------------------------------------
     //Pagina de log de usuarios.
     get("/login", (req, res) -> {
@@ -82,24 +84,60 @@ public class App{
       map.put("title", "Bienvenido a Preguntado$");
     	if(req.session().attribute("username")!=null){
     		map.put("id", req.session().attribute("userId"));
+    		map.put("admin", req.session().attribute("admin"));
     		map.put("play", "jugar");
     		map.put("logout","Salir");
     	}
       return new ModelAndView(map, "./views/login.html");
     }, new MustacheTemplateEngine());
+
     //----------------------------------------------------------------------------------------------------------
-    //Pagina de registro de usuarios.
+    /**
+     * Panel de Administracion.
+     * @param. username.
+     * @pre. Session Started & AccesLevel == 5.
+     * @post. -.
+     */
+    get("/administrate", (req, res) -> {
+      Map map = new HashMap();
+      map.put("title", "Panel de Administracion");
+      if(req.session().attribute("username")!=null) {
+        map.put("id", req.session().attribute("userId"));
+        map.put("admin", req.session().attribute("admin"));
+        map.put("play", "jugar");
+        map.put("logout","Salir");
+        map.put("admin", req.queryParams("admin"));
+      }
+      else{
+	 			return new ModelAndView(map, "./views/index.html");
+      }
+      return new ModelAndView(map, "./views/administrate.html");
+    }, new MustacheTemplateEngine());
+
+    //----------------------------------------------------------------------------------------------------------
+    /**
+     * User register.
+     * @param username.
+     * @pre. true.
+     * @post. Error(User logged) | User exists | User saved.
+     */
     get("/registrar", (req, res) -> {
       Map map = new HashMap();
       map.put("title", "Bienvenido a Preguntado$");
     	if(req.session().attribute("username")!=null){
     		map.put("play", "jugar");
     		map.put("logout","Salir");
+        map.put("admin", req.session().attribute("admin"));
     	}
       return new ModelAndView(map, "./views/registrar.html");
     }, new MustacheTemplateEngine());
     //----------------------------------------------------------------------------------------------------------
-    //Rankign de usuarios.
+    /**
+     * Ranking.
+     * @param.
+     * @pre. true.
+     * @post. --
+     */
     get("/ranking",(req,res)->{
       Map rank = new HashMap();
       List<User> top_10 = User.findBySQL("select * from users order by c_questions desc limit 10");
@@ -108,13 +146,19 @@ public class App{
     },new MustacheTemplateEngine());
   
     //----------------------------------------------------------------------------------------------------------
-    //Desconectarse.
+    /**
+     * Fin de sesiones.
+     * @param. Session, username, password.
+     * @pre. Session initializen.
+     * @post. User logged out.
+     */
     get("/logout", (req, res) -> {
       Map logout = new HashMap();
       logout.put("username", null);
     	if(req.session().attribute("username")!=null){
 	 			req.session().removeAttribute("username");
         req.session().removeAttribute("userId");
+        req.session().removeAttribute("admin");
         return new ModelAndView(logout,"./views/index.html"); 
     	}
       return new ModelAndView(logout,"./views/index.html"); 
@@ -152,6 +196,10 @@ public class App{
 	      req.session().attribute("userId",(Integer)unico.get(0).get("id"));
     		resLogin.put("play", "Jugar");
         resLogin.put("logout","Salir");
+        User isAdm = unico.get(0);
+        if((int)isAdm.get("acces_level") != 0){
+          req.session().attribute("admin","Adminsitrar");
+        }
 	    }
 	    else{
 	    	resLogin.put("error","Usuario o password incorrectos");
@@ -199,6 +247,7 @@ public class App{
 	    res_play.put("corrects", game_now.get("corrects"));
 	    res_play.put("incorrects", game_now.get("incorrects"));
       res_play.put("logout", "Salir");
+      res_play.put("admin", req.session().attribute("admin"));
       return new ModelAndView(res_play, "./views/play.html");
     }, new MustacheTemplateEngine());
     
@@ -256,7 +305,6 @@ public class App{
   	if(result2){
       String passMD5= md5Encode(p1);
 	  	User u = new User(result[0],result[1], passMD5);
-
 	  	u.saveIt();
 	    questt.put("id", u.getId());
 	  }
