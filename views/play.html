@@ -14,43 +14,58 @@
 			<li><a href="/play">{{play}}</a></li>
 			<li><a href="/administrate">{{admin}}</a></li>
 			<li><a href="/logout">{{logout}}</a></li>
-			</li>
 		</ul>
 	  <section>
-			<h2>Bienvenido <font color="blue"><b>{{username}}</b></font>, ya puedes jugar</h2>
 			<div>
 				<ul class="juego">
 					<li><b>{{newgame}}</b></li>
 				</ul>
 			</div>
-			<h1>Respuestas <font color="green">correctas:</font> {{corrects}}</h1>
-			<h1>Respuestas <font color="red">incorrectas:</font> {{incorrects}}</h1>
-			<h1>Categoria: <b>{{categ}}</b></h1>
+
+		<div class="center">
+			<table style="width:100%">
+			  <tr>
+			    <th>Respuestas <font color="green">correctas</font></th>
+			    <th>Respuestas <font color="red">incorrectas</font></th> 
+			    <th>Categoria</th> 
+			  </tr>
+			  <tr>
+		    	<td><b>{{corrects}}</b></td>
+		    	<td>{{incorrects}}</td>
+		    	<td>{{categ}}</td>
+			  </tr>
+			</table>
+		</div>
 			<br>
 			<div>
 				<ul class="pregunta">
-					<li>La pregunta es:  <b>{{desc}}</b></li>
+					<li><b>{{desc}}</b></li>
 				</ul>
 			</div>
 			<div>
+				<h1>Respuestas:</h1>
 				<ul class="respuesta">
-					<li>Opcion 1:  {{a1}}</li>
-					<li>Opcion 2:  {{a2}}</li>
-					<li>Opcion 3:  {{a3}}</li>
-					<li>Opcion 4:  {{a4}}</li>
+					<li>
+						<form action="/answer?gameId={{game_id}}&ca={{correct}}&qId={{qid}}&id={{id}}&answer=1" method="post">
+						  <button type="submit">{{a1}}</button>
+						</form>
+					</li>
+					<li>
+						<form action="/answer?gameId={{game_id}}&ca={{correct}}&qId={{qid}}&id={{id}}&answer=2" method="post">
+						  <button type="submit">{{a2}}</button>
+						</form>
+					</li>
+					<li>
+						<form action="/answer?gameId={{game_id}}&ca={{correct}}&qId={{qid}}&id={{id}}&answer=3" method="post">
+						  <button type="submit">{{a3}}</button>
+						</form>
+					</li>
+					<li>
+						<form action="/answer?gameId={{game_id}}&ca={{correct}}&qId={{qid}}&id={{id}}&answer=4" method="post">
+						  <button type="submit">{{a4}}</button>
+						</form>
+					</li>
 				</ul>
-			</div>
-			<div class="form">
-				<form action="/answer?gameId={{game_id}}&ca={{correct}}&qId={{qid}}&id={{id}}" method="post">
-				  <label for="answer">Numero de respuesta:</label>
-				  <select name="answer">
-					   <option value="1">1</option> 
-					   <option value="2">2</option> 
-					   <option value="3">3</option>
-					   <option value="4">4</option> 
-					</select>
-				  <button type="submit" class="btn btn-primary">Enviar</button>
-				</form>
 			</div>
 		</section>
   <footer>Desarrollado por Melegatti Pablo, Somare Francico y Gabriel Gonzalez - UNRC 2017</footer>

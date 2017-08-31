@@ -26,6 +26,7 @@ import spark.template.mustache.MustacheTemplateEngine;
 //---------------------------------
 
 public class App{
+
   public static String md5Encode(String texto) {
     String output = "";
     try {
@@ -48,8 +49,8 @@ public class App{
     }
     return output;
   }
-  public static void main( String[] args ){ 
-    // CSS,INAGES,JS.
+  public static void main( String[] args ){
+    // CSS,IMAGES,JS.
     staticFiles.location("/public");
 
     before((req, res)->{
@@ -67,12 +68,12 @@ public class App{
     get("/index", (req, res) -> {
       Map map = new HashMap();
       map.put("title", "Bienvenido a Preguntado$");
-    	map.put("username", req.queryParams("username"));
     	if(req.session().attribute("username")!=null){
     		map.put("userId", (int)req.session().attribute("userId"));
+        map.put("username", req.queryParams("username"));
     		map.put("play", "jugar");
     		map.put("logout","Salir");
-        map.put("admin", req.session().attribute("admin"));
+        map.put("admin", (String)req.session().attribute("admin"));
     	}
       return new ModelAndView(map,"./views/index.html");
     }, new MustacheTemplateEngine());
@@ -142,6 +143,9 @@ public class App{
       Map rank = new HashMap();
       List<User> top_10 = User.findBySQL("select * from users order by c_questions desc limit 10");
       rank.put("ranking",top_10);
+      rank.put("play", "jugar");
+      rank.put("logout","Salir");
+      rank.put("admin", req.session().attribute("admin"));
       return new ModelAndView(rank,"./views/ranking.html");
     },new MustacheTemplateEngine());
   
@@ -163,7 +167,7 @@ public class App{
     	}
       return new ModelAndView(logout,"./views/index.html"); 
     }, new MustacheTemplateEngine());
-
+    //----------------------------------------------------------------------------------------------------------
     /**
      * Inicio de sesiones.
      * @param. Session, username, password.
@@ -172,7 +176,6 @@ public class App{
      */
     post("/logger", (req,res) -> {
     	Map resLogin = new HashMap();
-    	//Si ya estmos conectados, no podemos conectarnos nuevamente.
     	if(req.session().attribute("username")!=null){
     		resLogin.put("id", (Integer)req.session().attribute("userId"));
     		resLogin.put("play", "jugar");
@@ -189,15 +192,13 @@ public class App{
 	    List<User> unico = User.where("username = ? and password = ?", namee, passMD5);
 	    Boolean result2 = unico.size()==0;
 			
-      //Si encontramos un usuario cargamos la sesion.
 			if(!result2){
 	      req.session().attribute("username", namee);
-	      req.session().attribute("password", password);
 	      req.session().attribute("userId",(Integer)unico.get(0).get("id"));
     		resLogin.put("play", "Jugar");
         resLogin.put("logout","Salir");
         User isAdm = unico.get(0);
-        if((int)isAdm.get("acces_level") != 0){
+        if((Integer)isAdm.get("acces_level") == 5){
           req.session().attribute("admin","Adminsitrar");
         }
 	    }
@@ -207,7 +208,7 @@ public class App{
 	    }
     	return new ModelAndView(resLogin,"./views/index.html");   	
     }, new MustacheTemplateEngine());
-
+    //----------------------------------------------------------------------------------------------------------
     /**
      * 
      * Modulo que entrega una pregunta y obtiene una respuesta.
@@ -224,26 +225,38 @@ public class App{
       //Obtenemos el primer juego comenzado (si no tiene juegos iniciados creamos uno nuevo)
       Game game_now = u.getGameInProgress();
       game_now.saveIt();
+      Category cat;
+      Question que;
+      String[] resQ = new String[5];
+      Integer correct;
+
       if((int)game_now.get("question_number")==0){
         res_play.put("newgame","Nuevo juego iniciado");
+        cat = (new Category()).randomCat();
+        que = cat.getQuestion();
+        resQ = { (String)que.get("description"), (String)que.get("a1"), (String)que.get("a2"), (String)que.get("a3"), (String)que.get("a4")};
+        correct = (Integer)que.get("correct_a");
       }
       else{
         res_play.put("newgame", "Juego en curso");
+        List<Question> question_now = Question.where("id = ?", (Integer)game_now.get("current_question_id"));
+        que = question_now.get(0);
+        List<Category> questions = Category.where("id = ?", (Integer)que.get("category_id"));
+        cat = questions.get(0);
+        resQ = {(String)que.get("description"),(String)que.get("a1"),(String)que.get("a2"),(String)que.get("a3"),(String)que.get("a4")};
+        correct = (Integer)que.get("correct_a");
       }
-			Category cat = (new Category()).randomCat();
-   		Question que = cat.getQuestion();
-    	String[] resQ = {(String)que.get("description"),(String)que.get("a1"),(String)que.get("a2"),(String)que.get("a3"),(String)que.get("a4")};
-    	Integer correct = (Integer)que.get("correct_a");
-	    res_play.put("categ", cat.get("name"));
+
+      res_play.put("categ", cat.get("name"));
       res_play.put("username", ((String)u.get("username")).toUpperCase());
-	    res_play.put("game_id", game_now.get("id"));
-	    res_play.put("desc", resQ[0]);
-	    res_play.put("a1", resQ[1]);
-	    res_play.put("a2", resQ[2]);
-	    res_play.put("a3", resQ[3]);
-	    res_play.put("a4", resQ[4]);
-	    res_play.put("correct", correct);
-	    res_play.put("qid", que.get("id"));
+      res_play.put("game_id", game_now.get("id"));
+      res_play.put("desc", resQ[0]);
+      res_play.put("a1", resQ[1]);
+      res_play.put("a2", resQ[2]);
+      res_play.put("a3", resQ[3]);
+      res_play.put("a4", resQ[4]);
+      res_play.put("correct", correct);
+      res_play.put("qid", que.get("id"));
 	    res_play.put("corrects", game_now.get("corrects"));
 	    res_play.put("incorrects", game_now.get("incorrects"));
       res_play.put("logout", "Salir");

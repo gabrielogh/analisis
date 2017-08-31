@@ -4,7 +4,7 @@
 		<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
 		<title> Bienvenido a Preguntado$ </title>
 		<link rel='stylesheet' href='/css/style.css'>
-		<link rel='stylesheet' href='/css/login.css'>
+		<link rel='stylesheet' href='/css/reg.css'>
 	</head>
 	<body>
 		<ul class="menu">
@@ -16,16 +16,18 @@
 			<li><a href="/administrate">{{admin}}</a></li>
 			<li><a href="/logout">{{logout}}</a></li>
 		</ul>
-		<p class="texto">Ingresar</p>
+		<p class="texto">Generador de Preguntas</p>
 		<div class="Registro">
-			<form method="post" action="/logger">
-				<input type="text1" name="username" required placeholder="Nombre de usuario" autocomplete="off">
-				<input type="password" name="password" id="password" required placeholder="Contraseña" autocomplete="off"> 
-				<input type="submit" value="Ingresar" title="ingresar">
+			<form method="post" action="/registering">
+				<input type="pregunta1" name="description" required placeholder="Escriba la pregunta" autocomplete="off">
+				<input type="pregunta2" name="option1" required placeholder="Opcion 1" autocomplete="off">
+				<input type="pregunta2" name="option2" required placeholder="Opcion 2" autocomplete="off">
+				<input type="pregunta2" name="option3" required placeholder="Opcion 3" autocomplete="off">
+				<input type="pregunta4" name="option4" required placeholder="Opcion 4" autocomplete="off">
+				<input type="submit" value="Agregar" title="Registra tu cuenta">
 				<b><font color="red">{{error}}</font></b>
 			</form>
 		</div>
   <footer>Desarrollado por Melegatti Pablo, Somare Francico y Gabriel Gonzalez - UNRC 2017</footer>
-
 	</body>
 </html>

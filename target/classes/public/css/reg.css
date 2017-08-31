@@ -24,16 +24,16 @@ input {
 }
 
 .Registro {
-	margin: 50px auto;
-	width: 242px;
+	margin-left:33.33%;
+	width: 30%;
 }
 
 .Registro span {
 	color: hsl(5, 50%, 57%);
-	display: block;
+
 	height: 48px;
 	line-height: 48px;
-	position: absolute;
+	position: fixed;
 	text-align: center;
 	width: 36px;
 }
@@ -71,7 +71,21 @@ input {
   -ms-border-radius: 5px 5px 0 0;
 	color: #363636;
 	padding-left: 36px;
-	width: 204px;
+	width: 100%;
+}
+.Registro input[type="pregunta1"] {
+	background-color: #fff;
+	border-top: 2px solid #292929;
+	border-right: 2px solid #292929;
+	border-left: 2px solid #292929;
+	border-radius: 0px 0px 5px 5px;
+	-moz-border-radius: 5px 5px 0 0;
+	-webkit-border-radius: 5px 5px 0 0;
+  -o-border-radius: 5px 5px 0 0;
+  -ms-border-radius: 5px 5px 0 0;
+	color: #363636;
+	padding-left: 36px;
+	width: 100%;
 }
 .Registro input[type="pregunta2"] {
 	background-color: #fff;
@@ -80,7 +94,7 @@ input {
 	border-left: 2px solid #292929;
 	color: #363636;
 	padding-left: 36px;
-	width: 204px;
+	width: 100%;
 }
 .Registro input[type="pregunta4"] {
 	background-color: #fff;
@@ -95,7 +109,7 @@ input {
 	color: #363636;
 	margin-bottom: 20px;
 	padding-left: 36px;
-	width: 204px;
+	width: 100%;
 }
 .Registro input[type="password"] {
 	background-color: #fff;

@@ -17,6 +17,7 @@ public class Game extends Model{
     set("in_progress",true);
     set("incorrects",0);
     set("corrects",0);
+    set("current_question_id", -1);
   }
   //Metodo que retorna una categoria Random
   public Category getRandomCat(){

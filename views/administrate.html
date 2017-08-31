@@ -15,17 +15,16 @@
 			<li><a href="/play">{{play}}</a></li>
 			<li><a href="/administrate">{{admin}}</a></li>
 			<li><a href="/logout">{{logout}}</a></li>
-			</li>
 		</ul>
 		<p class="texto">Generador de Preguntas</p>
-		<div class="Registro">
+		<div class="Registro" align='center'>
 			<form method="post" action="/registering">
-				<input type="text1" name="description" required placeholder="Escriba la pregunta" autocomplete="off">
+				<input type="pregunta1" name="description" required placeholder="Escriba la pregunta" autocomplete="off">
 				<input type="pregunta2" name="option1" required placeholder="Opcion 1" autocomplete="off">
 				<input type="pregunta2" name="option2" required placeholder="Opcion 2" autocomplete="off">
 				<input type="pregunta2" name="option3" required placeholder="Opcion 3" autocomplete="off">
 				<input type="pregunta4" name="option4" required placeholder="Opcion 4" autocomplete="off">
-				<input type="submit" value="Registrar" title="Registra tu cuenta">
+				<input type="submit" value="Agregar" title="Registra tu cuenta">
 				<b><font color="red">{{error}}</font></b>
 			</form>
 		</div>
