@@ -232,18 +232,35 @@ public class App{
 
       if((int)game_now.get("question_number")==0){
         res_play.put("newgame","Nuevo juego iniciado");
-        cat = (new Category()).randomCat();
-        que = cat.getQuestion();
-        resQ = { (String)que.get("description"), (String)que.get("a1"), (String)que.get("a2"), (String)que.get("a3"), (String)que.get("a4")};
+        que = game_now.getCurrentQuestion();
+        cat = game_now.getCurrentCategory();
+        resQ[0] = (String)que.get("description");
+        resQ[1] = (String)que.get("a1");
+        resQ[2] = (String)que.get("a2");
+        resQ[3] = (String)que.get("a3");
+        resQ[4] = (String)que.get("a4");
         correct = (Integer)que.get("correct_a");
       }
       else{
         res_play.put("newgame", "Juego en curso");
-        List<Question> question_now = Question.where("id = ?", (Integer)game_now.get("current_question_id"));
-        que = question_now.get(0);
-        List<Category> questions = Category.where("id = ?", (Integer)que.get("category_id"));
-        cat = questions.get(0);
-        resQ = {(String)que.get("description"),(String)que.get("a1"),(String)que.get("a2"),(String)que.get("a3"),(String)que.get("a4")};
+        if((Boolean)game_now.get("current_question_state")){
+	        cat = (new Category()).randomCat();
+	        que = cat.getQuestion();
+	        game_now.set("current_question_id", (Integer)que.get("id"));
+	        game_now.set("current_question_state", false);
+          game_now.saveIt();
+
+     		}
+     		else{
+	        que = game_now.getCurrentQuestion();
+	        cat = game_now.getCurrentCategory();
+     		}
+        resQ[0] = (String)que.get("description");
+        resQ[1] = (String)que.get("a1");
+        resQ[2] = (String)que.get("a2");
+        resQ[3] = (String)que.get("a3");
+        resQ[4] = (String)que.get("a4");
+        correct = (Integer)que.get("correct_a");
         correct = (Integer)que.get("correct_a");
       }
 
@@ -288,6 +305,7 @@ public class App{
 			}
       //Validamos la respuesta
       user_now.answerAQuestion(question_now, answer, game_now);
+      
       //user_now.set("score",)
  			String link = "play";
   		res.redirect(link);

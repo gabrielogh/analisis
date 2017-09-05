@@ -4,6 +4,7 @@ create table games (
   question_number int,
   in_progress boolean,
   current_question_id int,
+  current_question_state boolean,
   corrects int,
   incorrects int,
   created_at datetime,

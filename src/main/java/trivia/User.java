@@ -70,6 +70,7 @@ public class User extends Model {
       }
       Double winR = ((((Integer)this.get("c_questions"))* 100) / ((Integer)this.get("c_questions") + (Integer)this.get("i_questions"))) * 1.0;
       this.set("win_rate", winR).saveIt();
+      g.set("current_question_state", true).saveIt();
   }
 
 }
