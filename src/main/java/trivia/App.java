@@ -163,6 +163,8 @@ public class App{
 	 			req.session().removeAttribute("username");
         req.session().removeAttribute("userId");
         req.session().removeAttribute("admin");
+        req.session().removeAttribute("play");
+        req.session().removeAttribute("admin");
         return new ModelAndView(logout,"./views/index.html"); 
     	}
       return new ModelAndView(logout,"./views/index.html"); 

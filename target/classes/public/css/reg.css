@@ -73,6 +73,20 @@ input {
 	padding-left: 36px;
 	width: 100%;
 }
+.Registro input[type="register"] {
+	background-color: #fff;
+	border-top: 2px solid #292929;
+	border-right: 2px solid #292929;
+	border-left: 2px solid #292929;
+	border-radius: 0px 0px 5px 5px;
+	-moz-border-radius: 5px 5px 0 0;
+	-webkit-border-radius: 5px 5px 0 0;
+  -o-border-radius: 5px 5px 0 0;
+  -ms-border-radius: 5px 5px 0 0;
+	color: #363636;
+	padding-left: 36px;
+	width: 204px;
+}
 .Registro input[type="pregunta1"] {
 	background-color: #fff;
 	border-top: 2px solid #292929;
