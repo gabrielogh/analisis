@@ -5,17 +5,24 @@
 		<title> Bienvenido a Preguntado$ </title>
 		<link rel='stylesheet' href='/css/style.css'>
 		<link rel='stylesheet' href='/css/reg.css'>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	</head>
 	<body>
-		<ul class="menu">
-			<li><a href="/index">Inicio</a></li>
-			<li><a href="/registrar">Registrarme</a></li>
-			<li><a href="/login">Ingresar</a></li>
-			<li><a href="/ranking">Ranking</a></li>
-			<li><a href="/play">{{play}}</a></li>
-			<li><a href="/administrate">{{admin}}</a></li>
-			<li><a href="/logout">{{logout}}</a></li>
-		</ul>
+		<nav id="nav_bar" class="navbar navbar-inverse">
+		  <div class="container-fluid">
+		    <ul class="nav navbar-nav">
+		      <li class="active"><a href="/index"><span class="glyphicon glyphicon-home"></span></a></li>
+		      <li><a href="/ranking">Ranking</a></li>
+		      <li><a href="/play">{{play}}</a></li>
+					<li><a href="/administrate">{{admin}}</a></li>
+		    </ul>
+		    <ul class="nav navbar-nav navbar-right">
+		      <li><a href="/registrar"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+		      <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+		      <li><a href="/login"><span class="glyphicon glyphicon-off"></span> {{logout}}</a></li>
+		    </ul>
+		  </div>
+		</nav>
 		<p class="texto">Generador de Preguntas</p>
 		<div class="Registro">
 			<form method="post" action="/registering">

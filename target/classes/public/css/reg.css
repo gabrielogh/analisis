@@ -10,7 +10,9 @@ body {
 	font-size: 14px;
 	line-height: 1.5em;
 }
-
+#nav_bar{
+	border-radius:0px;
+}
 [class*="fontawesome-"]:before {
   font-family: 'FontAwesome', sans-serif;
 }

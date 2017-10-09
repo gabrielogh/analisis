@@ -76,7 +76,8 @@ public class User extends Model {
 
   //Metodo que crea un juego para un usuario
   public Game createGameForUser(){
-    return new Game((Integer)this.get("id"));
+    Game g = new Game((Integer)this.get("id"));
+    return g;
   }
 
   //Metodo utilizado para el Ranking

@@ -1,8 +1,8 @@
 trivia/LoginServer.class
 trivia/PlayGame.class
 trivia/Category.class
-trivia/App.class
 trivia/User.class
+trivia/App.class
 trivia/Question.class
 trivia/Game.class
 trivia/Md5Cipher.class
