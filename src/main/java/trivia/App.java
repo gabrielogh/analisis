@@ -1,19 +1,14 @@
 package trivia;
 //--------------------------------
-//MD5
-import java.security.MessageDigest;
-import java.math.BigInteger;
-import java.security.NoSuchAlgorithmException;
-import javax.crypto.Mac;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-//--------------------------------
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.validation.UniquenessValidator;
 import trivia.User;
 import trivia.Question;
 import trivia.Game;
 import trivia.Category;
+import trivia.Md5Cipher;
+import trivia.PlayGame;
+import trivia.LoginServer;
 //----------------------------------
 import java.util.List;
 import java.util.HashMap;
@@ -27,28 +22,6 @@ import spark.template.mustache.MustacheTemplateEngine;
 
 public class App{
 
-  public static String md5Encode(String texto) {
-    String output = "";
-    try {
-      byte[] defaultBytes = texto.getBytes();
-      MessageDigest algorithm = MessageDigest.getInstance("MD5");
-      algorithm.reset();
-      algorithm.update(defaultBytes);
-      byte messageDigest[] = algorithm.digest();
-
-      StringBuffer hexString = new StringBuffer();
-      for (int i = 0; i < messageDigest.length; i++) {
-        hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
-      }
-      //String foo = messageDigest.toString();
-      
-      output = hexString + "";
-      
-    } catch (NoSuchAlgorithmException noSuchAlgorithmException) {
-      System.out.println("Error");
-    }
-    return output;
-  }
   public static void main( String[] args ){
     // CSS,IMAGES,JS.
     staticFiles.location("/public");
@@ -178,36 +151,8 @@ public class App{
      */
     post("/logger", (req,res) -> {
     	Map resLogin = new HashMap();
-    	if(req.session().attribute("username")!=null){
-    		resLogin.put("id", (Integer)req.session().attribute("userId"));
-    		resLogin.put("play", "jugar");
-    		resLogin.put("error","Ya estas conectado como: "+ req.session().attribute("username"));
-	    	return new ModelAndView(resLogin,"./views/login.html");
-    	}
-
-    	String password = req.queryParams("password");
-      String passMD5 = md5Encode(password);
-      String namee = req.queryParams("username");
-    	req.session(true);
-
-	    //Verificamos si existe algun usuario con ese username y esa pass.
-	    List<User> unico = User.where("username = ? and password = ?", namee, passMD5);
-	    Boolean result2 = unico.size()==0;
-			
-			if(!result2){
-	      req.session().attribute("username", namee);
-	      req.session().attribute("userId",(Integer)unico.get(0).get("id"));
-    		resLogin.put("play", "Jugar");
-        resLogin.put("logout","Salir");
-        User isAdm = unico.get(0);
-        if((Integer)isAdm.get("acces_level") == 5){
-          req.session().attribute("admin","Adminsitrar");
-        }
-	    }
-	    else{
-	    	resLogin.put("error","Usuario o password incorrectos");
-	    	return new ModelAndView(resLogin,"./views/login.html");
-	    }
+      LoginServer login = new LoginServer(req,res);
+      resLogin = login.getResults();
     	return new ModelAndView(resLogin,"./views/index.html");   	
     }, new MustacheTemplateEngine());
     //----------------------------------------------------------------------------------------------------------
@@ -220,66 +165,8 @@ public class App{
      */
     get("/play", (req, res) -> {
       Map res_play = new HashMap();
-
-      //Obtenemos el Usuario actual
-      List<User> user_now = User.where("id = ?", (Integer)req.session().attribute("userId"));
-      User u = user_now.get(0);
-      //Obtenemos el primer juego comenzado (si no tiene juegos iniciados creamos uno nuevo)
-      Game game_now = u.getGameInProgress();
-      game_now.saveIt();
-      Category cat;
-      Question que;
-      String[] resQ = new String[5];
-      Integer correct;
-
-      if((int)game_now.get("question_number")==0){
-        res_play.put("newgame","Nuevo juego iniciado");
-        que = game_now.getCurrentQuestion();
-        cat = game_now.getCurrentCategory();
-        resQ[0] = (String)que.get("description");
-        resQ[1] = (String)que.get("a1");
-        resQ[2] = (String)que.get("a2");
-        resQ[3] = (String)que.get("a3");
-        resQ[4] = (String)que.get("a4");
-        correct = (Integer)que.get("correct_a");
-      }
-      else{
-        res_play.put("newgame", "Juego en curso");
-        if((Boolean)game_now.get("current_question_state")){
-	        cat = (new Category()).randomCat();
-	        que = cat.getQuestion();
-	        game_now.set("current_question_id", (Integer)que.get("id"));
-	        game_now.set("current_question_state", false);
-          game_now.saveIt();
-
-     		}
-     		else{
-	        que = game_now.getCurrentQuestion();
-	        cat = game_now.getCurrentCategory();
-     		}
-        resQ[0] = (String)que.get("description");
-        resQ[1] = (String)que.get("a1");
-        resQ[2] = (String)que.get("a2");
-        resQ[3] = (String)que.get("a3");
-        resQ[4] = (String)que.get("a4");
-        correct = (Integer)que.get("correct_a");
-        correct = (Integer)que.get("correct_a");
-      }
-
-      res_play.put("categ", cat.get("name"));
-      res_play.put("username", ((String)u.get("username")).toUpperCase());
-      res_play.put("game_id", game_now.get("id"));
-      res_play.put("desc", resQ[0]);
-      res_play.put("a1", resQ[1]);
-      res_play.put("a2", resQ[2]);
-      res_play.put("a3", resQ[3]);
-      res_play.put("a4", resQ[4]);
-      res_play.put("correct", correct);
-      res_play.put("qid", que.get("id"));
-	    res_play.put("corrects", game_now.get("corrects"));
-	    res_play.put("incorrects", game_now.get("incorrects"));
-      res_play.put("logout", "Salir");
-      res_play.put("admin", req.session().attribute("admin"));
+      PlayGame starter = new PlayGame(req, res);
+      res_play = starter.getResults();
       return new ModelAndView(res_play, "./views/play.html");
     }, new MustacheTemplateEngine());
     
@@ -321,40 +208,9 @@ public class App{
      * @post. User registered / Error.
      */
   	post("/registering", (req, res) -> {       
-  	// Se cargan los parámetros de la query (URL) en un arreglo
-    String[] result = {req.queryParams("username"),req.queryParams("email"),(String)req.queryParams("password"),(String)req.queryParams("password2")};
-  	String body = req.body();
-  	Map questt = new HashMap();
-
-    String p1 = new String(req.queryParams("password"));
-    String p2 = new String(req.queryParams("password2"));
-
-    if(!(p1.equals(p2))){
-      questt.put("error","Las contraseñas no coinciden, vuelva a intentarlo");
-      return new ModelAndView(questt,"./views/registrar.html");
-    }
-    List<User> unico = User.where("username = ? or mail = ? ", result[0], result[1]);
-    Boolean result2 = unico.size()==0;
-  	if(result2){
-      String passMD5= md5Encode(p1);
-	  	User u = new User(result[0],result[1], passMD5);
-	  	u.saveIt();
-	    questt.put("id", u.getId());
-	  }
-    else{
-      User u = unico.get(0);
-      String e = (String)u.get("mail");
-      if(e.equals(result[1])){
-      	questt.put("error","Ese e-mail ya se encuentra registrado, intente con otro");
-      	return new ModelAndView(questt,"./views/registrar.html");
-      }
-      else{
-        questt.put("error","Ese usuario ya existe, intente con otro");
-        return new ModelAndView(questt,"./views/registrar.html");
-      }
-    }
-
-    return new ModelAndView(questt, "./views/index.html");
+    User newUser = new User();
+    Map result = newUser.registerUser(req,res);
+    return new ModelAndView(result, "./views/index.html");
   	}, new MustacheTemplateEngine());
 		
     //Fin.

@@ -2,6 +2,13 @@ package trivia;
 import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.Base;
 import java.util.List;
+import spark.Request;
+import spark.Response;
+import spark.QueryParamsMap;
+import java.util.HashMap;
+import java.util.Map;
+import trivia.Md5Cipher;
+
 
 public class User extends Model {
   static{
@@ -13,6 +20,43 @@ public class User extends Model {
   public User(){
 
   }
+
+  public Map registerUser(Request req, Response res){
+    String[] result = {req.queryParams("username"),req.queryParams("email"),(String)req.queryParams("password"),(String)req.queryParams("password2")};
+    String body = req.body();
+    Map questt = new HashMap();
+
+    String p1 = new String(req.queryParams("password"));
+    String p2 = new String(req.queryParams("password2"));
+
+    if(!(p1.equals(p2))){
+      questt.put("error","Las contraseñas no coinciden, vuelva a intentarlo");
+      return questt;
+    }
+    List<User> unico = User.where("username = ? or mail = ? ", result[0], result[1]);
+    Boolean result2 = unico.size()==0;
+    if(result2){
+      Md5Cipher hashPass = new Md5Cipher(p1);
+      String passMD5 = hashPass.getHash();
+      User u = new User(result[0],result[1], passMD5);
+      u.saveIt();
+      questt.put("id", u.getId());
+    }
+    else{
+      User u = unico.get(0);
+      String e = (String)u.get("mail");
+      if(e.equals(result[1])){
+        questt.put("error","Ese e-mail ya se encuentra registrado, intente con otro");
+        return questt;
+      }
+      else{
+        questt.put("error","Ese usuario ya existe, intente con otro");
+        return questt;
+      }
+    }
+    return questt;
+  }
+
   //Metodo que registra un usuario
   public User(String user, String mail, String pass){
     set("username", user);
@@ -22,6 +66,12 @@ public class User extends Model {
     set("c_questions",0);
     set("i_questions",0);
     set("acces_level", 0);
+  }
+
+  public User getUserById(Integer id){
+      List<User> user_now = User.where("id = ?", id);
+      User u = user_now.get(0);
+      return u;
   }
 
   //Metodo que crea un juego para un usuario
