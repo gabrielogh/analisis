@@ -1,5 +1,6 @@
 trivia/LoginServer.class
 trivia/PlayGame.class
+trivia/EchoWebSocket.class
 trivia/Category.class
 trivia/App.class
 trivia/User.class

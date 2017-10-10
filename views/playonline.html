@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>WebsSockets</title>
+    <link rel="stylesheet" href="css/playonline.css">
+</head>
+<body>
+    <div>
+        <ul class="pregunta">
+            <li><b>Quien es el actual presidente de Argentina?</b></li>
+        </ul>
+    </div>
+    <div id="chatControls">
+        <h1>Respuestas:</h1>
+        <ul class="respuesta">
+            <li>
+                <div id="message" data-value="Menem">Menem</div>
+                <button id="send">Send</button>
+            </li>
+            <li>
+                <div id="message2" value="Cristina">Cristina</div>
+                <button id="send">Send</button>
+            </li>
+            <li>
+                <div id="message3" value="Macri">Macri</div>
+                <button id="send">Send</button>
+            </li>
+            <li>
+                <div id="message4" value="Obama">Obama</div>
+                <button id="send">Send</button>
+            </li>
+        </ul>
+    </div>
+    <ul id="userlist"> <!-- Built by JS --> </ul>
+    <div id="chat">    <!-- Built by JS --> </div>
+    <script src="websocketDemo.js"></script>
+</body>
+</html>

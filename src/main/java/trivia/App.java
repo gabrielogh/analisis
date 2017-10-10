@@ -9,18 +9,54 @@ import trivia.Category;
 import trivia.Md5Cipher;
 import trivia.PlayGame;
 import trivia.LoginServer;
+import trivia.EchoWebSocket;
+
 //----------------------------------
 import java.util.List;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 //--------------------------------
 import static spark.Spark.*;
 import static spark.Spark.staticFileLocation;
 import spark.ModelAndView;
 import spark.template.mustache.MustacheTemplateEngine;
+import org.eclipse.jetty.websocket.api.Session;
+import java.util.Date;
+import org.json.JSONObject;
+import java.text.SimpleDateFormat;
+import static j2html.TagCreator.*;
 //---------------------------------
 
 public class App{
+
+    private String sender, msg;
+    // this map is shared between sessions and threads, so it needs to be thread-safe (http://stackoverflow.com/a/2688817)
+    static Map<Session, String> userUsernameMap = new ConcurrentHashMap<>();
+    static int nextUserNumber = 1; //Assign to username for next connecting user
+
+
+  //Sends a message from one user to all users, along with a list of current usernames
+  public static void broadcastMessage(String sender, String message) {
+    userUsernameMap.keySet().stream().filter(Session::isOpen).forEach(session -> {
+        try {
+            session.getRemote().sendString(String.valueOf(new JSONObject()
+                .put("userMessage", createHtmlMessageFromSender(sender, message))
+                .put("userlist", userUsernameMap.values())
+            ));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    });
+  }
+
+  private static String createHtmlMessageFromSender(String sender,String message) {
+      return article(
+          b("Server says:"),
+          span(attrs(".timestamp"), new SimpleDateFormat("HH:mm:ss").format(new Date())),
+          p(message)
+      ).render();
+  }
 
   public static void main( String[] args ){
     // CSS,IMAGES,JS.
@@ -50,7 +86,13 @@ public class App{
     	}
       return new ModelAndView(map,"./views/index.html");
     }, new MustacheTemplateEngine());
-
+    //----------------------------------------------------------------------------------------------------------
+    get("/playonline", (req, res) -> {
+      Map map = new HashMap();
+      map.put("title", "Bienvenido a Preguntado$");
+  
+      return new ModelAndView(map,"./views/playOnline.html");
+    }, new MustacheTemplateEngine());
     //----------------------------------------------------------------------------------------------------------
     //Pagina de log de usuarios.
     get("/login", (req, res) -> {
