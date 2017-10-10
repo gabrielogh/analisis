@@ -13,7 +13,7 @@
     <environments>development.test,development</environments>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <project.basedir>/Users/gabriel/Escritorio/analisis2017</project.basedir>
+    <project.basedir>/Users/gabriel/Escritorio/analisis</project.basedir>
   </properties>
 
   <build>

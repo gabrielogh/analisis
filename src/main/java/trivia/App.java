@@ -70,11 +70,11 @@ public class App{
       Base.close();
     });
 
-   
     //Iicio de metodos GET
     //----------------------------------------------------------------------------------------------------------
     //Pagina principal.
     get("/index", (req, res) -> {
+
       Map map = new HashMap();
       map.put("title", "Bienvenido a Preguntado$");
     	if(req.session().attribute("username")!=null){

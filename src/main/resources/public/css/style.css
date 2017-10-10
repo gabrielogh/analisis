@@ -7,6 +7,9 @@ body {
     background-color: #FFFFFF;
     text-align: center;
 }
+#nav_bar{
+	border-radius:0px;
+}
 .menu, .menu ul {
 list-style: none;
 padding: 0;
