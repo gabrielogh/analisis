@@ -1,39 +1,58 @@
 <!DOCTYPE html>
+<html lang="es">
+<meta charset="UTF-8">
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>WebsSockets</title>
-    <link rel="stylesheet" href="css/playonline.css">
+    <link rel='stylesheet' href="css/playonline.css">
+		<link rel='stylesheet' href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 <body>
-    <div>
-        <ul class="pregunta">
-            <li><b>Quien es el actual presidente de Argentina?</b></li>
+    <nav id="nav_bar" class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="/index"><span class="glyphicon glyphicon-home"></span></a></li>
+          <li><a href="/ranking">Ranking</a></li>
+          {{{play}}}
+          {{{admin}}}
         </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/registrar"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+          <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+          {{{logout}}}
+        </ul>
+      </div>
+    </nav>
+    <div id="turno">    <!-- Built by JS --> </div>
+    <ul class="pregunta">
+        <li><b>Quien es el actual presidente de Argentina?</b></li>
+    </ul>
     </div>
     <div id="chatControls">
         <h1>Respuestas:</h1>
         <ul class="respuesta">
             <li>
-                <div id="message" data-value="Menem">Menem</div>
+                <div id="resp1" data-value="Menem">Menem</div>
                 <button id="send">Send</button>
             </li>
             <li>
-                <div id="message2" value="Cristina">Cristina</div>
-                <button id="send">Send</button>
+                <div id="resp2" data-value="Cristina">Cristina</div>
+                <button id="send2">Send</button>
             </li>
             <li>
-                <div id="message3" value="Macri">Macri</div>
-                <button id="send">Send</button>
+                <div id="resp3" data-value="Macri">Macri</div>
+                <button id="send3">Send</button>
             </li>
             <li>
-                <div id="message4" value="Obama">Obama</div>
-                <button id="send">Send</button>
+                <div id="resp4" data-value="Obama">Obama</div>
+                <button id="send4">Send</button>
             </li>
         </ul>
     </div>
     <ul id="userlist"> <!-- Built by JS --> </ul>
     <div id="chat">    <!-- Built by JS --> </div>
-    <script src="websocketDemo.js"></script>
+    <script src="/js/websocketDemo.js"></script>
+    <footer>Desarrollado por Melegatti Pablo, Somare Francico y Gonzalez Gabriel - UNRC 2017</footer>
 </body>
 </html>

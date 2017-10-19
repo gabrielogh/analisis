@@ -16,16 +16,24 @@ import java.util.Map;
 
 
 public class PlayGame{
-	User jugador;
-	Game juego;
-	Map results;
+	private User jugador;
+	private Game juego;
+	private Map results;
 
 	public PlayGame(Request req, Response res){
 		Map res_play = new HashMap();
     User aux = new User();
-    jugador = aux.getUserById((Integer)req.session().attribute("userId"));
-    juego = jugador.getGameInProgress();
-    juego.saveIt();
+
+    if(req.session().attribute("username")!=null){
+      jugador = aux.getUserById((Integer)req.session().attribute("userId"));
+      juego = jugador.getGameInProgress();
+      juego.saveIt();
+      res_play.put("id", (Integer)req.session().attribute("userId"));
+      res_play.put("play", "<li><a href='/play'>Jugar</a></li>");
+      if((Integer)jugador.get("acces_level") == 5){
+        res_play.put("admin","<li><a href='/administrate'>Administrar</a></li>");
+      }
+    }
     results = play(juego, jugador, req, res);
 
 	}
@@ -42,7 +50,7 @@ public class PlayGame{
     Integer correct;
 
    if((int)g.get("question_number")==0){
-      res_play.put("newgame","Nuevo juego iniciado");
+      res_play.put("newgame","<div class='alert alert-success' id='alert-success'><strong>Atento!</strong> Nuevo Juego Iniciado!</div>");
       que = g.getCurrentQuestion();
       cat = g.getCurrentCategory();
       resQ[0] = (String)que.get("description");
@@ -53,7 +61,6 @@ public class PlayGame{
       correct = (Integer)que.get("correct_a");
     }
     else{
-      res_play.put("newgame", "Juego en curso");
       if((Boolean)g.get("current_question_state")){
         cat = (new Category()).randomCat();
         que = cat.getQuestion();

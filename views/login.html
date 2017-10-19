@@ -1,11 +1,12 @@
 <!DOCTYPE html>
+<html lang="es">
+<meta charset="UTF-8">
 <html>
 	<head>
 		<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
 		<title> Bienvenido a Preguntado$ </title>
-		<link rel='stylesheet' href='/css/style.css'>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-		<link rel='stylesheet' href='/css/w3.css'>
+		<link rel='stylesheet' href='/css/css.css'>
+		<link rel='stylesheet' href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	</head>
 	<body>
 		<nav id="nav_bar" class="navbar navbar-inverse">
@@ -13,26 +14,41 @@
 		    <ul class="nav navbar-nav">
 		      <li class="active"><a href="/index"><span class="glyphicon glyphicon-home"></span></a></li>
 		      <li><a href="/ranking">Ranking</a></li>
-		      <li><a href="/play">{{play}}</a></li>
-					<li><a href="/administrate">{{admin}}</a></li>
+		      {{{play}}}
+					{{{admin}}}
 		    </ul>
 		    <ul class="nav navbar-nav navbar-right">
 		      <li><a href="/registrar"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
 		      <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-		      <li><a href="/login"><span class="glyphicon glyphicon-off"></span> {{logout}}</a></li>
+		      {{{logout}}}
 		    </ul>
 		  </div>
 		</nav>
-		<p class="texto">Ingresar</p>
-		<div class="Registro">
-			<form method="post" action="/logger">
-				<input type="text1" name="username" required placeholder="Nombre de usuario" autocomplete="off">
-				<input type="password" name="password" id="password" required placeholder="Contraseña" autocomplete="off"> 
-				<input type="submit" value="Ingresar" title="ingresar">
-				<b><font color="red">{{error}}</font></b>
-			</form>
-		</div>
-  <footer>Desarrollado por Melegatti Pablo, Somare Francico y Gabriel Gonzalez - UNRC 2017</footer>
 
+		<div id="container_login" class="container">
+			<div class="main-login main-center">
+				<form class="form-signin" method="post" action="/logger">
+					<h2 class="form-signin-heading">Log in</h2>
+
+					<div class="input-group">
+					  <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+						<label for="userName" class="sr-only">Username</label>
+						<input type="text" name="username" id="userName" class="form-control" placeholder="Username" required autofocus>
+					</div>
+
+					<div class="input-group" id="loginb">
+						<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+						<label for="inputPassword" class="sr-only">Password</label>
+						<input id="password" name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+					</div>
+
+					<button class="btn btn-lg btn-primary btn-block"  value="Ingresar" type="submit">Go!</button>
+				</form>
+			</div>
+		</div> <!-- /container -->
+		{{{error}}}
+  	<footer>Desarrollado por Melegatti Pablo, Somare Francico y Gonzalez Gabriel - UNRC 2017</footer>
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	</body>
 </html>

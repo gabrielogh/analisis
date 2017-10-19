@@ -30,7 +30,7 @@ public class User extends Model {
     String p2 = new String(req.queryParams("password2"));
 
     if(!(p1.equals(p2))){
-      questt.put("error","Las contraseñas no coinciden, vuelva a intentarlo");
+      questt.put("error","<div class='alert alert-danger'><strong>Error!</strong> Las contraseñas no coinciden.</div>");
       return questt;
     }
     List<User> unico = User.where("username = ? or mail = ? ", result[0], result[1]);
@@ -41,16 +41,17 @@ public class User extends Model {
       User u = new User(result[0],result[1], passMD5);
       u.saveIt();
       questt.put("id", u.getId());
+      questt.put("success","<div class='alert alert-success' id='alert-success'><strong>Hecho!</strong> Usuario registrado con exito!</div>");
     }
     else{
       User u = unico.get(0);
       String e = (String)u.get("mail");
       if(e.equals(result[1])){
-        questt.put("error","Ese e-mail ya se encuentra registrado, intente con otro");
+      questt.put("error","<div class='alert alert-danger' id='alert-danger'><strong>Error!</strong> Ese E-mail ya se encuentra registrado, pruebe con uno diferente.</div>");
         return questt;
       }
       else{
-        questt.put("error","Ese usuario ya existe, intente con otro");
+      questt.put("error","<div class='alert alert-danger' id='alert-danger'><strong>Error!</strong> Ese nombre de usuario ya existe, pruebe con uno diferente.</div>");
         return questt;
       }
     }
@@ -74,6 +75,11 @@ public class User extends Model {
       return u;
   }
 
+  public User getUserByName(String name){
+      List<User> user_now = User.where("username = ?", name);
+      User u = user_now.get(0);
+      return u;
+  }
   //Metodo que crea un juego para un usuario
   public Game createGameForUser(){
     Game g = new Game((Integer)this.get("id"));

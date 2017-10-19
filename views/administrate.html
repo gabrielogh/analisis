@@ -1,11 +1,13 @@
 <!DOCTYPE html>
+<html lang="es">
+<meta charset="UTF-8">
 <html>
 	<head>
 		<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
 		<title> Bienvenido a Preguntado$ </title>
 		<link rel='stylesheet' href='/css/style.css'>
 		<link rel='stylesheet' href='/css/reg.css'>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel='stylesheet' href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	</head>
 	<body>
 		<nav id="nav_bar" class="navbar navbar-inverse">
@@ -13,13 +15,13 @@
 		    <ul class="nav navbar-nav">
 		      <li class="active"><a href="/index"><span class="glyphicon glyphicon-home"></span></a></li>
 		      <li><a href="/ranking">Ranking</a></li>
-		      <li><a href="/play">{{play}}</a></li>
-					<li><a href="/administrate">{{admin}}</a></li>
+		      {{{play}}}
+					{{{admin}}}
 		    </ul>
 		    <ul class="nav navbar-nav navbar-right">
 		      <li><a href="/registrar"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
 		      <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-		      <li><a href="/login"><span class="glyphicon glyphicon-off"></span> {{logout}}</a></li>
+		      {{{logout}}}
 		    </ul>
 		  </div>
 		</nav>
@@ -32,9 +34,11 @@
 				<input type="pregunta2" name="option3" required placeholder="Opcion 3" autocomplete="off">
 				<input type="pregunta4" name="option4" required placeholder="Opcion 4" autocomplete="off">
 				<input type="submit" value="Agregar" title="Registra tu cuenta">
-				<b><font color="red">{{error}}</font></b>
 			</form>
 		</div>
-  <footer>Desarrollado por Melegatti Pablo, Somare Francico y Gabriel Gonzalez - UNRC 2017</footer>
+		{{{error}}}
+  <footer>Desarrollado por Melegatti Pablo, Somare Francico y Gonzalez Gabriel - UNRC 2017</footer>
+ 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	</body>
 </html>

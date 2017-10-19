@@ -9,6 +9,7 @@ import trivia.Category;
 import trivia.Md5Cipher;
 import trivia.PlayGame;
 import trivia.LoginServer;
+import trivia.Versusmode;
 import trivia.EchoWebSocket;
 
 //----------------------------------
@@ -22,26 +23,40 @@ import static spark.Spark.staticFileLocation;
 import spark.ModelAndView;
 import spark.template.mustache.MustacheTemplateEngine;
 import org.eclipse.jetty.websocket.api.Session;
-import java.util.Date;
 import org.json.JSONObject;
-import java.text.SimpleDateFormat;
 import static j2html.TagCreator.*;
+import com.google.gson.Gson;
 //---------------------------------
 
 public class App{
 
-    private String sender, msg;
-    // this map is shared between sessions and threads, so it needs to be thread-safe (http://stackoverflow.com/a/2688817)
-    static Map<Session, String> userUsernameMap = new ConcurrentHashMap<>();
-    static int nextUserNumber = 1; //Assign to username for next connecting user
+  // this map is shared between sessions and threads, so it needs to be thread-safe (http://stackoverflow.com/a/2688817)
+  static Map<Session, String> userUsernameMap = new ConcurrentHashMap<>();
+  static String nextUserName; //Assign to username for next connecting user
+  static int nextUserNumber = 1;
+  
 
+  public static void create_vs_game(Map data){
+    Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
+    String[] userNames = (String[])data.values().toArray(new String[2]);
+    User p1 = new User();
+    User p2 = new User();
+    p1 = p1.getUserByName(userNames[0]);
+    p2 = p2.getUserByName(userNames[1]);
+    //System.out.println("USUARIO1: " + (String)p1.get("username") + " USUARIO2: " + (String)p2.get("username") );
+    Versusmode play = new Versusmode(p1, p2);
+    play.saveIt();
+    Base.close();
+  }
 
   //Sends a message from one user to all users, along with a list of current usernames
-  public static void broadcastMessage(String sender, String message) {
+  public static void cambiarTurno(String sender, String message) {
     userUsernameMap.keySet().stream().filter(Session::isOpen).forEach(session -> {
         try {
+
             session.getRemote().sendString(String.valueOf(new JSONObject()
                 .put("userMessage", createHtmlMessageFromSender(sender, message))
+                .put("userTurno", nextUserName)
                 .put("userlist", userUsernameMap.values())
             ));
         } catch (Exception e) {
@@ -52,8 +67,7 @@ public class App{
 
   private static String createHtmlMessageFromSender(String sender,String message) {
       return article(
-          b("Server says:"),
-          span(attrs(".timestamp"), new SimpleDateFormat("HH:mm:ss").format(new Date())),
+          b("Turno: " + sender),
           p(message)
       ).render();
   }
@@ -61,7 +75,9 @@ public class App{
   public static void main( String[] args ){
     // CSS,IMAGES,JS.
     staticFiles.location("/public");
-
+    
+    webSocket("/App", EchoWebSocket.class);
+    
     before((req, res)->{
         Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
     });
@@ -69,6 +85,8 @@ public class App{
     after((req, res) -> {
       Base.close();
     });
+
+
 
     //Iicio de metodos GET
     //----------------------------------------------------------------------------------------------------------
@@ -80,9 +98,11 @@ public class App{
     	if(req.session().attribute("username")!=null){
     		map.put("userId", (int)req.session().attribute("userId"));
         map.put("username", req.queryParams("username"));
-    		map.put("play", "jugar");
-    		map.put("logout","Salir");
-        map.put("admin", (String)req.session().attribute("admin"));
+    		map.put("play", "<li><a href='/play'>Jugar</a></li>");
+    		map.put("logout","<li><a href='/login'><span class='glyphicon glyphicon-off'></span> Salir</a></li>");
+        if((String)req.session().attribute("admin") != null){
+          map.put("admin", "<li><a href='/administrate'>Administrar</a></li>");
+        }
     	}
       return new ModelAndView(map,"./views/index.html");
     }, new MustacheTemplateEngine());
@@ -90,7 +110,7 @@ public class App{
     get("/playonline", (req, res) -> {
       Map map = new HashMap();
       map.put("title", "Bienvenido a Preguntado$");
-  
+      nextUserName = (String)req.session().attribute("username");
       return new ModelAndView(map,"./views/playOnline.html");
     }, new MustacheTemplateEngine());
     //----------------------------------------------------------------------------------------------------------
@@ -101,8 +121,11 @@ public class App{
     	if(req.session().attribute("username")!=null){
     		map.put("id", req.session().attribute("userId"));
     		map.put("admin", req.session().attribute("admin"));
-    		map.put("play", "jugar");
-    		map.put("logout","Salir");
+        map.put("play", "<li><a href='/play'>Jugar</a></li>");
+        map.put("logout","<li><a href='/login'><span class='glyphicon glyphicon-off'></span> Salir</a></li>");
+        if((String)req.session().attribute("admin") != null){
+          map.put("admin", "<li><a href='/administrate'>Administrar</a></li>");
+        }
     	}
       return new ModelAndView(map, "./views/login.html");
     }, new MustacheTemplateEngine());
@@ -119,10 +142,11 @@ public class App{
       map.put("title", "Panel de Administracion");
       if(req.session().attribute("username")!=null) {
         map.put("id", req.session().attribute("userId"));
-        map.put("admin", req.session().attribute("admin"));
-        map.put("play", "jugar");
-        map.put("logout","Salir");
-        map.put("admin", req.queryParams("admin"));
+        map.put("play", "<li><a href='/play'>Jugar</a></li>");
+        map.put("logout","<li><a href='/login'><span class='glyphicon glyphicon-off'></span> Salir</a></li>");
+        if((String)req.session().attribute("admin") != null){
+          map.put("admin", "<li><a href='/administrate'>Administrar</a></li>");
+        }
       }
       else{
 	 			return new ModelAndView(map, "./views/index.html");
@@ -141,9 +165,11 @@ public class App{
       Map map = new HashMap();
       map.put("title", "Bienvenido a Preguntado$");
     	if(req.session().attribute("username")!=null){
-    		map.put("play", "jugar");
-    		map.put("logout","Salir");
-        map.put("admin", req.session().attribute("admin"));
+        map.put("play", "<li><a href='/play'>Jugar</a></li>");
+        map.put("logout","<li><a href='/login'><span class='glyphicon glyphicon-off'></span> Salir</a></li>");
+        if((String)req.session().attribute("admin") != null){
+          map.put("admin", "<li><a href='/administrate'>Administrar</a></li>");
+        }
     	}
       return new ModelAndView(map, "./views/registrar.html");
     }, new MustacheTemplateEngine());
@@ -158,9 +184,11 @@ public class App{
       Map rank = new HashMap();
       List<User> top_10 = User.findBySQL("select * from users order by c_questions desc limit 10");
       rank.put("ranking",top_10);
-      rank.put("play", "jugar");
-      rank.put("logout","Salir");
-      rank.put("admin", req.session().attribute("admin"));
+      rank.put("play", "<li><a href='/play'>Jugar</a></li>");
+      rank.put("logout","<li><a href='/login'><span class='glyphicon glyphicon-off'></span> Salir</a></li>");
+      if((String)req.session().attribute("admin") != null){
+        rank.put("admin", "<li><a href='/administrate'>Administrar</a></li>");
+      }
       return new ModelAndView(rank,"./views/ranking.html");
     },new MustacheTemplateEngine());
   
@@ -195,6 +223,9 @@ public class App{
     	Map resLogin = new HashMap();
       LoginServer login = new LoginServer(req,res);
       resLogin = login.getResults();
+      if((String)resLogin.get("error") != null){
+        return new ModelAndView(resLogin,"./views/login.html"); 
+      }
     	return new ModelAndView(resLogin,"./views/index.html");   	
     }, new MustacheTemplateEngine());
     //----------------------------------------------------------------------------------------------------------
@@ -252,6 +283,12 @@ public class App{
   	post("/registering", (req, res) -> {       
     User newUser = new User();
     Map result = newUser.registerUser(req,res);
+    if((String)result.get("error") != null){
+      return new ModelAndView(result,"./views/registrar.html"); 
+    }
+    if((String)result.get("success") != null){
+      return new ModelAndView(result,"./views/registrar.html"); 
+    }
     return new ModelAndView(result, "./views/index.html");
   	}, new MustacheTemplateEngine());
 		

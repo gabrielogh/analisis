@@ -9,7 +9,7 @@ html {
 body {
     font-family: monospace;
     font-size: 14px;
-    max-width: 480px;
+    max-width: 100%;
     margin: 0 auto;
     padding: 20px
 }
@@ -31,6 +31,7 @@ li {
 #chatControls {
     overflow: auto;
     margin: 0 0 5px 0
+    max-width 80%;
 }
 
 #userlist {

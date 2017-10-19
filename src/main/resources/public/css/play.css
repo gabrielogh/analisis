@@ -1,10 +1,5 @@
-@charset "utf-8";
-@import url(https://fonts.googleapis.com/css?family=Titan+One);
-@import url(http://weloveiconfonts.com/api/?family=fontawesome);
-@import url(https://meyerweb.com/eric/tools/css/reset/reset.css);
-
 body {
-    background-color: #FFFFFF;
+    background-color: #eee;
     text-align: center;
 }
 #nav_bar{
@@ -83,21 +78,8 @@ button[type=submit] {
   
 }
 .juego > li {
-  border: 1px solid #000;
-  padding: 2px;
-  padding-top: 3px;
-  height:15px;
-  width:200px;
-  margin: 1px auto;
-  display: block;
-  position: relative;
-  color:#000;
-  background: -moz-linear-gradient(#F3E2A9, #F5DA81);
-  background: -ms-linear-gradient(#F3E2A9, #F5DA81);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #F3E2A9), color-stop(100%, #F5DA81));
-  background: -webkit-linear-gradient(#F3E2A9, #F5DA81);
-  background: -o-linear-gradient(#F3E2A9, #F5DA81);
-  border-radius: 2px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 .fom{
   position:absolute;

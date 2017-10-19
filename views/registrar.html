@@ -1,11 +1,12 @@
 <!DOCTYPE html>
+<html lang="es">
+<meta charset="UTF-8">
 <html>
 	<head>
 		<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
 		<title> Bienvenido a Preguntado$ </title>
-		<link rel='stylesheet' href='/css/style.css'>
-		<link rel='stylesheet' href='/css/reg.css'>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel='stylesheet' href='/css/css.css'>
+		<link rel='stylesheet' href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	</head>
 	<body>
 		<nav id="nav_bar" class="navbar navbar-inverse">
@@ -13,27 +14,49 @@
 		    <ul class="nav navbar-nav">
 		      <li class="active"><a href="/index"><span class="glyphicon glyphicon-home"></span></a></li>
 		      <li><a href="/ranking">Ranking</a></li>
-		      <li><a href="/play">{{play}}</a></li>
-					<li><a href="/administrate">{{admin}}</a></li>
+		      {{{play}}}
+					{{{admin}}}
 		    </ul>
 		    <ul class="nav navbar-nav navbar-right">
 		      <li><a href="/registrar"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
 		      <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-		      <li><a href="/login"><span class="glyphicon glyphicon-off"></span> {{logout}}</a></li>
+		      {{{logout}}}
 		    </ul>
 		  </div>
 		</nav>
-		<p class="texto">Registro</p>
-		<div class="Registro">
-			<form method="post" action="/registering">
-				<input type="register" name="username" required placeholder="Nombre de usuario" autocomplete="off"> 
-				<input type="password" name="password" id="password" required placeholder="Contraseña" autocomplete="off">
-				<input type="password" name="password2" id="password2" required placeholder="Repita la contraseña" autocomplete="off">
-				<input type="text" name="email" id="email" required placeholder="Correo" autocomplete="off">
-				<input type="submit" value="Registrar" title="Registra tu cuenta">
-				<b><font color="red">{{error}}</font></b>
-			</form>
-		</div>
-  <footer>Desarrollado por Melegatti Pablo, Somare Francico y Gonzalez Gabriel - UNRC 2017</footer>
+
+		<div id="container_register" class="container">
+			<div class="main-login main-center">
+				<form class="form-signin" method="post" action="/registering">
+					<h2 class="form-signin-heading">Sign in</h2>
+					<div class="input-group">
+					  <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+						<label for="text" class="sr-only">Username</label>
+						<input type="text" id="username" name="username" class="form-control" placeholder="Username" required autofocus>
+	  				</div>
+					<div class="input-group">
+					  <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+						<label for="inputEmail" class="sr-only">Email address</label>
+						<input type="email" id="inputEmail" name="email" class="form-control" placeholder="Email address" required autofocus>
+	  				</div>
+					<div class="input-group">
+						<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+						<label for="inputPassword" class="sr-only">Password</label>
+						<input id="password" type="password" name="password" class="form-control" placeholder="Password" required>
+					</div>
+					<div class="input-group" id="loginb">
+						<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+						<label for="inputPassword" class="sr-only">Password</label>
+						<input id="repassword" type="password" name="password2" class="form-control" placeholder="Re-Password" required>
+					</div>
+					<input type="submit" class="btn btn-lg btn-primary btn-block" value="Registrar" title="Sign in">
+				</form>
+			</div>
+		</div> <!-- /container -->
+		{{{error}}}
+		{{{success}}}
+  	<footer>Desarrollado por Melegatti Pablo, Somare Francico y Gonzalez Gabriel - UNRC 2017</footer>
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	</body>
 </html>

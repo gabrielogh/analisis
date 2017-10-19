@@ -30,34 +30,34 @@ public class LoginServer{
 		Map resLogin = new HashMap();
   	if(req.session().attribute("username")!=null){
   		resLogin.put("id", (Integer)req.session().attribute("userId"));
-  		resLogin.put("play", "jugar");
-  		resLogin.put("error","Ya estas conectado como: "+ req.session().attribute("username"));
+  		resLogin.put("play", "<li><a href='/play'>Jugar</a></li>");
+  		resLogin.put("error","<div class='alert alert-danger' id='alert-danger'><strong>Error!</strong> Ya estas conectado como: " + req.session().attribute("username") + ".</div>");
     	return resLogin;
   	}
 
   	String password = req.queryParams("password");
     Md5Cipher hashPass = new Md5Cipher(password);
     String passMD5 = hashPass.getHash();
-    System.out.println("LA CONTRASENA ES: " + passMD5);
     String namee = req.queryParams("username");
-  	req.session(true);
 
     //Verificamos si existe algun usuario con ese username y esa pass.
     List<User> unico = User.where("username = ? and password = ?", namee, passMD5);
     Boolean result2 = unico.size()==0;
 		
 		if(!result2){
+      req.session(true);
       req.session().attribute("username", namee);
       req.session().attribute("userId",(Integer)unico.get(0).get("id"));
-  		resLogin.put("play", "Jugar");
-      resLogin.put("logout","Salir");
+      resLogin.put("play", "<li><a href='/play'>Jugar</a></li>");
+      resLogin.put("logout","<li><a href='/login'><span class='glyphicon glyphicon-off'></span> Salir</a></li>");
       User isAdm = unico.get(0);
       if((Integer)isAdm.get("acces_level") == 5){
-        req.session().attribute("admin","Adminsitrar");
+        resLogin.put("admin","<li><a href='/administrate'>Administrar</a></li>");
       }
     }
     else{
-    	resLogin.put("error","Usuario o password incorrectos");
+      String s = "<div class='alert alert-danger' id='alert-danger'><strong>Error!</strong> Usuario o password incorrectos.</div>";
+    	resLogin.put("error",s);
     	return resLogin;
     }
     return resLogin;

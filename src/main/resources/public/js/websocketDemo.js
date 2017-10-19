@@ -1,17 +1,27 @@
 //Establish the WebSocket connection and set up event handlers
 var webSocket = new WebSocket("ws://" + location.hostname + ":" + location.port + "/App");
-webSocket.onmessage = function (msg) { updateChat(msg); };
+webSocket.onmessage = function (msg) { updateGame(msg); };
 webSocket.onclose = function () { alert("WebSocket connection closed") };
 
 //Send message if "Send" is clicked
 id("send").addEventListener("click", function () {
-    var val = document.getElementById('message').getAttribute('data-value');
+    var val = document.getElementById('resp1').getAttribute('data-value');
     sendMessage(val);
 });
 
-//Send message if enter is pressed in the input field
-id("message").addEventListener("keypress", function (e) {
-    if (e.keyCode === 13) { sendMessage(e.target.value); }
+id("send2").addEventListener("click", function () {
+    var val = document.getElementById('resp2').getAttribute('data-value');
+    sendMessage(val);
+});
+
+id("send3").addEventListener("click", function () {
+    var val = document.getElementById('resp3').getAttribute('data-value');
+    sendMessage(val);
+});
+
+id("send4").addEventListener("click", function () {
+    var val = document.getElementById('resp4').getAttribute('data-value');
+    sendMessage(val);
 });
 
 //Send a message if it's not empty, then clear the input field
@@ -23,9 +33,10 @@ function sendMessage(message) {
 }
 
 //Update the chat-panel, and the list of connected users
-function updateChat(msg) {
+function updateGame(msg,pregunta) {
     var data = JSON.parse(msg.data);
     insert("chat", data.userMessage);
+    insert("turno", data.userTurno);
     id("userlist").innerHTML = "";
     data.userlist.forEach(function (user) {
         insert("userlist", "<li>" + user + "</li>");
