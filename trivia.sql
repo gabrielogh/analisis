@@ -53,12 +53,15 @@ CREATE TABLE `games` (
   `user_id` int(11) DEFAULT NULL,
   `question_number` int(11) DEFAULT NULL,
   `in_progress` tinyint(1) DEFAULT NULL,
+  `vs_mode` tinyint(1) DEFAULT NULL,
+  `current_question_id` int(11) DEFAULT NULL,
+  `current_question_state` tinyint(1) DEFAULT NULL,
   `corrects` int(11) DEFAULT NULL,
   `incorrects` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -67,7 +70,7 @@ CREATE TABLE `games` (
 
 LOCK TABLES `games` WRITE;
 /*!40000 ALTER TABLE `games` DISABLE KEYS */;
-INSERT INTO `games` VALUES (1,1,5,0,4,1,'2017-06-14 18:08:21','2017-06-15 08:34:28'),(2,8,0,1,0,0,'2017-06-14 18:25:44','2017-06-14 18:25:44'),(3,1,5,0,5,0,'2017-06-15 08:34:28','2017-06-15 09:01:04'),(4,1,5,0,5,0,'2017-06-15 09:01:04','2017-06-15 09:12:58'),(5,1,5,0,3,2,'2017-06-15 09:12:58','2017-06-15 10:15:10'),(6,1,1,1,0,1,'2017-06-15 10:15:10','2017-06-15 10:43:43');
+INSERT INTO `games` VALUES (1,1,5,0,0,68,1,4,1,'2017-09-05 18:59:31','2017-09-12 07:51:59'),(2,1,5,0,0,1,1,1,4,'2017-09-12 07:51:59','2017-09-14 18:23:59'),(3,2,5,0,0,55,1,2,3,'2017-09-12 11:07:14','2017-09-12 11:07:54'),(4,2,5,0,0,1,1,4,1,'2017-09-12 11:07:54','2017-09-12 11:08:30'),(5,2,5,0,0,34,1,3,2,'2017-09-12 11:08:30','2017-09-12 11:09:00'),(6,2,0,1,0,43,0,0,0,'2017-09-12 11:09:00','2017-10-18 08:43:45'),(7,1,5,0,0,31,1,2,3,'2017-09-14 18:23:59','2017-09-14 18:24:02'),(8,1,5,0,0,43,1,3,2,'2017-09-14 18:24:02','2017-09-14 18:24:03'),(9,1,5,0,0,23,1,1,4,'2017-09-14 18:24:03','2017-10-09 08:41:58'),(10,3,5,0,0,34,1,4,1,'2017-09-14 18:28:08','2017-09-14 18:32:07'),(11,3,5,0,0,55,1,1,4,'2017-09-14 18:32:07','2017-09-14 18:32:42'),(12,3,0,1,0,44,0,0,0,'2017-09-14 18:32:42','2017-09-14 18:32:42'),(13,1,5,0,0,50,1,0,5,'2017-10-09 08:41:58','2017-10-11 22:58:12'),(14,1,5,0,0,14,1,2,3,'2017-10-11 22:58:12','2017-10-17 12:29:30'),(15,1,5,0,0,33,1,0,5,'2017-10-17 12:29:30','2017-10-17 12:29:37'),(16,1,3,1,0,59,0,0,3,'2017-10-17 12:29:37','2017-10-23 14:34:10'),(17,2,0,1,0,47,0,0,0,'2017-10-19 14:50:30','2017-10-19 14:50:30'),(18,1,0,1,0,2,0,0,0,'2017-10-19 14:50:30','2017-10-19 14:50:30'),(19,2,0,1,0,7,0,0,0,'2017-10-19 14:52:10','2017-10-19 14:52:10'),(20,1,0,1,0,6,0,0,0,'2017-10-19 14:52:10','2017-10-19 14:52:10'),(21,1,0,1,0,13,0,0,0,'2017-10-19 14:58:31','2017-10-19 14:58:31'),(22,2,0,1,0,65,0,0,0,'2017-10-19 14:58:31','2017-10-19 14:58:31'),(23,1,0,1,0,63,0,0,0,'2017-10-19 15:01:30','2017-10-19 15:01:30'),(24,2,0,1,0,61,0,0,0,'2017-10-19 15:01:30','2017-10-19 15:01:30'),(25,2,0,1,0,69,0,0,0,'2017-10-19 16:02:52','2017-10-19 16:02:52'),(26,1,0,1,0,21,0,0,0,'2017-10-19 16:02:52','2017-10-19 16:02:52'),(27,2,0,1,0,39,0,0,0,'2017-10-19 19:08:11','2017-10-19 19:08:11'),(28,1,0,1,0,39,0,0,0,'2017-10-19 19:08:11','2017-10-19 19:08:11');
 /*!40000 ALTER TABLE `games` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -124,7 +127,7 @@ CREATE TABLE `schema_version` (
 
 LOCK TABLES `schema_version` WRITE;
 /*!40000 ALTER TABLE `schema_version` DISABLE KEYS */;
-INSERT INTO `schema_version` VALUES ('20170407112621','2017-05-20 01:06:38',-16),('20170525003123','2017-05-25 03:37:57',-14),('20170525003847','2017-05-25 03:48:53',0),('20170525003906','2017-05-25 03:48:53',-1),('20170526102547','2017-05-26 13:37:57',-16);
+INSERT INTO `schema_version` VALUES ('20170407112621','2017-05-20 01:06:38',-16),('20170525003123','2017-05-25 03:37:57',-14),('20170525003847','2017-05-25 03:48:53',0),('20170525003906','2017-05-25 03:48:53',-1),('20170526102547','2017-05-26 13:37:57',-16),('20171018075546','2017-10-18 11:29:12',-16);
 /*!40000 ALTER TABLE `schema_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -143,10 +146,11 @@ CREATE TABLE `users` (
   `i_questions` int(11) DEFAULT NULL,
   `c_questions` int(11) DEFAULT NULL,
   `win_rate` double DEFAULT NULL,
+  `acces_level` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -155,8 +159,37 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'gabriel','81dc9bdb52d04dc2036dbd8313ed055','gabriel@gmail.com',4,17,80,'2017-06-14 17:20:47','2017-06-15 10:15:24'),(2,'pepe','202cb962ac5975b964b7152d234b70','pepe@gmail.com',0,0,0,'2017-06-14 17:23:23','2017-06-14 17:23:23'),(3,'pepe2','202cb962ac5975b964b7152d234b70','pepe2@gmail.com',0,0,0,'2017-06-14 17:24:44','2017-06-14 17:24:44'),(4,'pepaa','202cb962ac5975b964b7152d234b70','pepaa@gmail.com',0,0,0,'2017-06-14 17:26:17','2017-06-14 17:26:17'),(5,'asdasd','81dc9bdb52d04dc2036dbd8313ed055','asdasd@gmail.com',0,0,0,'2017-06-14 17:31:57','2017-06-14 17:31:57'),(6,'menem','81dc9bdb52d04dc2036dbd8313ed055','menem@gmail.com',0,0,0,'2017-06-14 18:18:00','2017-06-14 18:18:00'),(7,'lau','202cb962ac5975b964b7152d234b70','lau@gmail.com',0,0,0,'2017-06-14 18:24:17','2017-06-14 18:24:17'),(8,'lau2','202cb962ac5975b964b7152d234b70','lau2@gmail.com',0,0,0,'2017-06-14 18:25:37','2017-06-14 18:25:37');
+INSERT INTO `users` VALUES (1,'gabriel','81dc9bdb52d04dc2036dbd8313ed055','gabriel@gmail.com',48,24,33,5,'2017-06-18 19:04:00','2017-10-23 14:34:10'),(2,'pepe','81dc9bdb52d04dc2036dbd8313ed055','pepe@gmail.com',6,9,60,0,'2017-09-12 11:07:07','2017-09-12 11:09:00'),(3,'santiago147','733d7be2196ff7efaf6913fc8bdcabf','sasa@gmail.com',5,5,50,0,'2017-09-14 18:27:45','2017-09-14 18:32:42'),(4,'gabriel2','81dc9bdb52d04dc2036dbd8313ed055','gabriel_ogh@outlook.com',0,0,0,0,'2017-10-11 22:35:39','2017-10-11 22:35:39'),(5,'gabriel3','81dc9bdb52d04dc2036dbd8313ed055','agujuarez97@hotmail.com.ar',0,0,0,0,'2017-10-12 18:12:15','2017-10-12 18:12:15'),(6,'juan','81dc9bdb52d04dc2036dbd8313ed055','juan@gmail.com',0,0,0,0,'2017-10-17 12:16:14','2017-10-17 12:16:14');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `versusmodes`
+--
+
+DROP TABLE IF EXISTS `versusmodes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `versusmodes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `game_p1_id` int(11) DEFAULT NULL,
+  `game_p2_id` int(11) DEFAULT NULL,
+  `turn` int(11) DEFAULT NULL,
+  `in_progress` tinyint(1) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `versusmodes`
+--
+
+LOCK TABLES `versusmodes` WRITE;
+/*!40000 ALTER TABLE `versusmodes` DISABLE KEYS */;
+INSERT INTO `versusmodes` VALUES (1,23,24,1,1,'2017-10-19 15:01:30','2017-10-19 15:01:30'),(2,25,26,1,1,'2017-10-19 16:02:52','2017-10-19 16:02:52'),(3,27,28,1,1,'2017-10-19 19:08:11','2017-10-19 19:08:11'),(4,29,30,1,1,'2017-10-19 19:09:42','2017-10-19 19:09:42'),(5,31,32,1,1,'2017-10-19 19:09:53','2017-10-19 19:09:53'),(6,33,34,1,1,'2017-10-19 19:10:17','2017-10-19 19:10:17'),(7,35,36,1,1,'2017-10-19 19:48:35','2017-10-19 19:48:35');
+/*!40000 ALTER TABLE `versusmodes` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -168,4 +201,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-15 10:46:50
+-- Dump completed on 2017-10-23 14:39:45
