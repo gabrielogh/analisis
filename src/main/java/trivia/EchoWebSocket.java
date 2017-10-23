@@ -26,9 +26,16 @@ public class EchoWebSocket {
         if(App.userUsernameMap.size()<=1){
             App.userUsernameMap.put(user, username);
             if(App.userUsernameMap.size()==2){
-            		App.create_vs_game(App.userUsernameMap);
-                //App.cambiarTurno(sender = username, msg = (" Responde"));
+              App.nextUserNumber = App.nextUserNumber + 2;
+              App.create_vs_game(App.userUsernameMap);
+              App.cambiarTurno(sender = username, msg = (" Responde"));
             }
+        }
+        else if ((App.userUsernameMap.size()>1) && (App.userUsernameMap.size()%2 == 0)){
+            App.userUsernameMap.put(user, username);
+            App.nextUserNumber = App.nextUserNumber + 2;
+            App.create_vs_game(App.userUsernameMap);
+            App.cambiarTurno(sender = username, msg = (" Responde"));
         }
     }
 
@@ -41,14 +48,6 @@ public class EchoWebSocket {
 
     @OnWebSocketMessage
     public void onMessage(Session user, String message) {
-        if(App.nextUserNumber == 1){
-            App.nextUserNumber++;
-            App.nextUserName = App.userUsernameMap.get(2);
-        }
-        else{
-            App.nextUserNumber--;
-            App.nextUserName = App.userUsernameMap.get(1);          
-        }
         
         App.cambiarTurno(sender = App.userUsernameMap.get(user), msg = message);
     }

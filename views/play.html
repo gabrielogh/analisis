@@ -51,12 +51,6 @@
 
 		<div id="tablero">
 			<h1 id='pregunta-titulo'>{{desc}}</h1>
-		<div class="progress">
-		  <div id='barra-progreso' class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
-		  </div>
-		</div>
-			<ol id="pregunta-respuestas">
-			</ol>
 				<ul class="respuesta">
 				<li>
 					<form action="/answer?gameId={{game_id}}&ca={{correct}}&qId={{qid}}&id={{id}}&answer=1" method="post">
@@ -88,6 +82,5 @@
   <footer>Desarrollado por Melegatti Pablo, Somare Francico y Gonzalez Gabriel - UNRC 2017</footer>
   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-		<script src="jugar.js"></script>
 	</body>
 </html>
