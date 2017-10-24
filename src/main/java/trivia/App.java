@@ -159,21 +159,16 @@ public class App{
     get("/generatec", (req, res) -> {
       Map map = new HashMap();
       map.put("title", "Panel de Administracion");
-      if(req.session().attribute("username")!=null) {
+      if(req.session().attribute("username")!=null && ((String)req.session().attribute("admin") != null) ) {
         map.put("id", req.session().attribute("userId"));
         map.put("play", "<li><a href='/play'>Jugar</a></li>");
         map.put("logout","<li><a href='/login'><span class='glyphicon glyphicon-off'></span> Salir</a></li>");
-        if((String)req.session().attribute("admin") != null){
-          map.put("admin", "<li><a href='/administrate'>Administrar</a></li>");
-        }
-        else{
-          return new ModelAndView(map, "./views/adminPanel/generate_cat.html");
-        }
+        map.put("admin", "<li><a href='/administrate'>Administrar</a></li>");
       }
       else{
         return new ModelAndView(map, "./views/index.html");
       }
-      return new ModelAndView(map, "./views/adminPanel/administrate.html");
+      return new ModelAndView(map, "./views/adminPanel/generate_cat.html");
     }, new MustacheTemplateEngine());
 
        //----------------------------------------------------------------------------------------------------------
@@ -192,15 +187,15 @@ public class App{
         map.put("logout","<li><a href='/login'><span class='glyphicon glyphicon-off'></span> Salir</a></li>");
         if((String)req.session().attribute("admin") != null){
           map.put("admin", "<li><a href='/administrate'>Administrar</a></li>");
+          return new ModelAndView(map, "./views/adminPanel/generate_quest.html");
         }
         else{
           return new ModelAndView(map, "./views/index.html");
         }
       }
       else{
-        return new ModelAndView(map, "./views/adminPanel/generate_quest.html");
+        return new ModelAndView(map, "./views/index.html");
       }
-      return new ModelAndView(map, "./views/adminPanel/administrate.html");
     }, new MustacheTemplateEngine());
     //----------------------------------------------------------------------------------------------------------
     /**
