@@ -5,8 +5,9 @@
 	<head>
 		<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
 		<title> Bienvenido a Preguntado$ </title>
-		<link rel='stylesheet' href='/css/style.css'>
+		
 		<link rel='stylesheet' href='/css/reg.css'>
+		<link rel='stylesheet' href='/css/account.css'>
 		<link rel='stylesheet' href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	</head>
 	<body>
@@ -25,20 +26,16 @@
 		    </ul>
 		  </div>
 		</nav>
-		<p class="texto">Generador de Preguntas</p>
-		<div class="Registro" align='center'>
+		<p class="texto">Generar Categoria</p>
+		<div class="Registro">
 			<form method="post" action="/registering">
-				<input type="pregunta1" name="description" required placeholder="Escriba la pregunta" autocomplete="off">
-				<input type="pregunta2" name="option1" required placeholder="Opcion 1" autocomplete="off">
-				<input type="pregunta2" name="option2" required placeholder="Opcion 2" autocomplete="off">
-				<input type="pregunta2" name="option3" required placeholder="Opcion 3" autocomplete="off">
-				<input type="pregunta4" name="option4" required placeholder="Opcion 4" autocomplete="off">
+				<input type="cat" name="cat" required placeholder="Escriba la pregunta" autocomplete="off">
 				<input type="submit" value="Agregar" title="Registra tu cuenta">
 			</form>
 		</div>
 		{{{error}}}
   <footer>Desarrollado por Melegatti Pablo, Somare Francico y Gonzalez Gabriel - UNRC 2017</footer>
- 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	</body>
 </html>

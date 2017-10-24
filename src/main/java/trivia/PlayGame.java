@@ -26,7 +26,7 @@ public class PlayGame{
 
     if(req.session().attribute("username")!=null){
       jugador = aux.getUserById((Integer)req.session().attribute("userId"));
-      juego = jugador.getGameInProgress();
+      juego = jugador.getGameInProgress(false);
       juego.saveIt();
       res_play.put("id", (Integer)req.session().attribute("userId"));
       res_play.put("play", "<li><a href='/play'>Jugar</a></li>");

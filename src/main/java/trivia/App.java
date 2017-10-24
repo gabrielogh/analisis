@@ -33,17 +33,16 @@ public class App{
   // this map is shared between sessions and threads, so it needs to be thread-safe (http://stackoverflow.com/a/2688817)
   static Map<Session, String> userUsernameMap = new ConcurrentHashMap<>();
   static String nextUserName; //Assign to username for next connecting user
-  static int nextUserNumber = 1;
+  static int nextUserNumber = 0;
   
 
   public static void create_vs_game(Map data){
     Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
-    String[] userNames = (String[])data.values().toArray(new String[2]);
+    String[] userNames = (String[])data.values().toArray(new String[data.size()]);
     User p1 = new User();
     User p2 = new User();
-    p1 = p1.getUserByName(userNames[0]);
-    p2 = p2.getUserByName(userNames[1]);
-    //System.out.println("USUARIO1: " + (String)p1.get("username") + " USUARIO2: " + (String)p2.get("username") );
+    p1 = p1.getUserByName(userNames[nextUserNumber]);
+    p2 = p2.getUserByName(userNames[nextUserNumber+1]);
     Versusmode play = new Versusmode(p1, p2);
     play.saveIt();
     Base.close();
@@ -66,10 +65,7 @@ public class App{
   }
 
   private static String createHtmlMessageFromSender(String sender,String message) {
-      return article(
-          b("Turno: " + sender),
-          p(message)
-      ).render();
+      return article(b("Turno: " + sender),p(message)).render();
   }
 
   public static void main( String[] args ){
@@ -87,7 +83,6 @@ public class App{
     });
 
 
-
     //Iicio de metodos GET
     //----------------------------------------------------------------------------------------------------------
     //Pagina principal.
@@ -99,7 +94,7 @@ public class App{
     		map.put("userId", (int)req.session().attribute("userId"));
         map.put("username", req.queryParams("username"));
     		map.put("play", "<li><a href='/play'>Jugar</a></li>");
-    		map.put("logout","<li><a href='/login'><span class='glyphicon glyphicon-off'></span> Salir</a></li>");
+    		map.put("logout","<li><a href='/logout'><span class='glyphicon glyphicon-off'></span> Salir</a></li>");
         if((String)req.session().attribute("admin") != null){
           map.put("admin", "<li><a href='/administrate'>Administrar</a></li>");
         }
@@ -151,9 +146,62 @@ public class App{
       else{
 	 			return new ModelAndView(map, "./views/index.html");
       }
-      return new ModelAndView(map, "./views/administrate.html");
+      return new ModelAndView(map, "./views/adminPanel/administrate.html");
     }, new MustacheTemplateEngine());
 
+   //----------------------------------------------------------------------------------------------------------
+    /**
+     * Panel de Administracion.
+     * @param. username.
+     * @pre. Session Started & AccesLevel == 5.
+     * @post. -.
+     */
+    get("/generatec", (req, res) -> {
+      Map map = new HashMap();
+      map.put("title", "Panel de Administracion");
+      if(req.session().attribute("username")!=null) {
+        map.put("id", req.session().attribute("userId"));
+        map.put("play", "<li><a href='/play'>Jugar</a></li>");
+        map.put("logout","<li><a href='/login'><span class='glyphicon glyphicon-off'></span> Salir</a></li>");
+        if((String)req.session().attribute("admin") != null){
+          map.put("admin", "<li><a href='/administrate'>Administrar</a></li>");
+        }
+        else{
+          return new ModelAndView(map, "./views/adminPanel/generate_cat.html");
+        }
+      }
+      else{
+        return new ModelAndView(map, "./views/index.html");
+      }
+      return new ModelAndView(map, "./views/adminPanel/administrate.html");
+    }, new MustacheTemplateEngine());
+
+       //----------------------------------------------------------------------------------------------------------
+    /**
+     * Panel de Administracion.
+     * @param. username.
+     * @pre. Session Started & AccesLevel == 5.
+     * @post. -.
+     */
+    get("/generateq", (req, res) -> {
+      Map map = new HashMap();
+      map.put("title", "Panel de Administracion");
+      if(req.session().attribute("username")!=null) {
+        map.put("id", req.session().attribute("userId"));
+        map.put("play", "<li><a href='/play'>Jugar</a></li>");
+        map.put("logout","<li><a href='/login'><span class='glyphicon glyphicon-off'></span> Salir</a></li>");
+        if((String)req.session().attribute("admin") != null){
+          map.put("admin", "<li><a href='/administrate'>Administrar</a></li>");
+        }
+        else{
+          return new ModelAndView(map, "./views/index.html");
+        }
+      }
+      else{
+        return new ModelAndView(map, "./views/adminPanel/generate_quest.html");
+      }
+      return new ModelAndView(map, "./views/adminPanel/administrate.html");
+    }, new MustacheTemplateEngine());
     //----------------------------------------------------------------------------------------------------------
     /**
      * User register.
@@ -226,6 +274,9 @@ public class App{
       if((String)resLogin.get("error") != null){
         return new ModelAndView(resLogin,"./views/login.html"); 
       }
+      if((String)resLogin.get("admin") != null){
+        return new ModelAndView(resLogin,"./views/adminPanel/administrate.html"); 
+      }    
     	return new ModelAndView(resLogin,"./views/index.html");   	
     }, new MustacheTemplateEngine());
     //----------------------------------------------------------------------------------------------------------

@@ -81,11 +81,18 @@ public class User extends Model {
       return u;
   }
   //Metodo que crea un juego para un usuario
-  public Game createGameForUser(){
+  public Game createVsGame(){
     Game g = new Game((Integer)this.get("id"));
+    g.set("vs_mode", false);
     return g;
   }
 
+ //Metodo que crea un juego VS para un usuario
+  public Game createGameForUser(){
+    Game g = new Game((Integer)this.get("id"));
+    g.set("vs_mode", true);
+    return g;
+  }
   //Metodo utilizado para el Ranking
   public String username(){
     return this.getString("username");
@@ -101,12 +108,12 @@ public class User extends Model {
   }
 
   //Devuelve el primer juego en progreso que tenga el usuario, si no tiene ninguno, crea uno.
-  public Game getGameInProgress(){
+  public Game getGameInProgress(boolean mode){
     List<Game> user_games = this.getAll(Game.class);
     int i = 0;
     while ((i< user_games.size())){
       Game g = user_games.get(i);
-      if((Boolean)g.get("in_progress")== true){
+      if((Boolean)g.get("in_progress")== true && (Boolean)g.get("vs_mode")== mode){
         return g;
       }
       i++;

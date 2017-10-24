@@ -13,9 +13,6 @@ import trivia.LoginServer;
  * This class represents a multiplayer game.
  * when two players try to start a game this class creates a multiplayer game
  * creating a single game for each user but allowing to answer a question one by one (waiting his turn).
- * @param. Users id.
- * @pre. Users logged.
- * @post. New VersusMode created on the DB.
  */
 
 public class Versusmode extends Model{
@@ -23,11 +20,17 @@ public class Versusmode extends Model{
 	private Game g1,g2;
 	private int questionNumber = 1;
 
+	/**
+	 * Constructor of the class.
+	 * @param. both users.
+	 * @pre. Users logged.
+	 * @post. New VersusMode created on the DB.
+	 */
 	public Versusmode(User user1, User user2){
 		p1 = user1;
 		p2 = user2;
-    g1 = p1.createGameForUser();
-    g2 = p2.createGameForUser();
+    g1 = p1.createVsGame();
+    g2 = p2.createVsGame();
     g1.saveIt();
     g2.saveIt();
     set("game_p1_id", Integer.valueOf(((Long)g1.get("id")).intValue()));

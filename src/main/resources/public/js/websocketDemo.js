@@ -1,7 +1,7 @@
 //Establish the WebSocket connection and set up event handlers
 var webSocket = new WebSocket("ws://" + location.hostname + ":" + location.port + "/App");
 webSocket.onmessage = function (msg) { updateGame(msg); };
-webSocket.onclose = function () { alert("WebSocket connection closed") };
+webSocket.onclose = function () { alert("Fuiste desconectado. Chau") };
 
 //Send message if "Send" is clicked
 id("send").addEventListener("click", function () {
