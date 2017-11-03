@@ -10,17 +10,18 @@ import org.javalite.activejdbc.Base;
 import java.util.List;
 import spark.Request;
 import spark.Response;
+import spark.ModelAndView;
 import spark.QueryParamsMap;
 import java.util.HashMap;
 import java.util.Map;
 
 
 public class PlayGame{
-	private User jugador;
-	private Game juego;
-	private Map results;
+	private static User jugador;
+	private static Game juego;
+	private static Map results;
 
-	public PlayGame(Request req, Response res){
+	public static ModelAndView playGame(Request req, Response res){
 		Map res_play = new HashMap();
     User aux = new User();
 
@@ -35,14 +36,14 @@ public class PlayGame{
       }
     }
     results = play(juego, jugador, req, res);
-
+    return new ModelAndView(results, "./views/play.html");
 	}
 
-	public Map getResults(){
+	public static Map getResults(){
 		return results;
 	}
 
-	private Map play(Game g, User u, Request req, Response res){
+	private static Map play(Game g, User u, Request req, Response res){
 		Map res_play = new HashMap();
 	  Category cat;
     Question que;
@@ -98,4 +99,32 @@ public class PlayGame{
 
     return res_play;
 	}
+
+  public static ModelAndView answer(Request req, Response res){
+    List<Game> games = Game.where("id = ?", req.queryParams("gameId"));
+    Game game_now = games.get(0);
+    List<User> users = User.where("id = ?", (Integer)req.session().attribute("userId"));
+    User user_now = users.get(0);
+    List<Question> question = Question.where("id = ?", req.queryParams("qId"));
+    Question question_now = question.get(0);
+
+    game_now.set("question_number", (Integer)game_now.get("question_number")+1).saveIt();
+    int answer = Integer.valueOf(req.queryParams("answer"));
+
+    if((Integer)game_now.get("question_number")==5){
+      game_now.set("in_progress", false).saveIt();
+
+    }
+    user_now.answerAQuestion(question_now, answer, game_now);
+    
+    return playGame(req, res);
+  }
+
+  public static ModelAndView playOnline(Request req, Response res){
+    Map map = new HashMap();
+    map.put("title", "Bienvenido a Preguntado$");
+    App.nextUserName = (String)req.session().attribute("username");
+    return new ModelAndView(map,"./views/playOnline.html");
+  }
+
 }

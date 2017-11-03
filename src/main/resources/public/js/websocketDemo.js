@@ -24,6 +24,34 @@ id("send4").addEventListener("click", function () {
     sendMessage(val);
 });
 
+function Game(user1_id, user2_id){
+    this.user1_id=user1_id;
+    this.user2_id=user2_id;
+}
+
+var example;
+var game;
+var user;
+var count=0;
+
+function getUserInfo() {
+    $.ajax({
+        type: "get",
+        url: "/userInfo",
+        async: false,
+        success : function(userInfo) {
+            user = userInfo.id;
+            console.log(user);
+        }
+    });
+}
+
+function play(id_oponente){
+    game = new Versusmode(user,id_oponente);
+    var jsonString = JSON.stringify(game);
+    webSocket.send(jsonString);
+}
+
 //Send a message if it's not empty, then clear the input field
 function sendMessage(message) {
     if (message !== "") {
@@ -52,3 +80,9 @@ function insert(targetId, message) {
 function id(id) {
     return document.getElementById(id);
 }
+
+
+function sendUserInfo(){
+    getUserInfo();
+}
+

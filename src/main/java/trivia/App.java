@@ -2,11 +2,6 @@ package trivia;
 //--------------------------------
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.validation.UniquenessValidator;
-import trivia.User;
-import trivia.Question;
-import trivia.Game;
-import trivia.Category;
-import trivia.Md5Cipher;
 import trivia.PlayGame;
 import trivia.LoginServer;
 import trivia.Versusmode;
@@ -32,9 +27,6 @@ public class App{
 
   // this map is shared between sessions and threads, so it needs to be thread-safe (http://stackoverflow.com/a/2688817)
   static Map<Session, String> userUsernameMap = new ConcurrentHashMap<>();
-  static String nextUserName; //Assign to username for next connecting user
-  static int nextUserNumber = 0;
-  
 
   public static void create_vs_game(Map data){
     Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
@@ -86,45 +78,12 @@ public class App{
     //Iicio de metodos GET
     //----------------------------------------------------------------------------------------------------------
     //Pagina principal.
-    get("/index", (req, res) -> {
-
-      Map map = new HashMap();
-      map.put("title", "Bienvenido a Preguntado$");
-    	if(req.session().attribute("username")!=null){
-    		map.put("userId", (int)req.session().attribute("userId"));
-        map.put("username", req.queryParams("username"));
-    		map.put("play", "<li><a href='/play'>Jugar</a></li>");
-    		map.put("logout","<li><a href='/logout'><span class='glyphicon glyphicon-off'></span> Salir</a></li>");
-        if((String)req.session().attribute("admin") != null){
-          map.put("admin", "<li><a href='/administrate'>Administrar</a></li>");
-        }
-    	}
-      return new ModelAndView(map,"./views/index.html");
-    }, new MustacheTemplateEngine());
+    get("/index", LoginServer::index,new MustacheTemplateEngine());
     //----------------------------------------------------------------------------------------------------------
-    get("/playonline", (req, res) -> {
-      Map map = new HashMap();
-      map.put("title", "Bienvenido a Preguntado$");
-      nextUserName = (String)req.session().attribute("username");
-      return new ModelAndView(map,"./views/playOnline.html");
-    }, new MustacheTemplateEngine());
+    get("/playOnline", PlayGame::playOnline,new MustacheTemplateEngine());
     //----------------------------------------------------------------------------------------------------------
     //Pagina de log de usuarios.
-    get("/login", (req, res) -> {
-      Map map = new HashMap();
-      map.put("title", "Bienvenido a Preguntado$");
-    	if(req.session().attribute("username")!=null){
-    		map.put("id", req.session().attribute("userId"));
-    		map.put("admin", req.session().attribute("admin"));
-        map.put("play", "<li><a href='/play'>Jugar</a></li>");
-        map.put("logout","<li><a href='/login'><span class='glyphicon glyphicon-off'></span> Salir</a></li>");
-        if((String)req.session().attribute("admin") != null){
-          map.put("admin", "<li><a href='/administrate'>Administrar</a></li>");
-        }
-    	}
-      return new ModelAndView(map, "./views/login.html");
-    }, new MustacheTemplateEngine());
-
+    get("/login", LoginServer::login,new MustacheTemplateEngine());
     //----------------------------------------------------------------------------------------------------------
     /**
      * Panel de Administracion.
@@ -132,23 +91,7 @@ public class App{
      * @pre. Session Started & AccesLevel == 5.
      * @post. -.
      */
-    get("/administrate", (req, res) -> {
-      Map map = new HashMap();
-      map.put("title", "Panel de Administracion");
-      if(req.session().attribute("username")!=null) {
-        map.put("id", req.session().attribute("userId"));
-        map.put("play", "<li><a href='/play'>Jugar</a></li>");
-        map.put("logout","<li><a href='/login'><span class='glyphicon glyphicon-off'></span> Salir</a></li>");
-        if((String)req.session().attribute("admin") != null){
-          map.put("admin", "<li><a href='/administrate'>Administrar</a></li>");
-        }
-      }
-      else{
-	 			return new ModelAndView(map, "./views/index.html");
-      }
-      return new ModelAndView(map, "./views/adminPanel/administrate.html");
-    }, new MustacheTemplateEngine());
-
+    get("/administrate", LoginServer::administrate,new MustacheTemplateEngine());
    //----------------------------------------------------------------------------------------------------------
     /**
      * Panel de Administracion.
@@ -156,47 +99,15 @@ public class App{
      * @pre. Session Started & AccesLevel == 5.
      * @post. -.
      */
-    get("/generatec", (req, res) -> {
-      Map map = new HashMap();
-      map.put("title", "Panel de Administracion");
-      if(req.session().attribute("username")!=null && ((String)req.session().attribute("admin") != null) ) {
-        map.put("id", req.session().attribute("userId"));
-        map.put("play", "<li><a href='/play'>Jugar</a></li>");
-        map.put("logout","<li><a href='/login'><span class='glyphicon glyphicon-off'></span> Salir</a></li>");
-        map.put("admin", "<li><a href='/administrate'>Administrar</a></li>");
-      }
-      else{
-        return new ModelAndView(map, "./views/index.html");
-      }
-      return new ModelAndView(map, "./views/adminPanel/generate_cat.html");
-    }, new MustacheTemplateEngine());
-
-       //----------------------------------------------------------------------------------------------------------
+    get("/generatec", LoginServer::generatec,new MustacheTemplateEngine());
+    //----------------------------------------------------------------------------------------------------------
     /**
      * Panel de Administracion.
      * @param. username.
      * @pre. Session Started & AccesLevel == 5.
      * @post. -.
      */
-    get("/generateq", (req, res) -> {
-      Map map = new HashMap();
-      map.put("title", "Panel de Administracion");
-      if(req.session().attribute("username")!=null) {
-        map.put("id", req.session().attribute("userId"));
-        map.put("play", "<li><a href='/play'>Jugar</a></li>");
-        map.put("logout","<li><a href='/login'><span class='glyphicon glyphicon-off'></span> Salir</a></li>");
-        if((String)req.session().attribute("admin") != null){
-          map.put("admin", "<li><a href='/administrate'>Administrar</a></li>");
-          return new ModelAndView(map, "./views/adminPanel/generate_quest.html");
-        }
-        else{
-          return new ModelAndView(map, "./views/index.html");
-        }
-      }
-      else{
-        return new ModelAndView(map, "./views/index.html");
-      }
-    }, new MustacheTemplateEngine());
+    get("/generateq", LoginServer::generateq,new MustacheTemplateEngine());
     //----------------------------------------------------------------------------------------------------------
     /**
      * User register.
@@ -204,18 +115,7 @@ public class App{
      * @pre. true.
      * @post. Error(User logged) | User exists | User saved.
      */
-    get("/registrar", (req, res) -> {
-      Map map = new HashMap();
-      map.put("title", "Bienvenido a Preguntado$");
-    	if(req.session().attribute("username")!=null){
-        map.put("play", "<li><a href='/play'>Jugar</a></li>");
-        map.put("logout","<li><a href='/login'><span class='glyphicon glyphicon-off'></span> Salir</a></li>");
-        if((String)req.session().attribute("admin") != null){
-          map.put("admin", "<li><a href='/administrate'>Administrar</a></li>");
-        }
-    	}
-      return new ModelAndView(map, "./views/registrar.html");
-    }, new MustacheTemplateEngine());
+    get("/registrar", LoginServer::registrar,new MustacheTemplateEngine());
     //----------------------------------------------------------------------------------------------------------
     /**
      * Ranking.
@@ -223,18 +123,7 @@ public class App{
      * @pre. true.
      * @post. --
      */
-    get("/ranking",(req,res)->{
-      Map rank = new HashMap();
-      List<User> top_10 = User.findBySQL("select * from users order by c_questions desc limit 10");
-      rank.put("ranking",top_10);
-      rank.put("play", "<li><a href='/play'>Jugar</a></li>");
-      rank.put("logout","<li><a href='/login'><span class='glyphicon glyphicon-off'></span> Salir</a></li>");
-      if((String)req.session().attribute("admin") != null){
-        rank.put("admin", "<li><a href='/administrate'>Administrar</a></li>");
-      }
-      return new ModelAndView(rank,"./views/ranking.html");
-    },new MustacheTemplateEngine());
-  
+    get("/ranking", LoginServer::ranking,new MustacheTemplateEngine());
     //----------------------------------------------------------------------------------------------------------
     /**
      * Fin de sesiones.
@@ -242,19 +131,7 @@ public class App{
      * @pre. Session initializen.
      * @post. User logged out.
      */
-    get("/logout", (req, res) -> {
-      Map logout = new HashMap();
-      logout.put("username", null);
-    	if(req.session().attribute("username")!=null){
-	 			req.session().removeAttribute("username");
-        req.session().removeAttribute("userId");
-        req.session().removeAttribute("admin");
-        req.session().removeAttribute("play");
-        req.session().removeAttribute("admin");
-        return new ModelAndView(logout,"./views/index.html"); 
-    	}
-      return new ModelAndView(logout,"./views/index.html"); 
-    }, new MustacheTemplateEngine());
+    get("/logout", LoginServer::logOut,new MustacheTemplateEngine());
     //----------------------------------------------------------------------------------------------------------
     /**
      * Inicio de sesiones.
@@ -262,18 +139,7 @@ public class App{
      * @pre. true.
      * @post. Error(User logged) / User logged.
      */
-    post("/logger", (req,res) -> {
-    	Map resLogin = new HashMap();
-      LoginServer login = new LoginServer(req,res);
-      resLogin = login.getResults();
-      if((String)resLogin.get("error") != null){
-        return new ModelAndView(resLogin,"./views/login.html"); 
-      }
-      if((String)resLogin.get("admin") != null){
-        return new ModelAndView(resLogin,"./views/adminPanel/administrate.html"); 
-      }    
-    	return new ModelAndView(resLogin,"./views/index.html");   	
-    }, new MustacheTemplateEngine());
+    post("/logger", LoginServer::loginOn, new MustacheTemplateEngine());
     //----------------------------------------------------------------------------------------------------------
     /**
      * 
@@ -282,12 +148,7 @@ public class App{
      * @pre. user logged.
      * @post. question_number inrease. User profile updated.
      */
-    get("/play", (req, res) -> {
-      Map res_play = new HashMap();
-      PlayGame starter = new PlayGame(req, res);
-      res_play = starter.getResults();
-      return new ModelAndView(res_play, "./views/play.html");
-    }, new MustacheTemplateEngine());
+    get("/play", PlayGame::playGame,new MustacheTemplateEngine());
     
     /**
      * Metodo para responder una pregunta
@@ -295,48 +156,15 @@ public class App{
      * @pre. user logged, game.get("in_progress") = true, .
      * @post. question_number inrease. User profile updated.
      */
-    post("/answer", (req,res) -> {
-      List<Game> games = Game.where("id = ?", req.queryParams("gameId"));
-      Game game_now = games.get(0);
-	    List<User> users = User.where("id = ?", (Integer)req.session().attribute("userId"));
-	    User user_now = users.get(0);
-	    List<Question> question = Question.where("id = ?", req.queryParams("qId"));
-	    Question question_now = question.get(0);
-
-			game_now.set("question_number", (Integer)game_now.get("question_number")+1).saveIt();
-			int answer = Integer.valueOf(req.queryParams("answer"));
-
-      //Chequeamos si es la ultima pregunta.
-			if((Integer)game_now.get("question_number")==5){
-				game_now.set("in_progress", false).saveIt();
-
-			}
-      //Validamos la respuesta
-      user_now.answerAQuestion(question_now, answer, game_now);
-      
-      //user_now.set("score",)
- 			String link = "play";
-  		res.redirect(link);
-  		return null;	
-    });
-
+    post("/answer", PlayGame::answer, new MustacheTemplateEngine());
+    //----------------------------------------------------------------------------------------------------------
     /**
   	 * Método para tratar los posts de /users (Creación de usuarios).
      * @param. username., user id, question id, password, password2
      * @pre. username != "", password == password2, email != "".
      * @post. User registered / Error.
      */
-  	post("/registering", (req, res) -> {       
-    User newUser = new User();
-    Map result = newUser.registerUser(req,res);
-    if((String)result.get("error") != null){
-      return new ModelAndView(result,"./views/registrar.html"); 
-    }
-    if((String)result.get("success") != null){
-      return new ModelAndView(result,"./views/registrar.html"); 
-    }
-    return new ModelAndView(result, "./views/index.html");
-  	}, new MustacheTemplateEngine());
+    post("/registering", LoginServer::registrarUser, new MustacheTemplateEngine());
 		
     //Fin.
   }

@@ -19,6 +19,7 @@ import trivia.LoginServer;
 @WebSocket
 public class EchoWebSocket {
     private String sender, msg;
+    private static Map<Session,User> usersOnline = new HashMap<Session,User>();
 
     @OnWebSocketConnect
     public void onConnect(Session user) throws Exception {
@@ -48,8 +49,17 @@ public class EchoWebSocket {
 
     @OnWebSocketMessage
     public void onMessage(Session user, String message) {
-        
+        Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "root");
+        JSONObject obj = new JSONObject(message);
+        String description = new String(obj.getString("message"));
+        if (description.equals("newGame")) {
+            Versusmode.Versusmode(obj.getInt("user1_id"),obj.getInt("user2_id"));
+            Base.close();
+            //App.broadcastMessage("Nuevo_Juego",obj.getInt("user1ID"));
+        }
         App.cambiarTurno(sender = App.userUsernameMap.get(user), msg = message);
     }
+
+
 
 }
