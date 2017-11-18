@@ -30,6 +30,10 @@ public class Game extends Model{
     return q;
   }
 
+  public Integer getGameId(){
+    return this.getInteger("id");
+  }
+
   public Category getCurrentCategory(){
     List<Question> question_now = Question.where("id = ?", (Integer)this.get("current_question_id"));
     Question q = question_now.get(0);

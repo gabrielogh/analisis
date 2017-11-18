@@ -2,16 +2,20 @@
     box-sizing: border-box;
 }
 
-html {
-    overflow-y: scroll;
+body {
+  padding-bottom: 40px;
+  background-color: #eee;
+  height: 100%;
+  font-family:Verdana,sans-serif;
+  font-size:15px;
+  line-height:1.5;
 }
 
-body {
-    font-family: monospace;
-    font-size: 14px;
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 20px
+#nav_bar{
+    border-radius:0px;
+}
+[class*="fontawesome-"]:before {
+  font-family: 'FontAwesome', sans-serif;
 }
 
 input {
@@ -77,3 +81,31 @@ li {
     50%  { transform: scale(1.05); }
     to   { transform: none;        }
 }
+
+table, td, th {
+    border: 1px solid black;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+th{
+    text-align: center;
+    height: 400px;
+}
+
+.center{
+    margin: auto;
+    width: 36%;
+    border: 3px solid #73AD21;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+tr:nth-child(even) {
+  background: #CEE3F6;
+}
+tr:nth-child(odd){
+  background: #ffffff;
+}
+

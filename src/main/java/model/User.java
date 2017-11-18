@@ -8,7 +8,7 @@ import spark.QueryParamsMap;
 import java.util.HashMap;
 import java.util.Map;
 import trivia.Md5Cipher;
-
+import org.json.JSONObject;
 
 public class User extends Model {
   static{
@@ -17,9 +17,7 @@ public class User extends Model {
     validatePresenceOf("mail").message("Por favor, ingrese un email");
   }
   //Constructor
-  public User(){
-
-  }
+  public User(){}
 
   public Map registerUser(Request req, Response res){
     String[] result = {req.queryParams("username"),req.queryParams("email"),(String)req.queryParams("password"),(String)req.queryParams("password2")};
@@ -69,13 +67,26 @@ public class User extends Model {
     set("acces_level", 0);
   }
 
-  public User getUserById(Integer id){
+  public static User getUserById(Integer id){
       List<User> user_now = User.where("id = ?", id);
       User u = user_now.get(0);
       return u;
   }
 
-  public User getUserByName(String name){
+  public JSONObject toJson(){
+    Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
+    JSONObject result = new JSONObject();
+    result.put("id", this.getInteger("id"));
+    result.put("username", this.getString("username"));
+    Base.close();
+    return result;
+  }
+
+  public Integer getUserId(){
+    return (Integer)this.get("id");
+  }
+
+  public static User getUserByName(String name){
       List<User> user_now = User.where("username = ?", name);
       User u = user_now.get(0);
       return u;
@@ -135,6 +146,22 @@ public class User extends Model {
       Double winR = ((((Integer)this.get("c_questions"))* 100) / ((Integer)this.get("c_questions") + (Integer)this.get("i_questions"))) * 1.0;
       this.set("win_rate", winR).saveIt();
       g.set("current_question_state", true).saveIt();
+  }
+  //Metodo que le permita a un usuario responder una pregunta en un juego online.
+  public Boolean answerOnline(Question q, int a, Game g){
+      Boolean res = q.validateA(a);
+      if(res){
+        this.set("c_questions", (Integer)this.get("c_questions")+1).saveIt();
+        g.set("corrects", (Integer)g.get("corrects")+1).saveIt();
+      }
+      else{
+        this.set("i_questions", (Integer)this.get("i_questions")+1).saveIt();
+        g.set("incorrects", (Integer)g.get("incorrects")+1).saveIt();
+      }
+      Double winR = ((((Integer)this.get("c_questions"))* 100) / ((Integer)this.get("c_questions") + (Integer)this.get("i_questions"))) * 1.0;
+      this.set("win_rate", winR).saveIt();
+      g.set("current_question_state", true).saveIt();
+      return res;
   }
 
 }

@@ -6,7 +6,6 @@ import trivia.PlayGame;
 import trivia.LoginServer;
 import trivia.Versusmode;
 import trivia.EchoWebSocket;
-
 //----------------------------------
 import java.util.List;
 import java.util.HashMap;
@@ -15,10 +14,13 @@ import java.util.Map;
 //--------------------------------
 import static spark.Spark.*;
 import static spark.Spark.staticFileLocation;
+import spark.Request;
+import spark.Response;
 import spark.ModelAndView;
 import spark.template.mustache.MustacheTemplateEngine;
 import org.eclipse.jetty.websocket.api.Session;
 import org.json.JSONObject;
+import org.json.JSONArray;
 import static j2html.TagCreator.*;
 import com.google.gson.Gson;
 //---------------------------------
@@ -26,61 +28,67 @@ import com.google.gson.Gson;
 public class App{
 
   // this map is shared between sessions and threads, so it needs to be thread-safe (http://stackoverflow.com/a/2688817)
-  static Map<Session, String> userUsernameMap = new ConcurrentHashMap<>();
+  static Map<Session,User> userUsernameMap = new ConcurrentHashMap<>();
+  static Map<Session,User> usersPlaying = new ConcurrentHashMap<>();
 
-  public static void create_vs_game(Map data){
-    Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
-    String[] userNames = (String[])data.values().toArray(new String[data.size()]);
-    User p1 = new User();
-    User p2 = new User();
-    p1 = p1.getUserByName(userNames[nextUserNumber]);
-    p2 = p2.getUserByName(userNames[nextUserNumber+1]);
-    Versusmode play = new Versusmode(p1, p2);
-    play.saveIt();
-    Base.close();
-  }
-
-  //Sends a message from one user to all users, along with a list of current usernames
-  public static void cambiarTurno(String sender, String message) {
+  //Reload online Users
+  public static void updateOnlineUsers(String msg){
+    JSONArray data = new JSONArray();
+    for(User u: userUsernameMap.values()){data.put(u.toJson());}
     userUsernameMap.keySet().stream().filter(Session::isOpen).forEach(session -> {
-        try {
-
-            session.getRemote().sendString(String.valueOf(new JSONObject()
-                .put("userMessage", createHtmlMessageFromSender(sender, message))
-                .put("userTurno", nextUserName)
-                .put("userlist", userUsernameMap.values())
-            ));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    });
+    try {
+      session.getRemote().sendString(String.valueOf(new JSONObject()
+        .put("userlist", data)
+        .put("token", msg)));
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    });        
   }
 
-  private static String createHtmlMessageFromSender(String sender,String message) {
-      return article(b("Turno: " + sender),p(message)).render();
+  private static void rePlay(boolean correct1, boolean correct2, Versusmode game){
+    Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
+    game.set("in_progress", false);
+    JSONObject data = new JSONObject();
+    Session u1 = Versusmode.getSession(userUsernameMap, game.getPlayer1());
+    Session u2 = Versusmode.getSession(userUsernameMap, game.getPlayer2());
+    User winner;
+    Integer win = game.getWinner();
+    if(win==1){
+      data.put("winner", 1);
+      data.put("corrects", game.getGameP1().get("corrects"));
+      data.put("incorrects", game.getGameP1().get("incorrects"));
+    }
+    else if(win==2){
+      data.put("winner", 2);
+      data.put("corrects", game.getGameP2().get("corrects"));
+      data.put("incorrects", game.getGameP2().get("incorrects"));
+    }
+    Base.close();
+    data.put("token","gameFinished");
+    try{
+      u1.getRemote().sendString(String.valueOf(data));
+      u2.getRemote().sendString(String.valueOf(data));
+    } catch(Exception e){
+      e.printStackTrace();
+    }         
   }
+
 
   public static void main( String[] args ){
-    // CSS,IMAGES,JS.
+
     staticFiles.location("/public");
+    webSocket("/playOnline", EchoWebSocket.class);
     
-    webSocket("/App", EchoWebSocket.class);
-    
-    before((req, res)->{
-        Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
-    });
-
-    after((req, res) -> {
-      Base.close();
-    });
-
+    before((req, res)->{Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");});
+    after((req, res) -> {Base.close();});
 
     //Iicio de metodos GET
     //----------------------------------------------------------------------------------------------------------
     //Pagina principal.
-    get("/index", LoginServer::index,new MustacheTemplateEngine());
+    get("/", LoginServer::index,new MustacheTemplateEngine());
     //----------------------------------------------------------------------------------------------------------
-    get("/playOnline", PlayGame::playOnline,new MustacheTemplateEngine());
+    get("/playonline", PlayGame::playOnline,new MustacheTemplateEngine());
     //----------------------------------------------------------------------------------------------------------
     //Pagina de log de usuarios.
     get("/login", LoginServer::login,new MustacheTemplateEngine());

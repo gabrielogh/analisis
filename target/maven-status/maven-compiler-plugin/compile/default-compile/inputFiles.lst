@@ -1,10 +1,10 @@
 /Users/gabriel/Desktop/preguntados websocket/analisis/src/main/java/model/Question.java
 /Users/gabriel/Desktop/preguntados websocket/analisis/src/main/java/controller/Versusmode.java
 /Users/gabriel/Desktop/preguntados websocket/analisis/src/main/java/trivia/App.java
+/Users/gabriel/Desktop/preguntados websocket/analisis/src/main/java/controller/EchoWebSocket.java
 /Users/gabriel/Desktop/preguntados websocket/analisis/src/main/java/model/Md5Cipher.java
 /Users/gabriel/Desktop/preguntados websocket/analisis/src/main/java/controller/PlayGame.java
 /Users/gabriel/Desktop/preguntados websocket/analisis/src/main/java/model/Category.java
-/Users/gabriel/Desktop/preguntados websocket/analisis/src/main/java/model/EchoWebSocket.java
 /Users/gabriel/Desktop/preguntados websocket/analisis/src/main/java/model/Game.java
 /Users/gabriel/Desktop/preguntados websocket/analisis/src/main/java/model/User.java
 /Users/gabriel/Desktop/preguntados websocket/analisis/src/main/java/controller/LoginServer.java

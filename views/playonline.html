@@ -2,19 +2,23 @@
 <html lang="es">
 <meta charset="UTF-8">
 <html>
-<head>
+  <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>WebsSockets</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+    <title>Bienvenido a Preguntado$</title>
     <link rel='stylesheet' href="css/playonline.css">
+    <link rel='stylesheet' href='/css/css.css'>
+    <link rel='stylesheet' href='/css/bootstrap-theme.css'>
 		<link rel='stylesheet' href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-</head>
-<body>
+  </head>
+  <body>
     <nav id="nav_bar" class="navbar navbar-inverse">
       <div class="container-fluid">
         <ul class="nav navbar-nav">
-          <li class="active"><a href="/index"><span class="glyphicon glyphicon-home"></span></a></li>
+          <li class="active"><a href="/"><span class="glyphicon glyphicon-home"></span></a></li>
           <li><a href="/ranking">Ranking</a></li>
           {{{play}}}
+          {{{playonline}}}
           {{{admin}}}
         </ul>
         <ul class="nav navbar-nav navbar-right">
@@ -24,35 +28,44 @@
         </ul>
       </div>
     </nav>
-    <div id="turno">    <!-- Built by JS --> </div>
-    <ul class="pregunta">
-        <li><b>Quien es el actual presidente de Argentina?</b></li>
-    </ul>
+    <div id="stats" class="center-stats">
+      <table style="width:100%">
+        <tr>
+          <th>Respuestas Correctas<font color="green">Jugador 1</font></th>
+          <th>Respuestas Correctas<font color="green">Jugador 2</font></th>
+          <th>Respuestas Incorrectas<font color="red">Jugador 1</font></th>
+          <th>Respuestas Incorrectas<font color="red">Jugador 2</font></th>  
+          <th>Categoria</th> 
+        </tr>
+        <tr>
+          <td id="corrects_p1"><b></b></td>
+          <td id="corrects_p2"><b></b></td>
+          <td id="inc_p1"></td>
+          <td id="inc_p2"></td>
+          <td id="category"></td>
+        </tr>
+      </table>
     </div>
-    <div id="chatControls">
-        <h1>Respuestas:</h1>
-        <ul class="respuesta">
-            <li>
-                <div id="resp1" data-value="Menem">Menem</div>
-                <button id="send">Send</button>
-            </li>
-            <li>
-                <div id="resp2" data-value="Cristina">Cristina</div>
-                <button id="send2">Send</button>
-            </li>
-            <li>
-                <div id="resp3" data-value="Macri">Macri</div>
-                <button id="send3">Send</button>
-            </li>
-            <li>
-                <div id="resp4" data-value="Obama">Obama</div>
-                <button id="send4">Send</button>
-            </li>
-        </ul>
+
+    <div hidden id="userdata">
+      <div hidden id="username">{{{username}}}</div>
+      <div hidden id="user_id">{{{user_id}}}</div>
     </div>
-    <ul id="userlist"> <!-- Built by JS --> </ul>
-    <div id="chat">    <!-- Built by JS --> </div>
+
+    <div id="content">
+      <div id="respuesta-estado"></div>
+      <div id="turno"></div>
+      <div id="tablero">
+      <h1 id='question'></h1>
+      <ul class="respuesta">
+        <form id="options"></form>
+      </ul>
+      </div>
+    </div><!-- end content -->
+
+    <div id="queue" class="center"></div>
+    <script src="/js/jquery.js"></script>
     <script src="/js/websocketDemo.js"></script>
     <footer>Desarrollado por Melegatti Pablo, Somare Francico y Gonzalez Gabriel - UNRC 2017</footer>
-</body>
+  </body>
 </html>
