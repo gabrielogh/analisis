@@ -190,6 +190,18 @@ public class LoginServer{
     return new ModelAndView(result, "./views/index.html");
   }
 
+  public static ModelAndView sendCategory(Request req, Response res){
+    Category cat = new Category();
+    Map result = cat.newCategory(req,res);
+    if((String)result.get("error") != null){
+      return new ModelAndView(result,"./views/adminPanel/generate_cat.html"); 
+    }
+    if((String)result.get("success") != null){
+      return new ModelAndView(result,"./views/adminPanel/generate_cat.html"); 
+    }
+    return new ModelAndView(result, "./views/index.html");
+  }
+
   public static ModelAndView ranking(Request req, Response res){
     Map rank = new HashMap();
     List<User> top_10 = User.findBySQL("select * from users order by c_questions desc limit 10");

@@ -44,10 +44,10 @@ public class PlayGame{
     Question que;
     Integer correct;
 
-    if((Integer)game.get("question_number")==0){
+    if(game.getInteger("question_number")==0){
       que = game.getCurrentQuestion();
       cat = game.getCurrentCategory();
-      correct = (Integer)que.get("correct_a");
+      correct = que.getInteger("correct_a");
       json.put("token", "sendQuestion");
       json.put("user_id", game.getInteger("user_id"));
       json.put("question_id", que.getInteger("id"));
@@ -60,17 +60,18 @@ public class PlayGame{
       return json;
     }
     else{
-      //if((Boolean)game.get("current_question_state")){
+      System.out.println("EL ESTADO DE LA PREGUNTA ES: "+(Boolean)game.get("current_question_state"));
+      if((Boolean)game.get("current_question_state")){
         cat = (new Category()).randomCat();
         que = cat.getQuestion();
         game.set("current_question_id",  que.getInteger("id"));
         game.set("current_question_state", false);
         game.saveIt();
-      //}
-      /*else{
+      }
+      else{
         que = game.getCurrentQuestion();
         cat = game.getCurrentCategory();
-      }*/
+      }
       json.put("user_id", game.getInteger("user_id"));
       json.put("token","sendQuestion");
       json.put("question_id", que.getInteger("id"));

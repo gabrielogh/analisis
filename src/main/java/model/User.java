@@ -68,9 +68,9 @@ public class User extends Model {
   }
 
   public static User getUserById(Integer id){
-      List<User> user_now = User.where("id = ?", id);
-      User u = user_now.get(0);
-      return u;
+    List<User> user_now = User.where("id = ?", id);
+    User u = user_now.get(0);
+    return u;
   }
 
   public JSONObject toJson(){
@@ -87,9 +87,9 @@ public class User extends Model {
   }
 
   public static User getUserByName(String name){
-      List<User> user_now = User.where("username = ?", name);
-      User u = user_now.get(0);
-      return u;
+    List<User> user_now = User.where("username = ?", name);
+    User u = user_now.get(0);
+    return u;
   }
   //Metodo que crea un juego para un usuario
   public Game createVsGame(){
@@ -135,33 +135,34 @@ public class User extends Model {
 
   //Metodo que le permita a un usuario responder una pregunta.
   public void answerAQuestion(Question q, int a, Game g){
-      if(q.validateA(a)){
-        this.set("c_questions", (Integer)this.get("c_questions")+1).saveIt();
-        g.set("corrects", (Integer)g.get("corrects")+1).saveIt();
-      }
-      else{
-        this.set("i_questions", (Integer)this.get("i_questions")+1).saveIt();
-        g.set("incorrects", (Integer)g.get("incorrects")+1).saveIt();
-      }
-      Double winR = ((((Integer)this.get("c_questions"))* 100) / ((Integer)this.get("c_questions") + (Integer)this.get("i_questions"))) * 1.0;
-      this.set("win_rate", winR).saveIt();
-      g.set("current_question_state", true).saveIt();
+    if(q.validateA(a)){
+      this.set("c_questions", this.getInteger("c_questions")+1).saveIt();
+      g.set("corrects", g.getInteger("corrects")+1).saveIt();
+    }
+    else{
+      this.set("i_questions", this.getInteger("i_questions")+1).saveIt();
+      g.set("incorrects", g.getInteger("incorrects")+1).saveIt();
+    }
+    Double winR = (((this.getInteger("c_questions"))* 100) / (this.getInteger("c_questions") + this.getInteger("i_questions"))) * 1.0;
+    this.set("win_rate", winR).saveIt();
+    g.set("current_question_state", true).saveIt();
   }
+  
+
   //Metodo que le permita a un usuario responder una pregunta en un juego online.
   public Boolean answerOnline(Question q, int a, Game g){
-      Boolean res = q.validateA(a);
-      if(res){
-        this.set("c_questions", (Integer)this.get("c_questions")+1).saveIt();
-        g.set("corrects", (Integer)g.get("corrects")+1).saveIt();
-      }
-      else{
-        this.set("i_questions", (Integer)this.get("i_questions")+1).saveIt();
-        g.set("incorrects", (Integer)g.get("incorrects")+1).saveIt();
-      }
-      Double winR = ((((Integer)this.get("c_questions"))* 100) / ((Integer)this.get("c_questions") + (Integer)this.get("i_questions"))) * 1.0;
-      this.set("win_rate", winR).saveIt();
-      g.set("current_question_state", true).saveIt();
-      return res;
+    Boolean res = q.validateA(a);
+    g.set("question_number", g.getInteger("question_number")+1).saveIt();
+    if(g.getInteger("question_number")>=5){
+      g.set("in_progress", false).saveIt();
+    }
+    if(res){
+      g.set("corrects", g.getInteger("corrects")+1).saveIt();
+    }
+    else{
+      g.set("incorrects", g.getInteger("incorrects")+1).saveIt();
+    }
+    g.set("current_question_state", true).saveIt();
+    return res;
   }
-
 }

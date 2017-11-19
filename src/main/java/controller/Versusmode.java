@@ -44,7 +44,7 @@ public class Versusmode extends Model{
     set("p2_id", p2_id);
     set("turn", 1);
     set("in_progress",true);
-    set("question_number", 1);
+    set("question_number", 0);
 	}
 
   public void incQuestionNumber(){ this.set("question_number", this.getQuestionNumber()+1);};
@@ -56,18 +56,15 @@ public class Versusmode extends Model{
 
   public void getQuestion(){
     Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
-    Game game_p1 = Game.findById(this.get("game_p1_id"));
-    Game game_p2 = Game.findById(this.get("game_p2_id"));
+    Game game_p1 = Game.findById(this.getInteger("game_p1_id"));
+    Game game_p2 = Game.findById(this.getInteger("game_p2_id"));
     Session u2 = getKeyByValue(App.usersPlaying, User.findById(game_p2.getInteger("user_id")));
     Session u1 = getKeyByValue(App.usersPlaying, User.findById(game_p1.getInteger("user_id")));
-    System.out.println("USER 1 SESSION "+u1);
-    System.out.println("USER 2 SESSION "+u2);
     if(this.getInteger("turn")==1){
       JSONObject question = PlayGame.generateQuestion(game_p1);
       question.put("turn", 1).put("game_id", this.getInteger("id"));
       Base.close();
       try{
-        System.out.println("ENVIAMOS AL USER 1");
         u1.getRemote().sendString(String.valueOf(question));
         u2.getRemote().sendString(String.valueOf(question));
       } catch(Exception e){
@@ -108,47 +105,93 @@ public class Versusmode extends Model{
 	 * @pre. 
 	 * @post. Number of winner (1-2) or -1 for error.
 	 */
-	public Integer getWinner(){
+	public JSONObject getFinalResults(){
+    JSONObject results = new JSONObject();
     Game g1 = Game.findById(this.get("game_p1_id"));
     Game g2 = Game.findById(this.get("game_p2_id"));
-		if((Boolean)this.get("in_progress") == false){
-			if((Integer)g1.get("corrects") > (Integer)g2.get("corrects")){
-				return 1;
-			}
-			else if((Integer)g1.get("corrects") < (Integer)g2.get("corrects")){
-				return 2;
-			}
-			else{
-				return 0;
-			}
-		}
-		return -1;
+    int winner_id, loser_id;
+    Integer user1_id = g1.getInteger("user_id");
+    Integer user2_id = g2.getInteger("user_id");
+
+    if(g1.getInteger("corrects")>g2.getInteger("corrects")){
+      results.put("loser", user2_id).put("winner", user1_id).put("player", 1);
+    }
+    else if(g1.getInteger("corrects")<g2.getInteger("corrects")){
+      results.put("loser", user1_id).put("winner", user2_id).put("player", 2);
+    }
+    else{
+      results.put("loser", 0).put("winner", 0);
+    }
+    results.put("token","gameFinished")
+    .put("corrects_p1", g1.getInteger("corrects"))
+    .put("corrects_p2", g2.getInteger("corrects"))
+    .put("incorrects_p1", g1.getInteger("incorrects"))
+    .put("incorrects_p2", g2.getInteger("incorrects"));
+    return results;
 	}
 
-  public void sendResults(boolean answer, Integer turn){
+  public void sendResults(JSONObject data){
     Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
     Session p1 = getSession(App.usersPlaying, this.getPlayer1());
     Session p2 = getSession(App.usersPlaying, this.getPlayer2());
     User player1 = this.getPlayer1();
     User player2 = this.getPlayer2();
-    JSONObject data = new JSONObject();
+    JSONObject results = new JSONObject();
     try{
-      if(turn == 1){
-      data.put("token","showResult").put("game_id",this.getInteger("id")).put("correct",answer).put("user_id", player1.getInteger("id"));
-      Base.close();
-      System.out.println("ENTRAMOS AL SEND RESULTS POR EL J1");
-      System.out.println(String.valueOf(data));
-      p1.getRemote().sendString(String.valueOf(data));
-      }
-      else{
-        System.out.println("ENTRAMOS AL SEND RESULTS POR EL J2");
-        data.put("token","showResult").put("game_id",this.getInteger("id")).put("correct",answer).put("user_id", player2.getInteger("id"));
+      if(this.getInteger("question_number")==10){
         Base.close();
+      System.out.println("EL JUEGO TERMINO, ENVIANDO RESULTADOS");
+        p1.getRemote().sendString(String.valueOf(data));
         p2.getRemote().sendString(String.valueOf(data));
+      }else{
+        if(data.getInt("turn") == 1){
+        results.put("token","showResult").put("game_id",this.getInteger("id")).put("correct",data.get("result")).put("user_id", player1.getInteger("id"));
+        Base.close();
+        System.out.println(String.valueOf(results));
+        p1.getRemote().sendString(String.valueOf(results));
+        }
+        else{
+          results.put("token","showResult").put("game_id",this.getInteger("id")).put("correct",data.get("result")).put("user_id", player2.getInteger("id"));
+          Base.close();
+          p2.getRemote().sendString(String.valueOf(results));
+        }
       }
     } catch(Exception e){
       e.printStackTrace();
     }         
+  }
+
+  public JSONObject answerQuestion(JSONObject data){
+    JSONObject result = new JSONObject();
+    if(data.getInt("turn")==1){
+      this.set("turn",2).saveIt();
+      User player1 = this.getPlayer1();
+      Game g1 = this.getGameP1();
+      Question q = Question.findById(data.get("question_id"));
+      System.out.println("EL JUEGO ENTRO A LA PREGUNTA: " + this.getInteger("question_number"));
+      Boolean answer = player1.answerOnline(q, data.getInt("answer"), g1);
+      this.set("question_number", this.getInteger("question_number")+1).saveIt();
+      System.out.println("EL JUEGO PASA A LA PREGUNTA: " + this.getInteger("question_number"));
+      if(this.getInteger("question_number")==10){
+        return this.getFinalResults();
+      }
+      result.put("result", answer).put("turn",1);
+    }
+    else{
+      this.set("turn",1).saveIt();
+      User player2 = this.getPlayer2();
+      Game g2 = this.getGameP2();
+      Question q = Question.findById(data.getInt("question_id"));
+      System.out.println("EL JUEGO ENTRO A LA PREGUNTA: " + this.getInteger("question_number"));
+      Boolean answer = player2.answerOnline(q, data.getInt("answer"), g2);
+      this.set("question_number", this.getInteger("question_number")+1).saveIt();
+      System.out.println("EL JUEGO PASA A LA PREGUNTA: " + this.getInteger("question_number"));
+      if(this.getInteger("question_number")==10){
+        return this.getFinalResults();
+      }
+      result.put("result", answer).put("turn",2);
+    }
+    return result;
   }
 
   public static Session getSession(Map<Session,User> map, User u){

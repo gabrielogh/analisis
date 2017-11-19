@@ -21,7 +21,7 @@ import spark.template.mustache.MustacheTemplateEngine;
 import org.eclipse.jetty.websocket.api.Session;
 import org.json.JSONObject;
 import org.json.JSONArray;
-import static j2html.TagCreator.*;
+//import static j2html.TagCreator.*;
 import com.google.gson.Gson;
 //---------------------------------
 
@@ -45,35 +45,6 @@ public class App{
       }
     });        
   }
-
-  private static void rePlay(boolean correct1, boolean correct2, Versusmode game){
-    Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
-    game.set("in_progress", false);
-    JSONObject data = new JSONObject();
-    Session u1 = Versusmode.getSession(userUsernameMap, game.getPlayer1());
-    Session u2 = Versusmode.getSession(userUsernameMap, game.getPlayer2());
-    User winner;
-    Integer win = game.getWinner();
-    if(win==1){
-      data.put("winner", 1);
-      data.put("corrects", game.getGameP1().get("corrects"));
-      data.put("incorrects", game.getGameP1().get("incorrects"));
-    }
-    else if(win==2){
-      data.put("winner", 2);
-      data.put("corrects", game.getGameP2().get("corrects"));
-      data.put("incorrects", game.getGameP2().get("incorrects"));
-    }
-    Base.close();
-    data.put("token","gameFinished");
-    try{
-      u1.getRemote().sendString(String.valueOf(data));
-      u2.getRemote().sendString(String.valueOf(data));
-    } catch(Exception e){
-      e.printStackTrace();
-    }         
-  }
-
 
   public static void main( String[] args ){
 
@@ -173,7 +144,21 @@ public class App{
      * @post. User registered / Error.
      */
     post("/registering", LoginServer::registrarUser, new MustacheTemplateEngine());
-		
-    //Fin.
+    //----------------------------------------------------------------------------------------------------------
+    /**
+     * Método que permite al administrador generar nuevas preguntas.
+     * @param. username., user id, question id, password, password2
+     * @pre. username != "", password == password2, email != "".
+     * @post. User registered / Error.
+     */
+    //post("/sendquestion", LoginServer::sendQuestion, new MustacheTemplateEngine());
+    //----------------------------------------------------------------------------------------------------------
+    /**
+     * Método que permite al administrador generar categorias.
+     * @param. username., user id, question id, password, password2
+     * @pre. username != "", password == password2, email != "".
+     * @post. User registered / Error.
+     */
+    post("/sendcategory", LoginServer::sendCategory, new MustacheTemplateEngine());
   }
 }

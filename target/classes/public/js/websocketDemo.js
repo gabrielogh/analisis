@@ -10,23 +10,17 @@ var username;
 var jugando;
 var game_id;
 
-console.log(user_id);
-
 function updateByToken(msg){
   var data = JSON.parse(msg.data);
   console.log(data.token);
   if(data.token == "updateOnlineUsers"){
     updateQueue(data);
   }
-  else if(data.token == "UpdateTurn"){
-    updateTurn();
-  }
   else if(data.token == "sendQuestion"){
     game_id=data.game_id;
     sendQuestion(msg);
   }
   else if(data.token == "showResult"){
-    console.log("ENTRAMOS AL SHOWRESULTS!!: ");
     showResult(data);
   }
   else if(data.token == "gameFinished"){
@@ -52,81 +46,97 @@ function play(p1_id, p2_id){
 
 function sendQuestion(msg){
   $('#queue').removeClass('center').html('');
+  $('#title-queue').removeClass('queueTitle').html('');
   var data = JSON.parse(msg.data);
-  console.log(data.user_id);
-  console.log(user_id);
-  console.log(data.user_id!=user_id);
   if(data.user_id!=user_id){
     id("turno").innerHTML='<b>Es el turno de tu oponente, debes esperar, no seas ansioso, sabemos que eres un deborador de preguntas.</b>'
+    $('#question').removeClass('').html('');
+    $('#options').removeClass('respuesta').html('');
   }
   else{
-    id("turno").innerHTML='<b>Es su turno. Si se siente frustrado ante la imposibilidad de contestar una pregunta, piense en las personas que escriben los temrinos y condiciones</b>'
+    $('#respuesta-correcta').removeClass('alert alert-success').html('');
+    $('#respuesta-incorrecta').removeClass('alert alert-danger').html('');
+    id("turno").innerHTML='<b>Es su turno. Si se siente frustrado ante la imposibilidad de contestar una pregunta, piense en las personas que escriben los temrinos y condiciones</b>';
     id("question").innerHTML=data.question;
-    id("options").innerHTML='<li><button class="btn btn-success" id="btn-responder" value="'+data.option1+'" onclick="sendAnswer('+user_id+','+1+','+data.question_id+','+data.turn+','+game_id+')">'+data.option1+'</buton></li>';
-    id("options").innerHTML+='<li><button class="btn btn-success" id="btn-responder" value="'+data.option2+'" onclick="sendAnswer('+user_id+','+2+','+data.question_id+','+data.turn+','+game_id+')">'+data.option2+'</buton></li>';
-    id("options").innerHTML+='<li><button class="btn btn-success" id="btn-responder" value="'+data.option3+'" onclick="sendAnswer('+user_id+','+3+','+data.question_id+','+data.turn+','+game_id+')">'+data.option3+'</buton></li>';
-    id("options").innerHTML+='<li><button class="btn btn-success" id="btn-responder" value="'+data.option4+'" onclick="sendAnswer('+user_id+','+4+','+data.question_id+','+data.turn+','+game_id+')">'+data.option4+'</buton></li>';
+    id("options").innerHTML='<li class="respuesta"><button class="btn btn-success" id="btn-responder" value="'+data.option1+'" onclick="sendAnswer('+user_id+','+1+','+data.question_id+','+data.turn+','+game_id+')">'+data.option1+'</buton></li><p>';
+    id("options").innerHTML+='<li class="respuesta"><button class="btn btn-success" id="btn-responder" value="'+data.option2+'" onclick="sendAnswer('+user_id+','+2+','+data.question_id+','+data.turn+','+game_id+')">'+data.option2+'</buton></li><p>';
+    id("options").innerHTML+='<li class="respuesta"><button class="btn btn-success" id="btn-responder" value="'+data.option3+'" onclick="sendAnswer('+user_id+','+3+','+data.question_id+','+data.turn+','+game_id+')">'+data.option3+'</buton></li><p>';
+    id("options").innerHTML+='<li class="respuesta"><button class="btn btn-success" id="btn-responder" value="'+data.option4+'" onclick="sendAnswer('+user_id+','+4+','+data.question_id+','+data.turn+','+game_id+')">'+data.option4+'</buton></li><p>';
   }
 }
 
 function sendAnswer(user_id, answer, question_id, turn, game_id){
-  console.log("user_id:"+user_id);
-  console.log("answer_id:"+answer);
-  console.log("question_id:"+question_id);
-  console.log("turn:"+turn);
-  console.log("game_id:"+game_id);
-  var dataJson = {"id":user_id, "answer":answer, "token":"answer", "game_id":game_id, "question_id":question_id, "turn":turn};    
-  var data = JSON.stringify(dataJson);
-  webSocket.send(data);
+  var data = {"id":user_id, "answer":answer, "token":"answer", "game_id":game_id, "question_id":question_id, "turn":turn};    
+  webSocket.send(JSON.stringify(data));
 }
 
 function showResult(data){
+  $('#resultado_respuesta').removeClass('').html('');
   if(data.user_id == user_id){
-    if(data.correct)
-      showMessage("Respondiste Bien");
-
-    else
-      showMessage("Respondiste MAL, nunca pegas una en tu vida, FRACASADO");
+    if(data.correct){
+      var resultado = '<div id="respuesta-incorrecta" class="alert alert-success"><strong>Respondiste Bien, por fin!!</strong></div>';
+      id("resultado_respuesta").innerHTML=resultado;
+    }
+    else{
+      var resultado = '<div id="respuesta-correcta" class="alert alert-danger"><strong>Respondiste MAL, nunca logras nada en tu vida, FRACASADO</strong></div>';
+      id("resultado_respuesta").innerHTML=resultado;
+    }
   }
 }
 
 function showFinalStats(data){
-  var button = '<li><button>Aceptar</buton></li>';
-  switch(data.winner){
-    case "1":
-      var input = 'Ganaste.<li>Respuestas correctas:'+data.correct+'</li><li>Respuestas incorrectas:'+data.wrong+'</li>';
-      var form = '<form action="/" method="get">'+input+ ' '+button+'</form>';
-      showMessage(form);
-      break;
-    case "2":
-      var input ='Perdiste.<li>Respuestas correctas:'+data.correct+'</li><li>Respuestas incorrectas:'+data.wrong+'</li>';
-      var form = '<form action="/" method="get">'+input+''+ button+'</form>';
-      showMessage(form);
-      break;
-    default:
-      var input ='Empate';
-      var form = '<form action="/" method="get">'+input+ ''+ button+'</form>';
-      showMessage(form);
-  } 
-}
+  console.log("ENTRAMOS A MOSTRAR RESULTADOS FINALES");
+  $('#tablero').removeClass('').html('');
 
-function WinnerMessage(){
-  if(id("play").innerHTML=="Play"){
-    clear();
-    var mesg = '<h1> Tu rival ha fracasado, como con todo lo que se propone en su vida. Ganaste.</h1>';
-    var input = '<li><button>Aceptar</buton></li>';
-    var form = '<form action="/playonline" method="get">'+mesg+'' +input+'</form>';
-    showMessage(form);
+  if(data.winner == user_id){
+    if(data.player==1){
+      var result = 'Ganaste.<li>Respuestas correctas:'+data.corrects_p1+'</li><li>Respuestas incorrectas:'+data.incorrects_p1+'</li>';
+    }
+    else{
+      var result = 'Ganaste.<li>Respuestas correctas:'+data.corrects_p2+'</li><li>Respuestas incorrectas:'+data.incorrects_p2+'</li>';
+
+    }
   }
+  else if(data.loser == user_id){
+    if(data.player==2){
+      var result ='Perdiste.<li>Respuestas correctas:'+data.corrects_p1+'</li><li>Respuestas incorrectas:'+data.incorrects_p1+'</li>';
+    }
+    else{
+      var result ='Perdiste.<li>Respuestas correctas:'+data.corrects_p2+'</li><li>Respuestas incorrectas:'+data.incorrects_p2+'</li>';
+    }
+  }
+  else{
+      var result ='Empate';
+  }
+  var boton = '<button onclick="play()">Finalizar</buton>';
+  var div = '<div id="stats" class="center-stats">';
+  var table = '<table style="width:100%">';
+  var tr = '<tr>';
+  var th1 = ' <th>Respuestas Correctas<font color="green">Jugador 1</font></th>';
+  var th2 = ' <th>Respuestas Correctas<font color="green">Jugador 2</font></th>';
+  var th3 = ' <th>Respuestas Incorrectas<font color="red">Jugador 1</font></th>';
+  var th4 = ' <th>Respuestas Incorrectas<font color="red">Jugador 2</font></th>'; 
+  var trend = '</tr>';
+  var tr2 = '<tr>';
+  var td1 ='      <td id="'+data.corrects_p1 +'"><b>'+data.corrects_p1 +'</b></td>';
+  var td2 ='      <td id="'+data.corrects_p2 +'"><b>'+data.corrects_p2+'</b></td>';
+  var td3 ='      <td id="inc_p1">'+data.incorrects_p1+'</td>';
+  var td4 ='      <td id="inc_p2">'+data.incorrects_p2+'</td>';
+  var tr2end ='</tr>';
+  var endtable ='</table>';
+  var enddiv ='</div>';
+
+  var concat = result+'<p>'+div+''+table+''+tr+''+th1+''+th2+''+th3+''+th4+''+trend+''+tr2+''+td1+''+td2+''+td3+''+td4+''+tr2end+''+endtable+''+enddiv+''+boton;
+  id("content").innerHTML=concat;
 }
 
-function updateTurn(){ if(document.getElementById("turn")!=null){ location.reload();}}
-
-function showMessage(message){id("respuesta-estado").innerHTML=message; console.log("entramos a la ultima funcion");}
+function showMessage(data){id("respuesta-correcta").innerHTML=message;}
 
 function updateQueue(data) {
   var id_user_in_queue = 0;
   $('#stats').removeClass('center-stats').html('');
+  $('#resultado_respuesta').removeClass('').html('');
+
   id("queue").innerHTML = "";
   data.userlist.forEach(function (user){
     if(user.id!=user_id && user.username!=null) {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="trivia.UserTest" time="0.421" tests="3" errors="0" skipped="0" failures="0">
+<testsuite name="trivia.UserTest" time="0.404" tests="3" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/jre/lib"/>
@@ -64,7 +64,7 @@
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase name="validateExistenceOfUsername" classname="trivia.UserTest" time="0.375"/>
-  <testcase name="validateUniquenessOfUsernames" classname="trivia.UserTest" time="0.033"/>
-  <testcase name="validateUniquenessOfMmail" classname="trivia.UserTest" time="0.013"/>
+  <testcase name="validateExistenceOfUsername" classname="trivia.UserTest" time="0.359"/>
+  <testcase name="validateUniquenessOfUsernames" classname="trivia.UserTest" time="0.034"/>
+  <testcase name="validateUniquenessOfMmail" classname="trivia.UserTest" time="0.011"/>
 </testsuite>

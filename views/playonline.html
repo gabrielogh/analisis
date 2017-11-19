@@ -28,42 +28,24 @@
         </ul>
       </div>
     </nav>
-    <div id="stats" class="center-stats">
-      <table style="width:100%">
-        <tr>
-          <th>Respuestas Correctas<font color="green">Jugador 1</font></th>
-          <th>Respuestas Correctas<font color="green">Jugador 2</font></th>
-          <th>Respuestas Incorrectas<font color="red">Jugador 1</font></th>
-          <th>Respuestas Incorrectas<font color="red">Jugador 2</font></th>  
-          <th>Categoria</th> 
-        </tr>
-        <tr>
-          <td id="corrects_p1"><b></b></td>
-          <td id="corrects_p2"><b></b></td>
-          <td id="inc_p1"></td>
-          <td id="inc_p2"></td>
-          <td id="category"></td>
-        </tr>
-      </table>
-    </div>
-
+    <div id="title-queue" class="queueTitle" ><h2><b>Jugadores disponibles: </b></h2></div>
+    <div id="queue" class="center"></div>
     <div hidden id="userdata">
       <div hidden id="username">{{{username}}}</div>
       <div hidden id="user_id">{{{user_id}}}</div>
     </div>
 
     <div id="content">
-      <div id="respuesta-estado"></div>
+      <div id="resultado_respuesta"></div>
+
       <div id="turno"></div>
       <div id="tablero">
-      <h1 id='question'></h1>
-      <ul class="respuesta">
-        <form id="options"></form>
-      </ul>
+        <h1 id='question'></h1>
+        <ul id="options" class="respuesta">
+        </ul>
       </div>
     </div><!-- end content -->
-
-    <div id="queue" class="center"></div>
+    
     <script src="/js/jquery.js"></script>
     <script src="/js/websocketDemo.js"></script>
     <footer>Desarrollado por Melegatti Pablo, Somare Francico y Gonzalez Gabriel - UNRC 2017</footer>
