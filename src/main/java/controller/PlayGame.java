@@ -24,13 +24,19 @@ public class PlayGame{
 
 	public static ModelAndView playGame(Request req, Response res){
     User aux = new User();
-
-    if(req.session().attribute("username")!=null){
+    results = new HashMap();
+    Map session = LoginServer.getSession(req,res);
+    if(session.get("username")!=null){
       jugador = aux.getUserById((Integer)req.session().attribute("userId"));
       juego = jugador.getGameInProgress(false);
       juego.saveIt();
     }
-    results = play(juego, jugador, req, res);
+    else{
+      results.put("error", "<div class='alert alert-danger' id='alert-danger'><strong>Error!</strong> Debes estar conectado para jugar.</div>");
+      return new ModelAndView(results, "./views/login.html");
+    }
+    results.putAll(session);
+    results.putAll(play(juego, jugador, req, res));
     return new ModelAndView(results, "./views/play.html");
 	}
 
@@ -110,7 +116,6 @@ public class PlayGame{
         g.set("current_question_id", (Integer)que.get("id"));
         g.set("current_question_state", false);
         g.saveIt();
-
    		}
    		else{
         que = g.getCurrentQuestion();
@@ -140,7 +145,6 @@ public class PlayGame{
       req.session().attribute("admin", true);
       res_play.put("admin","<li><a href='/administrate'>Administrar</a></li>");
     }
-
     return res_play;
 	}
 
@@ -157,24 +161,20 @@ public class PlayGame{
 
     if((Integer)game_now.get("question_number")==5){
       game_now.set("in_progress", false).saveIt();
-
     }
     user_now.answerAQuestion(question_now, answer, game_now);
-    
     return playGame(req, res);
   }
 
   public static ModelAndView playOnline(Request req, Response res){
-    Map map = new HashMap();
+    Map map = LoginServer.getSession(req,res);
     map.put("title", "Bienvenido a Preguntado$");
-    if(req.session().attribute("username")!=null){
-      map.put("user_id", (Integer)req.session().attribute("userId"));
-      map.put("username", (String)req.session().attribute("username"));
+    if(map.get("username")!=null){
+      return new ModelAndView(map,"./views/playOnline.html");
     }
     else{
-      return new ModelAndView(map,"./views/index.html");
+      map.put("error", "<div class='alert alert-danger' id='alert-danger'><strong>Error!</strong> Debes estar conectado para jugar.</div>");
+      return new ModelAndView(map,"./views/login.html");
     }
-    return new ModelAndView(map,"./views/playOnline.html");
   }
-
 }

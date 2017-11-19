@@ -22,12 +22,11 @@ public class LoginServer{
 		return results;
 	}
 
-
-  public static ModelAndView index(Request req, Response res){
+  public static Map getSession(Request req, Response res){
     Map map = new HashMap();
     map.put("title", "Bienvenido a Preguntado$");
     if(req.session().attribute("username")!=null){
-      map.put("userId", (int)req.session().attribute("userId"));
+      map.put("user_id", (int)req.session().attribute("userId"));
       map.put("username", req.queryParams("username"));
       map.put("play", "<li><a href='/play'>Jugar</a></li>");
       map.put("playonline", "<li><a href='/playonline'>Jugar Online</a></li>");
@@ -36,86 +35,47 @@ public class LoginServer{
         map.put("admin", "<li><a href='/administrate'>Administrar</a></li>");
       }
     }
-    return new ModelAndView(map,"./views/index.html");
+    return map;
+  }
+
+  public static ModelAndView index(Request req, Response res){
+    return new ModelAndView(getSession(req,res),"./views/index.html");
   }
 
   public static ModelAndView login(Request req, Response res){
-    Map map = new HashMap();
-    map.put("title", "Bienvenido a Preguntado$");
-    if(req.session().attribute("username")!=null){
-      map.put("id", req.session().attribute("userId"));
-      map.put("admin", req.session().attribute("admin"));
-      map.put("play", "<li><a href='/play'>Jugar</a></li>");
-      map.put("playonline", "<li><a href='/playonline'>Jugar Online</a></li>");
-      map.put("logout","<li><a href='/login'><span class='glyphicon glyphicon-off'></span> Salir</a></li>");
-      if((String)req.session().attribute("admin") != null){
-        map.put("admin", "<li><a href='/administrate'>Administrar</a></li>");
-      }
-    }
-    return new ModelAndView(map, "./views/login.html");
+    return new ModelAndView(getSession(req,res), "./views/login.html");
   }
 
   public static ModelAndView generatec(Request req, Response res){
-    Map map = new HashMap();
-    map.put("title", "Panel de Administracion");
-    if(req.session().attribute("admin") != null) {
-      map.put("id", req.session().attribute("userId"));
-      map.put("play", "<li><a href='/play'>Jugar</a></li>");
-      map.put("playonline", "<li><a href='/playonline'>Jugar Online</a></li>");
-      map.put("logout","<li><a href='/login'><span class='glyphicon glyphicon-off'></span> Salir</a></li>");
-      map.put("admin", "<li><a href='/administrate'>Administrar</a></li>");
-    }
-    else{
-      return new ModelAndView(map, "./views/index.html");
+    Map map = getSession(req,res);
+    if(map.get("admin")==null || map.get("username")==null){
+      map.put("error", "<div class='alert alert-danger' id='alert-danger'><strong>Error!</strong> Debes estar conectado y ser un Administrador.</div>");
+      return new ModelAndView(map, "./views/login.html");
     }
     return new ModelAndView(map, "./views/adminPanel/generate_cat.html");
   }
 
   public static ModelAndView generateq(Request req, Response res){
-    Map map = new HashMap();
-    map.put("title", "Panel de Administracion");
-    if(req.session().attribute("username")!=null) {
-      map.put("id", req.session().attribute("userId"));
-      map.put("play", "<li><a href='/play'>Jugar</a></li>");
-      map.put("playonline", "<li><a href='/playonline'>Jugar Online</a></li>");
-      map.put("logout","<li><a href='/login'><span class='glyphicon glyphicon-off'></span> Salir</a></li>");
-      if(req.session().attribute("admin") != null){
-        map.put("admin", "<li><a href='/administrate'>Administrar</a></li>");
-        return new ModelAndView(map, "./views/adminPanel/generate_quest.html");
-      }
-      else{
-        return new ModelAndView(map, "./views/index.html");
-      }
+    Map map = getSession(req,res);
+    if(map.get("admin")==null || map.get("username")==null){
+      map.put("error", "<div class='alert alert-danger' id='alert-danger'><strong>Error!</strong> Debes estar conectado y ser un Administrador.</div>");
+      return new ModelAndView(map, "./views/login.html");
     }
-    else{
-      return new ModelAndView(map, "./views/index.html");
-    }
+    return new ModelAndView(map, "./views/adminPanel/generate_quest.html");
   }
 
   public static ModelAndView administrate(Request req, Response res){
-      Map map = new HashMap();
-      map.put("title", "Panel de Administracion");
-      if(req.session().attribute("username")!=null) {
-        map.put("id", req.session().attribute("userId"));
-        map.put("play", "<li><a href='/play'>Jugar</a></li>");
-        map.put("playonline", "<li><a href='/playonline'>Jugar Online</a></li>");
-        map.put("logout","<li><a href='/login'><span class='glyphicon glyphicon-off'></span> Salir</a></li>");
-        if(req.session().attribute("admin") != null){
-          map.put("admin", "<li><a href='/administrate'>Administrar</a></li>");
-        }
-      }
-      else{
-        return new ModelAndView(map, "./views/index.html");
-      }
-      return new ModelAndView(map, "./views/adminPanel/administrate.html");
+    Map map = getSession(req,res);
+    if(map.get("admin")==null || map.get("username")==null){
+      map.put("error", "<div class='alert alert-danger' id='alert-danger'><strong>Error!</strong> Debes estar conectado y ser un Administrador.</div>");
+      return new ModelAndView(map, "./views/login.html");
+    }
+    return new ModelAndView(map, "./views/adminPanel/administrate.html");
   }
 
 	public static ModelAndView loginOn(Request req, Response res){
-		Map resLogin = new HashMap();
-  	if(req.session().attribute("username")!=null){
-  		resLogin.put("id", (Integer)req.session().attribute("userId"));
-  		resLogin.put("play", "<li><a href='/play'>Jugar</a></li>");
-      resLogin.put("playonline", "<li><a href='/playonline'>Jugar Online</a></li>");
+		Map resLogin = getSession(req,res);
+  	if(resLogin.get("username")!=null){
   		resLogin.put("error","<div class='alert alert-danger' id='alert-danger'><strong>Error!</strong> Ya estas conectado como: " + req.session().attribute("username") + ".</div>");
     	return new ModelAndView(resLogin, "./views/login.html");
   	}
@@ -148,7 +108,7 @@ public class LoginServer{
     	resLogin.put("error",s);
     	return new ModelAndView(resLogin, "./views/login.html");
     }  
-    return new ModelAndView(resLogin, "./views/login.html");
+    return new ModelAndView(resLogin, "./views/index.html");
 	}
 
   public static ModelAndView logOut(Request req, Response res){
@@ -203,15 +163,9 @@ public class LoginServer{
   }
 
   public static ModelAndView ranking(Request req, Response res){
-    Map rank = new HashMap();
+    Map rank = getSession(req,res);
     List<User> top_10 = User.findBySQL("select * from users order by c_questions desc limit 10");
     rank.put("ranking",top_10);
-    rank.put("play", "<li><a href='/play'>Jugar</a></li>");
-    rank.put("playonline", "<li><a href='/playonline'>Jugar Online</a></li>");
-    rank.put("logout","<li><a href='/login'><span class='glyphicon glyphicon-off'></span> Salir</a></li>");
-    if(req.session().attribute("admin") != null){
-      rank.put("admin", "<li><a href='/administrate'>Administrar</a></li>");
-    }
     return new ModelAndView(rank,"./views/ranking.html");
   }
 

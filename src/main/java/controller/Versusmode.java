@@ -91,10 +91,6 @@ public class Versusmode extends Model{
       }
     }
     return null;
-  }
-
-  public static boolean answer(Integer user_id, Integer question_id, int answer){
-    return true;
   } 
 
 	/**
