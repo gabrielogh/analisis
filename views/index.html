@@ -7,6 +7,7 @@
 		<title> Bienvenido a Preguntado$ </title>
 		<link rel='stylesheet' href='/css/css.css'>
 		<link rel='stylesheet' href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<script src="//d3js.org/d3.v3.min.js"></script>
 	</head>
 	<body>
 		<nav id="nav_bar" class="navbar navbar-inverse">
@@ -25,7 +26,87 @@
 		    </ul>
 		  </div>
 		</nav>
-
+  <script>
+    var w = 960, h = 500, r = Math.min(w, h) / 2, ir = r - 100;
+    var pie = d3.layout.pie()
+    .sort(null)
+    .value(function(d) { return d; });
+    
+    var ruleta = ["ciencia", "historia", "deportes", "arte", "pop", "corona", "geografia"];
+    
+    // Feel free to change or delete any of the code you see in this editor!
+    var svg = d3.select("body")
+    	.append("svg")
+      .attr("width", w)
+      .attr("height", h)
+    
+    var slice = (((360/ruleta.length)/360) * (2 * Math.PI));
+    var initial = -Math.PI+slice;
+    var pointerInit = -(Math.PI)-((45/360) * (2*Math.PI));
+    var pointerEnd = -(Math.PI)+((45/360) * (2*Math.PI));
+    
+    var arc = d3.svg.arc()
+    	.innerRadius(ir)
+      .outerRadius(r)
+    	.cornerRadius(10)
+      .startAngle((d, i) => initial + (slice * (i+1)))
+      .endAngle((d, i) => (initial + (slice * (i+1)) + slice));
+    
+    var pointerArc = d3.svg.arc()
+    	.innerRadius(0)
+      .outerRadius(r/2)
+      .startAngle(pointerInit)
+      .endAngle(pointerEnd);
+   
+    var color = d3.scale.ordinal()
+    .range(["#24C36B", "#F8DF53", "#F99123", "#DB232F", "#F14CAA", "#8D40B2", "#1E71CB", "black"]);
+   
+    svg.selectAll(".arc")
+      .data(ruleta)
+    	.enter()
+    	.append("g")
+        .attr({
+          "transform": "translate(" + w/2 + "," + h/2 + ")",
+          "class": "arc"
+        })
+      .append("path")
+      	.attr("d", arc)
+      	.style("fill", color);
+    
+    svg.append("g")
+      .attr({
+        "transform": "translate(" + w/2 + "," + (h/2 - (140 + 30)) + ")",
+        "class": "pointerArc"
+      })
+    .append("path")
+      .attr({
+        d: pointerArc,
+        fill: "#DADADA",
+      	stroke: "white",
+      	"stroke-width": 5
+      });
+    
+    svg.append("circle")
+        .attr({
+          cx: w/2,
+          cy: h/2,
+          r: ir,
+          fill: "#DADADA",
+      		stroke: "white",
+      		"stroke-width": 5
+        });
+    
+    svg.append("text")
+      .text("GIRAR")
+      .attr({
+      	"font-family": "sans-serif",
+      	"font-size": 46,
+      	"font-weight": 900,
+        x: w/2 - 80,
+        y: (h/2),
+        fill: "#616161"
+      });
+  </script>
   	<footer>Desarrollado por Melegatti Pablo, Somare Francico y Gabriel Gonzalez - UNRC 2017</footer>
   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
