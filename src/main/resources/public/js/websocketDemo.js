@@ -48,11 +48,12 @@ function sendQuestion(msg){
   $('#title-queue').removeClass('queueTitle').html('');
   var data = JSON.parse(msg.data);
   if(data.user_id!=user_id){
-    $('#tablero').removeClass('').html('');
+    $('#tablero').fadeOut();
     //$('#options').removeClass('respuesta').html('');
     id("turno").innerHTML='<b>Es el turno de tu oponente, debes esperar, no seas ansioso, sabemos que eres un deborador de preguntas.</b>'
   }
   else{
+    $('#tablero').fadeIn();
     $('#respuesta-correcta').removeClass('alert alert-success').html('');
     $('#respuesta-incorrecta').removeClass('alert alert-danger').html('');
     id("turno").innerHTML='<b>Es su turno. Si se siente frustrado ante la imposibilidad de contestar una pregunta, piense en las personas que escriben los temrinos y condiciones</b>';
@@ -71,7 +72,6 @@ function sendAnswer(user_id, answer, question_id, turn, game_id){
 
 function showResult(data){
   $('#resultado_respuesta').removeClass('').html('');
-  $('#question').removeClass('').html('');
   if(data.user_id == user_id){
     if(data.correct){
       var resultado = '<div id="respuesta-incorrecta" class="alert alert-success"><strong>Respondiste Bien, por fin!!</strong></div>';
@@ -106,7 +106,7 @@ function showFinalStats(data){
   else{
       var result ='Empate';
   }
-  var boton = '<button onclick="play()">Finalizar</buton>';
+  var boton = '<button onclick="play('+data.winner+','+ data.loser+')">Volver a jugar</buton>';
   var div = '<div id="stats" class="center-stats">';
   var table = '<table style="width:100%">';
   var tr = '<tr>';
@@ -134,8 +134,6 @@ function updateQueue(data) {
   var id_user_in_queue = 0;
   $('#stats').removeClass('center-stats').html('');
   $('#resultado_respuesta').removeClass('').html('');
-  $('#question').removeClass('').html('');
-
   id("queue").innerHTML = "";
   data.userlist.forEach(function (user){
     if(user.id!=user_id && user.username!=null) {
@@ -151,4 +149,3 @@ function insert(targetId, message) { id(targetId).insertAdjacentHTML("afterbegin
 
 //Helper function for selecting element by id
 function id(id) { return document.getElementById(id);}
-

@@ -58,6 +58,14 @@ public class EchoWebSocket {
         if(vs.getInteger("question_number")<10){
           vs.getQuestion();
         }
+        else{
+          Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
+          Session user1 = Versusmode.getSession(App.usersPlaying, vs.getPlayer1());
+          Session user2 = Versusmode.getSession(App.usersPlaying, vs.getPlayer2());
+          App.userUsernameMap.put(user1, vs.getPlayer1());
+          App.userUsernameMap.put(user2, vs.getPlayer2());
+          Base.close();
+        }
         break;
 
       case "putUser":
