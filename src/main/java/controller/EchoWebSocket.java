@@ -32,7 +32,7 @@ public class EchoWebSocket {
     Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
     JSONObject data = new JSONObject(message);
     String token = new String(data.getString("token"));
-
+    // obtiene las datos de las sesiones de dos jugadores para iniciar un nuevo juego en modo versus
     switch(token){
       case "startGame":
         User p1 = User.findById((Integer)data.get("p1_id"));
@@ -49,7 +49,7 @@ public class EchoWebSocket {
         Versusmode.updateOnlineUsers("updateOnlineUsers");
         v.getQuestion();
         break;
-
+      
       case "answer":
         Versusmode vs = Versusmode.findById(data.getInt("game_id"));
         JSONObject res = vs.answerQuestion(data);
