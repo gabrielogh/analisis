@@ -19,9 +19,7 @@ import spark.Response;
 import spark.ModelAndView;
 import spark.template.mustache.MustacheTemplateEngine;
 import org.eclipse.jetty.websocket.api.Session;
-import org.json.JSONObject;
-import org.json.JSONArray;
-import com.google.gson.Gson;
+
 //---------------------------------
 
 public class App{
