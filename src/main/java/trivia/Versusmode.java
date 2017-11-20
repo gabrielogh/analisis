@@ -29,14 +29,14 @@ public class Versusmode extends Model{
 	public Versusmode(User user1, User user2){
 		p1 = user1;
 		p2 = user2;
-    g1 = p1.createVsGame();
-    g2 = p2.createVsGame();
-    g1.saveIt();
-    g2.saveIt();
-    set("game_p1_id", Integer.valueOf(((Long)g1.get("id")).intValue()));
-    set("game_p2_id", Integer.valueOf(((Long)g2.get("id")).intValue()));
-    set("turn", 1);
-    set("in_progress",true);
+    		g1 = p1.createVsGame();
+    		g2 = p2.createVsGame();
+    		g1.saveIt();
+    		g2.saveIt();
+    		set("game_p1_id", Integer.valueOf(((Long)g1.get("id")).intValue()));
+    		set("game_p2_id", Integer.valueOf(((Long)g2.get("id")).intValue()));
+    		set("turn", 1);
+    		set("in_progress",true);
 	}
 
 	/**
