@@ -191,4 +191,20 @@ public class Versusmode extends Model{
     }
     return null;
   }
+
+  //Reload online Users
+  public static void updateOnlineUsers(String msg){
+    JSONArray data = new JSONArray();
+    for(User u: App.userUsernameMap.values()){data.put(u.toJson());}
+    App.userUsernameMap.keySet().stream().filter(Session::isOpen).forEach(session -> {
+    try {
+      session.getRemote().sendString(String.valueOf(new JSONObject()
+        .put("userlist", data)
+        .put("token", msg)));
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    });        
+  }
+
 }

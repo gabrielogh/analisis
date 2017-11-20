@@ -24,7 +24,7 @@ public class EchoWebSocket {
   public void onClose(Session user, int statusCode, String reason) {
     App.userUsernameMap.remove(user);
     App.usersPlaying.remove(user);
-    App.updateOnlineUsers("updateOnlineUsers");
+    Versusmode.updateOnlineUsers("updateOnlineUsers");
   }
 
   @OnWebSocketMessage
@@ -46,7 +46,7 @@ public class EchoWebSocket {
         Versusmode v = new Versusmode((Integer)data.get("p1_id"), (Integer)data.get("p2_id"));
         v.saveIt();
         Base.close();
-        App.updateOnlineUsers("updateOnlineUsers");
+        Versusmode.updateOnlineUsers("updateOnlineUsers");
         v.getQuestion();
         break;
 
@@ -64,7 +64,7 @@ public class EchoWebSocket {
         User u = User.getUserByName((String)data.get("username"));
         App.userUsernameMap.put(user,u);
         Base.close();
-        App.updateOnlineUsers("updateOnlineUsers");
+        Versusmode.updateOnlineUsers("updateOnlineUsers");
         break;
       default:
        break;

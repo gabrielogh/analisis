@@ -30,21 +30,6 @@ public class App{
   static Map<Session,User> userUsernameMap = new ConcurrentHashMap<>();
   static Map<Session,User> usersPlaying = new ConcurrentHashMap<>();
 
-  //Reload online Users
-  public static void updateOnlineUsers(String msg){
-    JSONArray data = new JSONArray();
-    for(User u: userUsernameMap.values()){data.put(u.toJson());}
-    userUsernameMap.keySet().stream().filter(Session::isOpen).forEach(session -> {
-    try {
-      session.getRemote().sendString(String.valueOf(new JSONObject()
-        .put("userlist", data)
-        .put("token", msg)));
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    });        
-  }
-
   public static void main( String[] args ){
 
     staticFiles.location("/public");
