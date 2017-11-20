@@ -44,6 +44,7 @@ function play(p1_id, p2_id){
 }
 
 function sendQuestion(msg){
+  actualizarBarra(0);
   $('#queue').removeClass('center').html('');
   $('#title-queue').removeClass('queueTitle').html('');
   var data = JSON.parse(msg.data);
@@ -56,6 +57,7 @@ function sendQuestion(msg){
     $('#tablero').fadeIn();
     $('#respuesta-correcta').removeClass('alert alert-success').html('');
     $('#respuesta-incorrecta').removeClass('alert alert-danger').html('');
+    actualizarFicha(user_id, data.question_id, data.turn, game_id);
     id("turno").innerHTML='<b>Es su turno. Si se siente frustrado ante la imposibilidad de contestar una pregunta, piense en las personas que escriben los temrinos y condiciones</b>';
     id("question").innerHTML='<h1>'+data.question+'</h1>';
     id("options").innerHTML='<li class="respuesta"><button class="btn btn-success" id="btn-responder" value="'+data.option1+'" onclick="sendAnswer('+user_id+','+1+','+data.question_id+','+data.turn+','+game_id+')">'+data.option1+'</buton></li>';
@@ -67,6 +69,7 @@ function sendQuestion(msg){
 
 function sendAnswer(user_id, answer, question_id, turn, game_id){
   var data = {"id":user_id, "answer":answer, "token":"answer", "game_id":game_id, "question_id":question_id, "turn":turn};    
+  actualizarBarra(100);
   webSocket.send(JSON.stringify(data));
 }
 
@@ -128,6 +131,26 @@ function showFinalStats(data){
   id("content").innerHTML=concat;
 }
 
+function actualizarBarra(progreso) {
+  if (progreso<0 || progreso>100) {
+    return;
+  }
+  var $barra = $('#barra-progreso');
+  $barra.attr('aria-valuenow', progreso);
+  $barra.css('width', progreso + '%');
+}
+
+function actualizarFicha(user_id, question_id, turn, game_id) {
+  var $barra = $('#barra-progreso');
+  var ancho = $barra.attr('aria-valuenow');
+  if(ancho < 100) {
+    ancho++;
+    actualizarBarra(ancho);
+    setTimeout('actualizarFicha('+user_id+', '+question_id+', '+turn+', '+ game_id+')', 100);
+  } else {
+    sendAnswer(user_id, -1, question_id, turn, game_id);
+  }
+}
 function showMessage(data){id("respuesta-correcta").innerHTML=message;}
 
 function updateQueue(data) {
