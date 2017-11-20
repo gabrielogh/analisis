@@ -16,7 +16,7 @@ public class User extends Model {
     validatePresenceOf("password").message("Por favor, ingrese una contraseña");
     validatePresenceOf("mail").message("Por favor, ingrese un email");
   }
-  //Constructor
+  //Constructor sin parametros
   public User(){}
 
   public Map registerUser(Request req, Response res){

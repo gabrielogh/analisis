@@ -24,18 +24,18 @@ import org.eclipse.jetty.websocket.api.Session;
 
 public class Versusmode extends Model{
 
-	/**
-	 * Constructor of the class.
-	 * @param. both users.
-	 * @pre. Users logged.
-	 * @post. New VersusMode created on the DB.
-	 */
+  /**
+  * Constructor of the class.
+  * @param. both users.
+  * @pre. Users logged.
+  * @post. New VersusMode created on the DB.
+  */
 
   public Versusmode(){};
-	
+
   public Versusmode(Integer p1_id, Integer p2_id){
     Game g1 = new Game(p1_id);
-		Game g2 = new Game(p2_id);
+    Game g2 = new Game(p2_id);
     g1.saveIt();
     g2.saveIt();
     set("game_p1_id", g1.getGameId());
@@ -45,14 +45,14 @@ public class Versusmode extends Model{
     set("turn", 1);
     set("in_progress",true);
     set("question_number", 0);
-	}
+  }
 
   public void incQuestionNumber(){ this.set("question_number", this.getQuestionNumber()+1);};
   public Integer getQuestionNumber(){return this.getInteger("question_number");};
-	public  Game getGameP1(){ return Game.findById(this.getInteger("game_p1_id"));};
-	public  Game getGameP2(){ return Game.findById(this.getInteger("game_p2_id"));};
-	public  User getPlayer1(){ return User.getUserById(this.getInteger("p1_id"));};
-	public  User getPlayer2(){ return User.getUserById(this.getInteger("p2_id"));};
+  public  Game getGameP1(){ return Game.findById(this.getInteger("game_p1_id"));};
+  public  Game getGameP2(){ return Game.findById(this.getInteger("game_p2_id"));};
+  public  User getPlayer1(){ return User.getUserById(this.getInteger("p1_id"));};
+  public  User getPlayer2(){ return User.getUserById(this.getInteger("p2_id"));};
 
   public void getQuestion(){
     Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
@@ -92,16 +92,15 @@ public class Versusmode extends Model{
     }
     return null;
   } 
-
-	/**
-	 * This method returns the winner number of the game.
-	 * if player1 wins, return 1, if player2 wins, return 2, if its a draw return 0
-	 * if the game isn't finished, return -1
-	 * @param.
-	 * @pre. 
-	 * @post. Number of winner (1-2) or -1 for error.
-	 */
-	public JSONObject getFinalResults(){
+  /**
+  * This method returns the winner number of the game.
+  * if player1 wins, return 1, if player2 wins, return 2, if its a draw return 0
+  * if the game isn't finished, return -1
+  * @param.
+  * @pre. 
+  * @post. Number of winner (1-2) or -1 for error.
+  */
+  public JSONObject getFinalResults(){
     JSONObject results = new JSONObject();
     Game g1 = Game.findById(this.get("game_p1_id"));
     Game g2 = Game.findById(this.get("game_p2_id"));
@@ -124,7 +123,7 @@ public class Versusmode extends Model{
     .put("incorrects_p1", g1.getInteger("incorrects"))
     .put("incorrects_p2", g2.getInteger("incorrects"));
     return results;
-	}
+  }
 
   public void sendResults(JSONObject data){
     Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
@@ -136,14 +135,12 @@ public class Versusmode extends Model{
     try{
       if(this.getInteger("question_number")==10){
         Base.close();
-      System.out.println("EL JUEGO TERMINO, ENVIANDO RESULTADOS");
         p1.getRemote().sendString(String.valueOf(data));
         p2.getRemote().sendString(String.valueOf(data));
       }else{
         if(data.getInt("turn") == 1){
         results.put("token","showResult").put("game_id",this.getInteger("id")).put("correct",data.get("result")).put("user_id", player1.getInteger("id"));
         Base.close();
-        System.out.println(String.valueOf(results));
         p1.getRemote().sendString(String.valueOf(results));
         }
         else{
@@ -164,10 +161,8 @@ public class Versusmode extends Model{
       User player1 = this.getPlayer1();
       Game g1 = this.getGameP1();
       Question q = Question.findById(data.get("question_id"));
-      System.out.println("EL JUEGO ENTRO A LA PREGUNTA: " + this.getInteger("question_number"));
       Boolean answer = player1.answerOnline(q, data.getInt("answer"), g1);
       this.set("question_number", this.getInteger("question_number")+1).saveIt();
-      System.out.println("EL JUEGO PASA A LA PREGUNTA: " + this.getInteger("question_number"));
       if(this.getInteger("question_number")==10){
         return this.getFinalResults();
       }
@@ -178,10 +173,8 @@ public class Versusmode extends Model{
       User player2 = this.getPlayer2();
       Game g2 = this.getGameP2();
       Question q = Question.findById(data.getInt("question_id"));
-      System.out.println("EL JUEGO ENTRO A LA PREGUNTA: " + this.getInteger("question_number"));
       Boolean answer = player2.answerOnline(q, data.getInt("answer"), g2);
       this.set("question_number", this.getInteger("question_number")+1).saveIt();
-      System.out.println("EL JUEGO PASA A LA PREGUNTA: " + this.getInteger("question_number"));
       if(this.getInteger("question_number")==10){
         return this.getFinalResults();
       }

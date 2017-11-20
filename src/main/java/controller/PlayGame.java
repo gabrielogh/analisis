@@ -18,16 +18,16 @@ import org.json.JSONObject;
 import org.eclipse.jetty.websocket.api.Session;
 
 public class PlayGame{
-	private static User jugador;
-	private static Game juego;
-	private static Map results;
+  private static User jugador;
+  private static Game juego;
+  private static Map results;
 
-	public static ModelAndView playGame(Request req, Response res){
+  public static ModelAndView playGame(Request req, Response res){
     User aux = new User();
     results = new HashMap();
     Map session = LoginServer.getSession(req,res);
     if(session.get("username")!=null){
-      jugador = aux.getUserById((Integer)req.session().attribute("userId"));
+      jugador = aux.getUserById((Integer)req.session().attribute("user_id"));
       juego = jugador.getGameInProgress(false);
       juego.saveIt();
     }
@@ -38,11 +38,11 @@ public class PlayGame{
     results.putAll(session);
     results.putAll(play(juego, jugador, req, res));
     return new ModelAndView(results, "./views/play.html");
-	}
+  }
 
-	public static Map getResults(){
-		return results;
-	}
+  public static Map getResults(){
+    return results;
+  }
 
   public static JSONObject generateQuestion(Game game){
     JSONObject json = new JSONObject();
@@ -66,7 +66,6 @@ public class PlayGame{
       return json;
     }
     else{
-      System.out.println("EL ESTADO DE LA PREGUNTA ES: "+(Boolean)game.get("current_question_state"));
       if((Boolean)game.get("current_question_state")){
         cat = (new Category()).randomCat();
         que = cat.getQuestion();
@@ -91,9 +90,9 @@ public class PlayGame{
     return json;
   }
 
-	private static Map play(Game g, User u, Request req, Response res){
-		Map res_play = new HashMap();
-	  Category cat;
+  private static Map play(Game g, User u, Request req, Response res){
+    Map res_play = new HashMap();
+    Category cat;
     Question que;
     String[] resQ = new String[5];
     Integer correct;
@@ -116,11 +115,11 @@ public class PlayGame{
         g.set("current_question_id", (Integer)que.get("id"));
         g.set("current_question_state", false);
         g.saveIt();
-   		}
-   		else{
+      }
+      else{
         que = g.getCurrentQuestion();
         cat = g.getCurrentCategory();
-   		}
+      }
       resQ[0] = (String)que.get("description");
       resQ[1] = (String)que.get("a1");
       resQ[2] = (String)que.get("a2");
@@ -146,12 +145,12 @@ public class PlayGame{
       res_play.put("admin","<li><a href='/administrate'>Administrar</a></li>");
     }
     return res_play;
-	}
+  }
 
   public static ModelAndView answer(Request req, Response res){
-    List<Game> games = Game.where("id = ?", req.queryParams("gameId"));
+    List<Game> games = Game.where("id = ?", req.queryParams("game_id"));
     Game game_now = games.get(0);
-    List<User> users = User.where("id = ?", (Integer)req.session().attribute("userId"));
+    List<User> users = User.where("id = ?", (Integer)req.session().attribute("user_id"));
     User user_now = users.get(0);
     List<Question> question = Question.where("id = ?", req.queryParams("qId"));
     Question question_now = question.get(0);

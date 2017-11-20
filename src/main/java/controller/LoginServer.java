@@ -12,22 +12,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LoginServer{
-	private static ModelAndView results;
+  private static ModelAndView results;
 
-	public LoginServer(Request req, Response res){
-  	results = loginOn(req,res);
-	}
+  public LoginServer(Request req, Response res){
+    results = loginOn(req,res);
+  }
 
-	public static ModelAndView getResults(){
-		return results;
-	}
+  public static ModelAndView getResults(){
+    return results;
+  }
 
   public static Map getSession(Request req, Response res){
     Map map = new HashMap();
     map.put("title", "Bienvenido a Preguntado$");
     if(req.session().attribute("username")!=null){
-      map.put("user_id", (int)req.session().attribute("userId"));
-      map.put("username", req.queryParams("username"));
+      map.put("user_id", (int)req.session().attribute("user_id"));
+      map.put("username", req.session().attribute("username"));
       map.put("play", "<li><a href='/play'>Jugar</a></li>");
       map.put("playonline", "<li><a href='/playonline'>Jugar Online</a></li>");
       map.put("logout","<li><a href='/logout'><span class='glyphicon glyphicon-off'></span> Salir</a></li>");
@@ -73,14 +73,14 @@ public class LoginServer{
     return new ModelAndView(map, "./views/adminPanel/administrate.html");
   }
 
-	public static ModelAndView loginOn(Request req, Response res){
-		Map resLogin = getSession(req,res);
-  	if(resLogin.get("username")!=null){
-  		resLogin.put("error","<div class='alert alert-danger' id='alert-danger'><strong>Error!</strong> Ya estas conectado como: " + req.session().attribute("username") + ".</div>");
-    	return new ModelAndView(resLogin, "./views/login.html");
-  	}
+  public static ModelAndView loginOn(Request req, Response res){
+    Map resLogin = getSession(req,res);
+    if(resLogin.get("username")!=null){
+      resLogin.put("error","<div class='alert alert-danger' id='alert-danger'><strong>Error!</strong> Ya estas conectado como: " + req.session().attribute("username") + ".</div>");
+      return new ModelAndView(resLogin, "./views/login.html");
+    }
 
-  	String password = req.queryParams("password");
+    String password = req.queryParams("password");
     Md5Cipher hashPass = new Md5Cipher(password);
     String passMD5 = hashPass.getHash();
     String namee = req.queryParams("username");
@@ -88,11 +88,11 @@ public class LoginServer{
     //Verificamos si existe algun usuario con ese username y esa pass.
     List<User> unico = User.where("username = ? and password = ?", namee, passMD5);
     Boolean result2 = unico.size()==0;
-		
-		if(!result2){
+ 
+    if(!result2){
       req.session(true);
       req.session().attribute("username", namee);
-      req.session().attribute("userId",unico.get(0).getId());
+      req.session().attribute("user_id",unico.get(0).getId());
       resLogin.put("play", "<li><a href='/play'>Jugar</a></li>");
       resLogin.put("playonline", "<li><a href='/playonline'>Jugar Online</a></li>");
       resLogin.put("logout","<li><a href='/login'><span class='glyphicon glyphicon-off'></span> Salir</a></li>");
@@ -105,18 +105,18 @@ public class LoginServer{
     }
     else{
       String s = "<div class='alert alert-danger' id='alert-danger'><strong>Error!</strong> Usuario o password incorrectos.</div>";
-    	resLogin.put("error",s);
-    	return new ModelAndView(resLogin, "./views/login.html");
+      resLogin.put("error",s);
+      return new ModelAndView(resLogin, "./views/login.html");
     }  
     return new ModelAndView(resLogin, "./views/index.html");
-	}
+  }
 
   public static ModelAndView logOut(Request req, Response res){
     Map logout = new HashMap();
     logout.put("username", null);
     if(req.session().attribute("username")!=null){
       req.session().removeAttribute("username");
-      req.session().removeAttribute("userId");
+      req.session().removeAttribute("user_id");
       req.session().removeAttribute("admin");
       req.session().removeAttribute("play");
       req.session().removeAttribute("admin");

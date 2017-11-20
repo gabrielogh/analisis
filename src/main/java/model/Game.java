@@ -3,18 +3,14 @@ import java.util.List;
 import org.javalite.activejdbc.Model;
 
 public class Game extends Model{
-  static{
-    validatePresenceOf("user_id").message("Error");
-  }
+  static{validatePresenceOf("user_id").message("Error");}
   //Constructor de la clase sin parametros.
- 	public Game(){
+  public Game(){}
 
- 	}
-
- 	//Constructor de la clase con parametros
+  //Constructor de la clase con parametros
   public Game(Integer id_user){
-  	set("question_number",0);
-  	set("user_id",id_user);
+    set("question_number",0);
+    set("user_id",id_user);
     set("in_progress",true);
     set("incorrects",0);
     set("corrects",0);
@@ -43,6 +39,6 @@ public class Game extends Model{
   }
   //Metodo que retorna una categoria Random
   public Category getRandomCat(){
-  	return (new Category()).randomCat();
+    return (new Category()).randomCat();
   }
 }

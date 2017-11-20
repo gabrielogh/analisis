@@ -7,23 +7,23 @@ body {
   line-height:1.5;
 }
 .container{
-	text-align: center;
+  text-align: center;
 }
 #nav_bar{
-	border-radius:0px;
+  border-radius:0px;
 }
 
 .table-striped{
-	text-align: left;
+  text-align: left;
 }
 
 #container_login{
-	text-align:center;
+  text-align:center;
   padding-bottom: 20px;
 }
 
 #container_register{
-	text-align:center;
+  text-align:center;
   padding-bottom: 20px;
 }
 
@@ -32,7 +32,7 @@ body {
 }
 
 #pagination_home{
-	alignment-baseline: center;
+  alignment-baseline: center;
 }
 .main-login{
   margin: auto;
@@ -100,7 +100,7 @@ body {
   border-top-right-radius: 0;
 }
 p{
-	margin: 10px;
+  margin: 10px;
 }
 
 footer {

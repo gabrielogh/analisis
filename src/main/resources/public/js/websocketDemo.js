@@ -12,7 +12,6 @@ var game_id;
 
 function updateByToken(msg){
   var data = JSON.parse(msg.data);
-  console.log(data.token);
   if(data.token == "updateOnlineUsers"){
     updateQueue(data);
   }
@@ -49,19 +48,19 @@ function sendQuestion(msg){
   $('#title-queue').removeClass('queueTitle').html('');
   var data = JSON.parse(msg.data);
   if(data.user_id!=user_id){
+    $('#tablero').removeClass('').html('');
+    //$('#options').removeClass('respuesta').html('');
     id("turno").innerHTML='<b>Es el turno de tu oponente, debes esperar, no seas ansioso, sabemos que eres un deborador de preguntas.</b>'
-    $('#question').removeClass('').html('');
-    $('#options').removeClass('respuesta').html('');
   }
   else{
     $('#respuesta-correcta').removeClass('alert alert-success').html('');
     $('#respuesta-incorrecta').removeClass('alert alert-danger').html('');
     id("turno").innerHTML='<b>Es su turno. Si se siente frustrado ante la imposibilidad de contestar una pregunta, piense en las personas que escriben los temrinos y condiciones</b>';
-    id("question").innerHTML=data.question;
-    id("options").innerHTML='<li class="respuesta"><button class="btn btn-success" id="btn-responder" value="'+data.option1+'" onclick="sendAnswer('+user_id+','+1+','+data.question_id+','+data.turn+','+game_id+')">'+data.option1+'</buton></li><p>';
-    id("options").innerHTML+='<li class="respuesta"><button class="btn btn-success" id="btn-responder" value="'+data.option2+'" onclick="sendAnswer('+user_id+','+2+','+data.question_id+','+data.turn+','+game_id+')">'+data.option2+'</buton></li><p>';
-    id("options").innerHTML+='<li class="respuesta"><button class="btn btn-success" id="btn-responder" value="'+data.option3+'" onclick="sendAnswer('+user_id+','+3+','+data.question_id+','+data.turn+','+game_id+')">'+data.option3+'</buton></li><p>';
-    id("options").innerHTML+='<li class="respuesta"><button class="btn btn-success" id="btn-responder" value="'+data.option4+'" onclick="sendAnswer('+user_id+','+4+','+data.question_id+','+data.turn+','+game_id+')">'+data.option4+'</buton></li><p>';
+    id("question").innerHTML='<h1>'+data.question+'</h1>';
+    id("options").innerHTML='<li class="respuesta"><button class="btn btn-success" id="btn-responder" value="'+data.option1+'" onclick="sendAnswer('+user_id+','+1+','+data.question_id+','+data.turn+','+game_id+')">'+data.option1+'</buton></li>';
+    id("options").innerHTML+='<li class="respuesta"><button class="btn btn-success" id="btn-responder" value="'+data.option2+'" onclick="sendAnswer('+user_id+','+2+','+data.question_id+','+data.turn+','+game_id+')">'+data.option2+'</buton></li>';
+    id("options").innerHTML+='<li class="respuesta"><button class="btn btn-success" id="btn-responder" value="'+data.option3+'" onclick="sendAnswer('+user_id+','+3+','+data.question_id+','+data.turn+','+game_id+')">'+data.option3+'</buton></li>';
+    id("options").innerHTML+='<li class="respuesta"><button class="btn btn-success" id="btn-responder" value="'+data.option4+'" onclick="sendAnswer('+user_id+','+4+','+data.question_id+','+data.turn+','+game_id+')">'+data.option4+'</buton></li>';
   }
 }
 
@@ -72,6 +71,7 @@ function sendAnswer(user_id, answer, question_id, turn, game_id){
 
 function showResult(data){
   $('#resultado_respuesta').removeClass('').html('');
+  $('#question').removeClass('').html('');
   if(data.user_id == user_id){
     if(data.correct){
       var resultado = '<div id="respuesta-incorrecta" class="alert alert-success"><strong>Respondiste Bien, por fin!!</strong></div>';
@@ -85,7 +85,6 @@ function showResult(data){
 }
 
 function showFinalStats(data){
-  console.log("ENTRAMOS A MOSTRAR RESULTADOS FINALES");
   $('#tablero').removeClass('').html('');
 
   if(data.winner == user_id){
@@ -94,7 +93,6 @@ function showFinalStats(data){
     }
     else{
       var result = 'Ganaste.<li>Respuestas correctas:'+data.corrects_p2+'</li><li>Respuestas incorrectas:'+data.incorrects_p2+'</li>';
-
     }
   }
   else if(data.loser == user_id){
@@ -136,6 +134,7 @@ function updateQueue(data) {
   var id_user_in_queue = 0;
   $('#stats').removeClass('center-stats').html('');
   $('#resultado_respuesta').removeClass('').html('');
+  $('#question').removeClass('').html('');
 
   id("queue").innerHTML = "";
   data.userlist.forEach(function (user){

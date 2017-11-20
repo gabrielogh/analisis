@@ -21,7 +21,6 @@ import spark.template.mustache.MustacheTemplateEngine;
 import org.eclipse.jetty.websocket.api.Session;
 import org.json.JSONObject;
 import org.json.JSONArray;
-//import static j2html.TagCreator.*;
 import com.google.gson.Gson;
 //---------------------------------
 
@@ -138,7 +137,7 @@ public class App{
     post("/answer", PlayGame::answer, new MustacheTemplateEngine());
     //----------------------------------------------------------------------------------------------------------
     /**
-  	 * Método para tratar los posts de /users (Creación de usuarios).
+     * Método para tratar los posts de /users (Creación de usuarios).
      * @param. username., user id, question id, password, password2
      * @pre. username != "", password == password2, email != "".
      * @post. User registered / Error.
