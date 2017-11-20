@@ -26,14 +26,16 @@ import org.eclipse.jetty.websocket.api.Session;
 public class Versusmode extends Model{
 
   /**
-  * Constructor of the class.
-  * @param. both users.
-  * @pre. Users logged.
-  * @post. New VersusMode created on the DB.
+  * Constructor of the class without params.
   */
-
   public Versusmode(){};
 
+  /**
+   * Constructor of the class.
+   * @param. both users.
+   * @pre. Users logged.
+   * @post. New VersusMode created on the DB.
+   */
   public Versusmode(Integer p1_id, Integer p2_id){
     Game g1 = new Game(p1_id);
     Game g2 = new Game(p2_id);
@@ -48,6 +50,9 @@ public class Versusmode extends Model{
     set("question_number", 0);
   }
 
+  /**
+   * methods GET snd SET of the class.
+   */
   public void incQuestionNumber(){ this.set("question_number", this.getQuestionNumber()+1);};
   public Integer getQuestionNumber(){return this.getInteger("question_number");};
   public  Game getGameP1(){ return Game.findById(this.getInteger("game_p1_id"));};
@@ -55,12 +60,20 @@ public class Versusmode extends Model{
   public  User getPlayer1(){ return User.getUserById(this.getInteger("p1_id"));};
   public  User getPlayer2(){ return User.getUserById(this.getInteger("p2_id"));};
 
+  //----------------------------------------------------------------------------------------------------------
+  /**
+   * 
+   * method that gets a question for a specific user and then send it.
+   * @param. -.
+   * @pre. user logged & Versusmode started.
+   * @post. PlayOnline view updated.
+   */
   public void getQuestion(){
     Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
     Game game_p1 = Game.findById(this.getInteger("game_p1_id"));
     Game game_p2 = Game.findById(this.getInteger("game_p2_id"));
-    Session u2 = getKeyByValue(App.usersPlaying, User.findById(game_p2.getInteger("user_id")));
-    Session u1 = getKeyByValue(App.usersPlaying, User.findById(game_p1.getInteger("user_id")));
+    Session u2 = getSession(App.usersPlaying, User.findById(game_p2.getInteger("user_id")));
+    Session u1 = getSession(App.usersPlaying, User.findById(game_p1.getInteger("user_id")));
     if(this.getInteger("turn")==1){
       JSONObject question = PlayGame.generateQuestion(game_p1);
       question.put("turn", 1).put("game_id", this.getInteger("id"));
@@ -85,22 +98,13 @@ public class Versusmode extends Model{
     }
   }
 
-  public Session getKeyByValue(Map<Session,User> map, User user){
-   for (Map.Entry<Session, User> entry : map.entrySet()) {
-      if (user.getUserId().equals((entry.getValue()).getUserId())) {
-          return entry.getKey();
-      }
-    }
-    return null;
-  } 
+  //----------------------------------------------------------------------------------------------------------
   /**
-  * This method returns the winner number of the game.
-  * if player1 wins, return 1, if player2 wins, return 2, if its a draw return 0
-  * if the game isn't finished, return -1
-  * @param.
-  * @pre. 
-  * @post. Number of winner (1-2) or -1 for error.
-  */
+   * This method returns the winner number of the game and the final results of the Versusmode game as a JsonObject.
+   * @param.
+   * @pre. user logged & Versusmode started.
+   * @post. PlayOnline view updated.
+   */
   public JSONObject getFinalResults(){
     JSONObject results = new JSONObject();
     Game g1 = Game.findById(this.get("game_p1_id"));
@@ -125,7 +129,13 @@ public class Versusmode extends Model{
     .put("incorrects_p2", g2.getInteger("incorrects"));
     return results;
   }
-
+  //----------------------------------------------------------------------------------------------------------
+  /**
+   * This method returns the winner number of the game and the final results of the Versusmode game as a JsonObject.
+   * @param.
+   * @pre. user logged & Versusmode started.
+   * @post. PlayOnline view updated.
+   */
   public void sendResults(JSONObject data){
     Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");
     Session p1 = getSession(App.usersPlaying, this.getPlayer1());
@@ -154,7 +164,14 @@ public class Versusmode extends Model{
       e.printStackTrace();
     }         
   }
-
+  //----------------------------------------------------------------------------------------------------------
+  /**
+   * 
+   * This method allows a user to answer a question and obtain a result.
+   * @param. -.
+   * @pre. user logged & Versusmode started.
+   * @post. PlayOnline view updated and turn switched.
+   */
   public JSONObject answerQuestion(JSONObject data){
     JSONObject result = new JSONObject();
     if(data.getInt("turn")==1){
@@ -184,6 +201,16 @@ public class Versusmode extends Model{
     return result;
   }
 
+  //----------------------------------------------------------------------------------------------------------
+  /**
+   * 
+   * Metodo que obtiene una sesion de usuario a traves del mismo.
+   * Esta funcions es utiliza para poder enviarle mensajes a un usuario
+   * por medio de su sesion
+   * @param. -.
+   * @pre. user logged & Versusmode started.
+   * @post. PlayOnline view updated.
+   */
   public static Session getSession(Map<Session,User> map, User u){
    for (Map.Entry<Session, User> entry : map.entrySet()) {
       if (u.get("id").equals((entry.getValue()).getInteger("id"))) {
@@ -193,7 +220,14 @@ public class Versusmode extends Model{
     return null;
   }
 
-  //Reload online Users
+  //----------------------------------------------------------------------------------------------------------
+  /**
+   * 
+   * This mehtod updates the Queue .
+   * @param. -.
+   * @pre. user logged.
+   * @post. PlayOnline view updated.
+   */
   public static void updateOnlineUsers(String msg){
     JSONArray data = new JSONArray();
     for(User u: App.userUsernameMap.values()){data.put(u.toJson());}
@@ -207,5 +241,4 @@ public class Versusmode extends Model{
       }
     });        
   }
-
 }

@@ -19,8 +19,13 @@ import spark.Response;
 import spark.ModelAndView;
 import spark.template.mustache.MustacheTemplateEngine;
 import org.eclipse.jetty.websocket.api.Session;
-
 //---------------------------------
+
+/**
+ * This class represents our Java Application.
+ * when a user navigates the web this class controls said navigation.
+ * It also takes care of keeping track of users online and of users playing.
+ */
 
 public class App{
 
@@ -36,18 +41,35 @@ public class App{
     before((req, res)->{Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/trivia", "root", "c4j0i20g");});
     after((req, res) -> {Base.close();});
 
-    //Iicio de metodos GET
+    //GET methods init
     //----------------------------------------------------------------------------------------------------------
-    //Pagina principal.
+    //Dashboard page.
+    /**
+     * Panel de Administracion.
+     * @param. -.
+     * @pre. -.
+     * @post. main page view loaded.
+     */
     get("/", LoginServer::index,new MustacheTemplateEngine());
+    /**
+     * View for a Online games (multiplayer with 1vs1 mode).
+     * @param. username.
+     * @pre. Session Started (username!=null).
+     * @post. PlayOnline view loaded.
+     */
     //----------------------------------------------------------------------------------------------------------
     get("/playonline", PlayGame::playOnline,new MustacheTemplateEngine());
     //----------------------------------------------------------------------------------------------------------
-    //Pagina de log de usuarios.
+    /**
+     * LoginIn form for registered users.
+     * @param. -.
+     * @pre. -.
+     * @post. Login page view loaded.
+     */
     get("/login", LoginServer::login,new MustacheTemplateEngine());
     //----------------------------------------------------------------------------------------------------------
     /**
-     * Panel de Administracion.
+     * AdminPanel for Admin Users.
      * @param. username.
      * @pre. Session Started & AccesLevel == 5.
      * @post. -.
