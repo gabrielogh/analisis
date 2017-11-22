@@ -10,6 +10,9 @@ body {
   font-size:15px;
   line-height:1.5;
 }
+.container{
+  text-align: center;
+}
 
 #nav_bar{
     border-radius:0px;
@@ -26,7 +29,7 @@ body {
   margin: auto;
   background-color: #FAFAFA;
   max-width: 100%;
-  height:150px;
+  height:auto;
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
   border-radius: 10px;
@@ -103,7 +106,8 @@ li {
 
 #tablero{
   margin:auto;
-  height:800px;
+  height:50%;
+  width: 100%;
   text-align:center;
 }
 
@@ -115,6 +119,7 @@ li {
 
 table, td, th {
   border: 1px solid black;
+  width:auto;
 }
 table {
   border-collapse: collapse;
@@ -122,7 +127,25 @@ table {
 }
 th{
   text-align: center;
-  height: 400px;
+  height: auto;
+}
+
+
+#re_play_btn{
+  margin-top:10px;
+}
+
+#salir_btn{
+  margin-top:10px;
+  padding-left:10px;
+}
+
+#final_results{
+  border-collapse: collapse;
+  border-radius:5px;
+  border: 1px solid black;
+  background-color: #FAFAFA;
+  width: 100%; 
 }
 
 .center{
@@ -133,6 +156,14 @@ th{
   border-radius: 5px;
 }
 
+.center-stats{
+  margin: auto;
+  width: 100%;
+  height: auto;
+  border: 3px solid #73AD21;
+  padding: 10px;
+  border-radius: 5px; 
+}
 .queueTitle{
   margin: auto;
   width: 36%;
@@ -145,3 +176,16 @@ tr:nth-child(odd){
   background: #ffffff;
 }
 
+p{
+  margin: 10px;
+}
+
+footer {
+  text-align: center;
+  position:absolute;
+  margin:auto;
+  vertical-align: bottom;
+  bottom:0;
+  width:100%;
+  height:60px;
+}
